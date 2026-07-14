@@ -1,0 +1,5 @@
+{
+  "name": "digibouquet-together",
+  "main": "src/bouquetTogether.js",
+  "compatibilityDate": "2024-01-01"
+}

@@ -1,0 +1,117 @@
+{
+  "expo": {
+    "name": "Digi Bouquet",
+    "slug": "digibouquet",
+    "version": "1.0.8",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FAF7F2"
+    },
+    "assetBundlePatterns": [
+      "assets/**",
+      "src/assets/**"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.digibouquet.app"
+    },
+    "android": {
+      "googleServicesFile": "./google-services.json",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FAF7F2"
+      },
+      "package": "com.digibouquet.app",
+      "versionCode": 14,
+      "blockedPermissions": [
+        "android.permission.ACTIVITY_RECOGNITION"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "egreet.in",
+              "pathPrefix": "/together"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
+    },
+    "web": {
+      "favicon": "./public/favicon.ico",
+      "bundler": "metro"
+    },
+    "scheme": "digibouquet",
+    "plugins": [
+      "expo-web-browser",
+      [
+        "expo-notifications",
+        {
+          "sounds": [
+            "./assets/notification.mp3"
+          ]
+        }
+      ],
+      "@react-native-google-signin/google-signin",
+      [
+        "react-native-android-widget",
+        {
+          "widgets": [
+            {
+              "name": "BouquetWidget",
+              "label": "Digi Bouquet",
+              "description": "Quickly create and send bouquets.",
+              "previewImage": "./assets/icon.png",
+              "minWidth": "180dp",
+              "minHeight": "220dp",
+              "targetCellWidth": 3,
+              "targetCellHeight": 4,
+              "resizeMode": "vertical"
+            }
+          ]
+        }
+      ],
+      "@react-native-community/datetimepicker",
+      "./withAndroid15Fixes",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true
+          }
+        }
+      ],
+      "./withResConfigs",
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "react-native",
+          "organization": "tutelio"
+        }
+      ],
+      "./withWidgetPin",
+      "@sentry/react-native",
+      "expo-audio",
+      "expo-font",
+      "expo-asset"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "8e2daf2d-e7b7-46bf-8a19-34b6246f6f9f"
+      }
+    }
+  }
+}

@@ -1,0 +1,276 @@
+{
+  "IN": [
+    {
+      "name": "Ferns N Petals",
+      "aliases": [
+        "fnp",
+        "ferns n petals india"
+      ],
+      "rating": "8.5/10",
+      "description": "India's largest gifting portal offering flowers, cakes, and personalized gifts for all occasions.",
+      "feedback": "Generally praised for wide variety and nationwide reach, though some users report occasional delivery delays during peak seasons.",
+      "verified": true,
+      "instantDelivery": false,
+      "link": "https://www.fnp.com"
+    },
+    {
+      "name": "FlowerAura",
+      "aliases": [
+        "floweraura",
+        "flower aura"
+      ],
+      "rating": "8.2/10",
+      "description": "An online gifting platform specializing in fresh flower arrangements, cakes, and plants.",
+      "feedback": "Customers appreciate the quality of flowers and cake combos; however, customer service responsiveness can sometimes be inconsistent.",
+      "verified": true,
+      "instantDelivery": false,
+      "link": "https://www.floweraura.com"
+    },
+    {
+      "name": "Blinkit",
+      "aliases": [
+        "grofers",
+        "blinkit india"
+      ],
+      "rating": "9.0/10",
+      "description": "A quick-commerce platform delivering groceries, essentials, and increasingly, fresh flowers and gifts within minutes.",
+      "feedback": "Highly rated for its reliable 10-minute delivery promise and expanding product range, though availability varies by pin code.",
+      "verified": true,
+      "instantDelivery": true,
+      "link": "https://blinkit.com"
+    },
+    {
+      "name": "Zepto",
+      "aliases": [
+        "zepto now",
+        "zepto app"
+      ],
+      "rating": "8.8/10",
+      "description": "A fast-growing instant grocery delivery app in India that also offers a selection of fresh flowers and daily needs.",
+      "feedback": "Users love the consistent rapid delivery speeds and app interface, but note that the flower selection is limited compared to dedicated florists.",
+      "verified": true,
+      "instantDelivery": true,
+      "link": "https://www.zeptonow.com"
+    },
+    {
+      "name": "Swiggy Instamart",
+      "aliases": [
+        "instamart",
+        "swiggy grocery"
+      ],
+      "rating": "8.9/10",
+      "description": "The quick-commerce arm of Swiggy, offering hyper-local delivery of groceries, snacks, and increasingly, gifting options like flowers.",
+      "feedback": "Appreciated for integrating seamlessly with the main Swiggy app and offering fast deliveries, though inventory can fluctuate.",
+      "verified": true,
+      "instantDelivery": true,
+      "link": "https://www.swiggy.com/instamart"
+    },
+    {
+      "name": "Interflora India",
+      "aliases": [
+        "interflora",
+        "interflora in"
+      ],
+      "rating": "8.7/10",
+      "description": "A premium online flower delivery service offering luxury, handcrafted floral arrangements.",
+      "feedback": "Renowned for high-quality, exotic blooms and elegant packaging; often considered expensive but worth it for special occasions.",
+      "verified": true,
+      "instantDelivery": false,
+      "link": "https://www.interflora.in"
+    },
+    {
+      "name": "IGP",
+      "aliases": [
+        "indian gifts portal",
+        "igp.com"
+      ],
+      "rating": "8.1/10",
+      "description": "A comprehensive online gifting site offering international and domestic delivery of flowers, cakes, and personalized items.",
+      "feedback": "Good for sending gifts internationally from India; mixed reviews on domestic flower freshness compared to local specialists.",
+      "verified": true,
+      "instantDelivery": false,
+      "link": "https://www.igp.com"
+    },
+    {
+      "name": "Winni",
+      "aliases": [
+        "winni cakes and more",
+        "winni.in"
+      ],
+      "rating": "7.9/10",
+      "description": "An online platform offering bakery items, flowers, and gifts with options for same-day delivery.",
+      "feedback": "Popular for affordable cake and flower combos; some users report issues with last-minute cancellations or substitutions.",
+      "verified": true,
+      "instantDelivery": false,
+      "link": "https://www.winni.in"
+    },
+    {
+      "name": "MyFlowerTree",
+      "aliases": [
+        "my flower tree",
+        "myflowertree.com"
+      ],
+      "rating": "7.7/10",
+      "description": "An online florist network providing fresh flowers, cakes, and customized gifts across India.",
+      "feedback": "Offers budget-friendly options and wide coverage, but experiences varied service quality depending on the local franchise partner.",
+      "verified": true,
+      "instantDelivery": false,
+      "link": "https://www.myflowertree.com"
+    },
+    {
+      "name": "BB Now (BigBasket)",
+      "aliases": [
+        "bb now",
+        "bigbasket instant"
+      ],
+      "rating": "8.4/10",
+      "description": "BigBasket's 10-30 minute delivery service for groceries and daily essentials, including a limited selection of flowers.",
+      "feedback": "Valued for the trust associated with the BigBasket brand; delivery speeds are generally good, though slightly slower than pure 10-minute players.",
+      "verified": true,
+      "instantDelivery": true,
+      "link": "https://www.bigbasket.com/bbnow/"
+    }
+  ]
+}
+
+
+{
+  "US": [
+    {
+      "name": "1-800-Flowers",
+      "aliases": [
+        "1800flowers",
+        "1-800-flowers.com",
+        "1 800 flowers"
+      ],
+      "rating": "7.2/10",
+      "description": "One of the largest floral and gift delivery networks in the US, offering a massive variety of bouquets, plants, and gourmet baskets.",
+      "feedback": "Customers appreciate the vast selection and reliable same-day delivery options, though some note occasional inconsistencies with local florist fulfillments during peak holidays.",
+      "verified": true,
+      "instantDelivery": false,
+      "link": "https://www.1800flowers.com"
+    },
+    {
+      "name": "The Bouqs Co.",
+      "aliases": [
+        "bouqs",
+        "the bouqs company",
+        "thebouqsco"
+      ],
+      "rating": "8.6/10",
+      "description": "An eco-friendly flower delivery service that partners directly with sustainable farms to provide fresh, longer-lasting blooms.",
+      "feedback": "Highly praised for the freshness and modern design of their arrangements, but users frequently mention that blooms arrive in bud form and take a day or two to fully open.",
+      "verified": true,
+      "instantDelivery": false,
+      "link": "https://bouqs.com"
+    },
+    {
+      "name": "UrbanStems",
+      "aliases": [
+        "urbanstems",
+        "urban stems"
+      ],
+      "rating": "8.8/10",
+      "description": "A modern floral gifting company specializing in trendy, thoughtfully designed bouquets sourced directly from Rainforest Alliance Certified farms.",
+      "feedback": "Reviewers love the stylish, Instagram-worthy aesthetic and premium packaging, though prices are often cited as slightly higher than traditional alternatives.",
+      "verified": true,
+      "instantDelivery": false,
+      "link": "https://urbanstems.com"
+    },
+    {
+      "name": "Farmgirl Flowers",
+      "aliases": [
+        "farmgirl flowers",
+        "farmgirl",
+        "farm girl flowers"
+      ],
+      "rating": "8.9/10",
+      "description": "A boutique floral company known for its signature burlap-wrapped bouquets and ethically sourced, seasonal blooms.",
+      "feedback": "Widely celebrated for unique, rustic aesthetics and excellent customer service, but the lack of traditional vase options and premium price points are commonly noted.",
+      "verified": true,
+      "instantDelivery": false,
+      "link": "https://farmgirlflowers.com"
+    },
+    {
+      "name": "FTD",
+      "aliases": [
+        "ftd",
+        "florists' transworld delivery",
+        "ftd flowers"
+      ],
+      "rating": "6.8/10",
+      "description": "A historic floral wire service connecting customers with local artisan florists for same-day delivery across the country.",
+      "feedback": "Provides great nationwide coverage and supports local businesses, but reviews are mixed regarding the consistency between the website photos and the final delivered product.",
+      "verified": true,
+      "instantDelivery": false,
+      "link": "https://www.ftd.com"
+    },
+    {
+      "name": "Teleflora",
+      "aliases": [
+        "teleflora",
+        "tele flora"
+      ],
+      "rating": "7.4/10",
+      "description": "A prominent floral network that relies exclusively on local florists to arrange and hand-deliver every order, never using shipping boxes.",
+      "feedback": "Users value the personal touch of hand-delivery and the unique keepsake vases, though some report unexpected substitutions during major floral holidays.",
+      "verified": true,
+      "instantDelivery": false,
+      "link": "https://www.teleflora.com"
+    },
+    {
+      "name": "From You Flowers",
+      "aliases": [
+        "from you flowers",
+        "fromyouflowers"
+      ],
+      "rating": "7.8/10",
+      "description": "A high-volume online flower retailer offering budget-friendly arrangements and extensive same-day delivery coverage.",
+      "feedback": "Highly rated for its competitive pricing, regular promotional discounts, and speedy delivery, making it a reliable go-to for last-minute shoppers.",
+      "verified": true,
+      "instantDelivery": false,
+      "link": "https://www.fromyouflowers.com"
+    },
+    {
+      "name": "ProFlowers",
+      "aliases": [
+        "proflowers",
+        "pro flowers"
+      ],
+      "rating": "7.0/10",
+      "description": "A popular online floral retailer offering direct-from-farm bouquets shipped in a box, as well as local florist-fulfilled options.",
+      "feedback": "Shoppers frequently cite affordability and solid promotional deals, while some critical reviews point out that boxed flowers require assembly upon arrival.",
+      "verified": true,
+      "instantDelivery": false,
+      "link": "https://www.proflowers.com"
+    },
+    {
+      "name": "BloomNation",
+      "aliases": [
+        "bloomnation",
+        "bloom nation"
+      ],
+      "rating": "8.5/10",
+      "description": "An online marketplace that allows customers to shop directly from top local florists, viewing actual photos of the florists' unique designs.",
+      "feedback": "Customers love the transparency, lack of hidden service fees, and the ability to buy highly unique, non-cookie-cutter arrangements directly from local artisans.",
+      "verified": true,
+      "instantDelivery": false,
+      "link": "https://www.bloomnation.com"
+    },
+    {
+      "name": "BloomsyBox",
+      "aliases": [
+        "bloomsybox",
+        "bloomsy box"
+      ],
+      "rating": "8.3/10",
+      "description": "A subscription-first flower service delivering farm-fresh, sustainable bouquets on a weekly or monthly basis.",
+      "feedback": "Praised for the longevity of the flowers and the convenience of the subscription model, though options for spontaneous one-off purchases can feel somewhat limited.",
+      "verified": true,
+      "instantDelivery": false,
+      "link": "https://www.bloomsybox.com"
+    }
+  ]
+}
+
+{"ID": [{"name": "Flower Chimp Indonesia","aliases": ["flowerchimp","flower chimp","flowerchimp indonesia"],"rating": "9.2/10","description": "A leading online flower delivery service in Indonesia offering a wide variety of bouquets, flower boards, and gift hampers. They are known for their reliable same-day delivery service across major cities.","feedback": "Customers praise the timely deliveries and fresh blooms, though a few note occasional discrepancies between website photos and the actual delivered arrangements.","verified": true,"instantDelivery": false,"link": "https://www.flowerchimp.co.id"},{"name": "Outerbloom","aliases": ["outerbloom","outerbloom florist","outerbloom jakarta"],"rating": "9.0/10","description": "A premium online florist specializing in luxury flower arrangements, forever roses, and romantic gift sets. They cater to a modern clientele looking for elegant floral designs in Jakarta and beyond.","feedback": "Users highly rate the premium packaging and quality of roses. Some reviews mention that the premium pricing is justified by the exceptional presentation and customer service.","verified": true,"instantDelivery": false,"link": "https://outerbloom.com"},{"name": "Prestisa","aliases": ["prestisa","prestisa florist","prestasi florist"],"rating": "8.8/10","description": "A nationwide florist network in Indonesia highly recognized for their traditional Papan Bunga (flower boards) and custom bouquets. They leverage a wide network of local partners to deliver across the archipelago.","feedback": "Widely appreciated for their extensive coverage and reliability for corporate flower boards. Some users suggest improvements in the user interface of their ordering platform.","verified": true,"instantDelivery": false,"link": "https://www.prestisa.com"},{"name": "Meme Florist","aliases": ["meme florist","memeflorist","meme florist indonesia"],"rating": "9.4/10","description": "One of Indonesia's most trusted online florists, renowned for fast delivery of flower boards, bouquets, and standing flowers across more than 200 cities. They focus heavily on B2B and celebratory floral arrangements.","feedback": "Excellent feedback regarding their responsive customer support and punctuality, particularly for urgent Papan Bunga orders. A highly reliable choice according to consistent Google reviews.","verified": true,"instantDelivery": false,"link": "https://memeflorist.com"},{"name": "FlowerAdvisor Indonesia","aliases": ["floweradvisor","flower advisor id","floweradvisor indonesia"],"rating": "8.5/10","description": "An international flower and gift delivery service with a strong presence in Indonesia. They offer a vast catalog of bouquets, corporate gifts, and international delivery options.","feedback": "Reviewers appreciate the wide selection and international delivery capabilities. However, some customers report occasional delays during peak holiday seasons.","verified": true,"instantDelivery": false,"link": "https://www.floweradvisor.co.id"},{"name": "Million Bloom","aliases": ["million bloom","millionbloom"],"rating": "8.9/10","description": "A modern online florist in Indonesia offering aesthetically pleasing, contemporary floral arrangements and customized gifts. They emphasize high-quality blooms and stylish wrapping for various occasions.","feedback": "Customers love the modern aesthetic and fresh flower quality. Minor critiques occasionally focus on the delivery fees for areas outside central Jakarta.","verified": true,"instantDelivery": false,"link": "https://millionbloom.com"},{"name": "Delovery","aliases": ["delovery","delovery indonesia","toko bunga delovery"],"rating": "9.1/10","description": "A major corporate gifting and floral platform providing nationwide delivery of flower boards, hampers, and parcels. They specialize in corporate relations, weddings, and grand opening events.","feedback": "Highly rated by corporate clients for seamless invoicing and dependable execution of large flower boards. Retail customers also praise their simple ordering process.","verified": true,"instantDelivery": false,"link": "https://www.delovery.com"},{"name": "Three Bouquets","aliases": ["three bouquets","threebouquets","threehouse florist"],"rating": "9.3/10","description": "A boutique florist based in West Jakarta specializing in rustic, Korean-style floral arrangements, and delicate bespoke bouquets. They are highly sought after for weddings, anniversaries, and romantic occasions.","feedback": "Clients rave about the beautiful, Instagram-worthy arrangements and attention to detail. Delivery is noted as careful, ensuring fragile bouquets arrive in perfect condition.","verified": true,"instantDelivery": false,"link": "https://threebouquets.com"},{"name": "Bunga Nusantara","aliases": ["bunga nusantara","bunganusantara"],"rating": "8.6/10","description": "An established Indonesian online florist providing classic floral arrangements, standing flowers, and traditional flower boards. They are a staple choice for formal events and condolences.","feedback": "Users commend their traditional designs and professional service. Some reviews mention that their website design feels slightly dated but functionally reliable.","verified": true,"instantDelivery": false,"link": "https://www.bunganusantara.com"},{"name": "Bunda Florist","aliases": ["bunda florist","bundaflorist"],"rating": "8.4/10","description": "A local flower shop offering accessible and affordable flower boards, table arrangements, and hand bouquets in Jakarta. They provide straightforward and budget-friendly floral solutions.","feedback": "Praised for affordability and quick local delivery. Some reviews note that the flower variety can be limited compared to premium competitors.","verified": true,"instantDelivery": false,"link": "https://www.bundaflorist.com"}]}

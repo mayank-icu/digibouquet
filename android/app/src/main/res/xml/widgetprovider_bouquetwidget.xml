@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="180dp"
+    android:minHeight="220dp"
+    android:targetCellWidth="3"
+    android:targetCellHeight="4"
+
+
+
+    android:resizeMode="vertical"
+
+    android:description="@string/widget_bouquetwidget_description"
+
+    android:initialLayout="@layout/rn_widget"
+    android:previewImage="@drawable/bouquetwidget_preview"
+
+
+
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen">
+</appwidget-provider>

@@ -1,0 +1,94 @@
+{
+  "universal": {
+    "valentinesDay": "2026-02-14",
+    "womensDay": "2026-03-08",
+    "intlFriendshipDay": "2026-07-30",
+    "worldGratitudeDay": "2026-09-21",
+    "teachersDay": "2026-10-05",
+    "singlesDay": "2026-11-11",
+    "newYear": "2026-01-01",
+    "siblingsDay": "2026-04-10",
+    "bestFriendsDay": "2026-06-08",
+    "randomActOfKindnessDay": "2026-02-17",
+    "grandparentsDay": "2026-09-13",
+    "spousesDay": "2026-01-26",
+    "galentinesDay": "2026-02-13",
+    "worldComplimentDay": "2026-03-01",
+    "petDay": "2026-04-11",
+    "nursesDay": "2026-05-06",
+    "familiesDay": "2026-05-15",
+    "justBecauseDay": "2026-08-27",
+    "daughtersDay": "2026-09-27",
+    "sonsDay": "2026-09-28",
+    "bossesDay": "2026-10-16",
+    "sweetestDay": "2026-10-17"
+  },
+  "IN": {
+    "roseDay": "2026-02-07",
+    "mothersDay": "2026-05-10",
+    "friendshipDay": "2026-08-02",
+    "rakshaBandhan": "2026-08-28",
+    "karvaChauth": "2026-10-30",
+    "diwali": "2026-11-08"
+  },
+  "ID": {
+    "kartiniDay": "2026-04-21",
+    "eidAlFitr": "2026-03-20",
+    "eidAlAdha": "2026-05-27",
+    "mothersDay": "2026-12-22"
+  },
+  "PH": {
+    "mothersDay": "2026-05-10",
+    "undas": "2026-11-01",
+    "christmas": "2026-12-25"
+  },
+  "PK": {
+    "eidAlFitr": "2026-03-20",
+    "eidAlAdha": "2026-05-27"
+  },
+  "BR": {
+    "diaDosNamorados": "2026-06-12",
+    "mothersDay": "2026-05-10",
+    "childrensDay": "2026-10-12"
+  },
+  "BD": {
+    "pohelaBoishakh": "2026-04-14",
+    "eidAlFitr": "2026-03-20",
+    "eidAlAdha": "2026-05-27"
+  },
+  "NP": {
+    "dashain": "2026-10-20",
+    "tihar": "2026-11-11"
+  },
+  "US": {
+    "mothersDay": "2026-05-10",
+    "fathersDay": "2026-06-21",
+    "christmas": "2026-12-25",
+    "halloween": "2026-10-31"
+  },
+  "MY": {
+    "eidAlFitr": "2026-03-20",
+    "eidAlAdha": "2026-05-27",
+    "mothersDay": "2026-05-10"
+  },
+  "MX": {
+    "mothersDay": "2026-05-10",
+    "diaDeLosMuertos": "2026-11-01"
+  },
+  "TH": {
+    "songkran": "2026-04-13",
+    "mothersDay": "2026-08-12"
+  },
+  "RU": {
+    "newYearRU": "2026-01-01"
+  },
+  "TR": {
+    "mothersDay": "2026-05-10",
+    "eidAlFitr": "2026-03-20",
+    "eidAlAdha": "2026-05-27"
+  },
+  "GB": {
+    "motheringSunday": "2026-03-15",
+    "christmas": "2026-12-25"
+  }
+}

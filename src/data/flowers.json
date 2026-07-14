@@ -1,0 +1,117 @@
+{
+  "_meta": {
+    "version": "merged-v1",
+    "source": "Best-of merge: Claude analysis (primary) + Gemini analysis (cherry-picked improvements)",
+    "canvas": "600x600px square, origin top-left, coordinates in percent",
+    "roles": {
+      "hero": "Large focal flowers (rose, peony, dahlia, magnolia, hydrangea) — 20-25% canvas width",
+      "accent": "Tall/wispy flowers (gladiolus, delphinium, snapdragon, wisteria) — need vertical clearance above greenery",
+      "filler": "Small/round flowers (daisy, buttercup, cosmos, anemone, coreopsis) — 10-15% canvas width",
+      "avoid": "Dense/busy zones where flowers clash visually with the greenery"
+    }
+  },
+
+  "bg_1": {
+    "hero":   [{"x": 50, "y": 55}, {"x": 35, "y": 50}],
+    "accent": [{"x": 22, "y": 30}, {"x": 75, "y": 28}, {"x": 50, "y": 20}],
+    "filler": [{"x": 62, "y": 65}, {"x": 30, "y": 68}, {"x": 50, "y": 78}],
+    "avoid":  [{"x": 50, "y": 45}, {"x": 40, "y": 40}, {"x": 60, "y": 42}],
+    "notes": "V-shaped foliage fan. Dense stem-crossing zone at center y:40–48 — primary avoid. Mid-foliage shelf at y:50–58 is the natural hero pocket. Accent tips extend well above the V arms. Lower outer corners taper nicely for fillers."
+  },
+
+  "bg_2": {
+    "hero":   [{"x": 48, "y": 58}, {"x": 32, "y": 52}, {"x": 60, "y": 50}],
+    "accent": [{"x": 20, "y": 28}, {"x": 72, "y": 25}, {"x": 50, "y": 18}],
+    "filler": [{"x": 65, "y": 68}, {"x": 28, "y": 72}, {"x": 52, "y": 80}],
+    "avoid":  [{"x": 50, "y": 48}, {"x": 42, "y": 42}, {"x": 55, "y": 38}],
+    "notes": "Wide-spread pointed-leaf bouquet. Supports an asymmetric hero trio (Gemini insight merged). Long arching stems create open negative space at upper corners for tall accents. Avoid the crossing zone around y:38–48."
+  },
+
+  "bg_3": {
+    "hero":   [{"x": 50, "y": 52}, {"x": 38, "y": 48}, {"x": 50, "y": 65}],
+    "accent": [{"x": 25, "y": 25}, {"x": 72, "y": 22}, {"x": 55, "y": 18}],
+    "filler": [{"x": 68, "y": 65}, {"x": 28, "y": 68}, {"x": 50, "y": 75}],
+    "avoid":  [{"x": 50, "y": 42}, {"x": 50, "y": 35}, {"x": 38, "y": 38}],
+    "notes": "Compact circular bouquet (seeded eucalyptus). Very dense core from y:30–50. Third hero at y:65 (Gemini insight) works below the mass where stems thin out. Outer ring of bouquet is the main flower zone."
+  },
+
+  "bg_4": {
+    "hero":   [{"x": 50, "y": 60}, {"x": 35, "y": 55}, {"x": 65, "y": 55}],
+    "accent": [{"x": 20, "y": 30}, {"x": 78, "y": 28}, {"x": 50, "y": 15}],
+    "filler": [{"x": 62, "y": 72}, {"x": 30, "y": 74}, {"x": 48, "y": 80}],
+    "avoid":  [{"x": 50, "y": 45}, {"x": 42, "y": 40}],
+    "notes": "Symmetrical fan/myrtle shape with thin wispy branches. Less dense than round bouquets so avoid zone is smaller. Accents placed wide follow the outer branch lines naturally. Strong symmetric three-hero placement works well."
+  },
+
+  "bg_5": {
+    "hero":   [{"x": 50, "y": 58}, {"x": 32, "y": 53}],
+    "accent": [{"x": 18, "y": 28}, {"x": 78, "y": 25}, {"x": 52, "y": 16}],
+    "filler": [{"x": 68, "y": 68}, {"x": 26, "y": 70}, {"x": 50, "y": 78}],
+    "avoid":  [{"x": 50, "y": 45}, {"x": 45, "y": 38}, {"x": 58, "y": 40}],
+    "notes": "Spiky outward-spreading branches. Wide horizontal reach. Upper corners are relatively open — good for accents that extend above the silhouette. Gemini's avoid at (10,10) and (90,10) discarded — those are genuinely empty canvas and flowers there would float disconnected."
+  },
+
+  "baby_blue_eucalyptus": {
+    "hero":   [{"x": 45, "y": 50}, {"x": 55, "y": 60}],
+    "accent": [{"x": 25, "y": 25}, {"x": 75, "y": 30}, {"x": 50, "y": 18}],
+    "filler": [{"x": 35, "y": 65}, {"x": 65, "y": 68}, {"x": 50, "y": 75}],
+    "avoid":  [{"x": 50, "y": 38}, {"x": 42, "y": 32}, {"x": 58, "y": 35}],
+    "notes": "Tall upright spray with dense round orb clusters throughout central column. The round berries create strong visual noise — heroes should sit just below the densest cluster band (y:50–60). Filler moved lower (y:65–75) vs Gemini's y:35 which clashes with orb texture."
+  },
+
+  "english_ivy": {
+    "hero":   [{"x": 50, "y": 55}, {"x": 38, "y": 50}, {"x": 62, "y": 50}],
+    "accent": [{"x": 20, "y": 30}, {"x": 78, "y": 28}],
+    "filler": [{"x": 25, "y": 65}, {"x": 72, "y": 62}, {"x": 50, "y": 72}],
+    "avoid":  [{"x": 50, "y": 42}, {"x": 42, "y": 38}, {"x": 58, "y": 38}],
+    "notes": "Radial starburst of star-shaped ivy leaves. Lacy texture overall allows some hero overlap with foliage. Keep outermost trailing leaf tips uncovered (Gemini insight) — accent placements kept closer to center to preserve visible ivy outline. Filler at lower outer positions."
+  },
+
+  "maidenhair_fern": {
+    "hero":   [{"x": 50, "y": 58}, {"x": 35, "y": 52}, {"x": 60, "y": 45}],
+    "accent": [{"x": 22, "y": 25}, {"x": 75, "y": 22}, {"x": 52, "y": 15}],
+    "filler": [{"x": 65, "y": 68}, {"x": 28, "y": 70}, {"x": 50, "y": 76}],
+    "avoid":  [{"x": 50, "y": 44}, {"x": 42, "y": 38}, {"x": 60, "y": 40}],
+    "notes": "Delicate airy fronds in wide upward V. Transparent enough that flowers layer forgivingly. Third hero at (60,45) from Gemini is a good addition — maidenhair's lighter texture supports it. Accent tips at y:15–25 extend well above the frond tips. Keep central stem zone clear."
+  },
+
+  "monstera_leaves": {
+    "hero":   [{"x": 50, "y": 45}, {"x": 32, "y": 38}, {"x": 68, "y": 42}],
+    "accent": [{"x": 18, "y": 20}, {"x": 80, "y": 18}],
+    "filler": [{"x": 50, "y": 70}, {"x": 28, "y": 65}, {"x": 72, "y": 62}],
+    "avoid":  [{"x": 50, "y": 52}, {"x": 40, "y": 55}, {"x": 60, "y": 55}, {"x": 20, "y": 60}, {"x": 80, "y": 60}],
+    "notes": "Large dramatic monstera leaves. Heroes placed above center (y:38–45) on leaf surfaces — the large leaf planes act as natural backdrops. Merged Gemini's outer-lower avoid zones (20,60) and (80,60) — those outer leaf-edge areas look unnatural with overlaid flowers. Avoid zones expanded to 5 total."
+  },
+
+  "olive_branches": {
+    "hero":   [{"x": 50, "y": 55}, {"x": 34, "y": 50}, {"x": 66, "y": 50}],
+    "accent": [{"x": 20, "y": 25}, {"x": 78, "y": 22}, {"x": 50, "y": 18}],
+    "filler": [{"x": 60, "y": 70}, {"x": 32, "y": 72}, {"x": 48, "y": 80}],
+    "avoid":  [{"x": 50, "y": 42}, {"x": 44, "y": 36}],
+    "notes": "Classic upward-arching olive branches. Narrow leaves make this one of the least dense — only 2 avoid zones needed at the lower stem bundle. Excellent for classic wedding bouquet composition. Three-hero arrangement perfectly follows the V arch. Accents extend high above branch tips."
+  },
+
+  "ruscus_branches": {
+    "hero":   [{"x": 50, "y": 52}, {"x": 36, "y": 48}, {"x": 64, "y": 48}],
+    "accent": [{"x": 22, "y": 22}, {"x": 76, "y": 20}, {"x": 52, "y": 14}],
+    "filler": [{"x": 62, "y": 68}, {"x": 30, "y": 70}, {"x": 50, "y": 78}],
+    "avoid":  [{"x": 50, "y": 40}, {"x": 44, "y": 34}, {"x": 56, "y": 36}],
+    "notes": "Dense flat-leaf ruscus in wide fan. Medium-sized overlapping leaves create a clear density gradient — dense core, sparse tips. Outer reaching branches provide natural channels for tall accents. Three-hero trio at the central foliage shelf works well. Avoid the heavy overlap zone at lower-center."
+  },
+
+  "silver_dollar_eucalyptus": {
+    "hero":   [{"x": 50, "y": 55}, {"x": 36, "y": 50}, {"x": 64, "y": 52}],
+    "accent": [{"x": 20, "y": 28}, {"x": 76, "y": 25}, {"x": 52, "y": 16}],
+    "filler": [{"x": 64, "y": 68}, {"x": 28, "y": 70}, {"x": 50, "y": 76}],
+    "avoid":  [{"x": 50, "y": 42}, {"x": 42, "y": 36}, {"x": 58, "y": 38}],
+    "notes": "Round silver-dollar leaves on arching stems. Larger, more widely-spaced coins than baby_blue — slightly less dense so a third hero point added. Still avoid the central vertical stem column. Large coin leaves make a strong visual backdrop for bold hero flowers like peonies."
+  },
+
+  "sword_fern": {
+    "hero":   [{"x": 50, "y": 65}, {"x": 45, "y": 52}, {"x": 65, "y": 48}],
+    "accent": [{"x": 18, "y": 30}, {"x": 80, "y": 28}],
+    "filler": [{"x": 50, "y": 75}, {"x": 28, "y": 68}, {"x": 72, "y": 66}],
+    "avoid":  [{"x": 50, "y": 40}, {"x": 50, "y": 32}, {"x": 42, "y": 36}],
+    "notes": "Wide starburst of horizontal sword fern fronds radiating from central crown. Gemini correctly noted the primary hero should sit lower at y:65 where the frond base fans wide — merged as first hero. Additional heroes between frond lines at upper positions. Place flowers between frond spokes, not on top of them. Avoid the tight center crown entirely."
+  }
+}
