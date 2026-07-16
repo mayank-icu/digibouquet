@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Alert, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Stage1Select } from '../stages/Stage1Select';
 import { Stage2Arrange } from '../stages/Stage2Arrange';
@@ -170,20 +170,10 @@ export const RandomActMode = ({ navigation }) => {
         />
       )}
 
-      {/* Basic Step Navigation for testing */}
-      <View style={styles.debugNav}>
-         {currentStep === 1 && selectedFlowers.length >= 3 && (
-            <TouchableOpacity style={styles.navBtn} onPress={() => setCurrentStep(2)}>
-               <Text>Next (Debug)</Text>
-            </TouchableOpacity>
-         )}
-      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  debugNav: { padding: 16, alignItems: 'center' },
-  navBtn: { padding: 10, backgroundColor: '#ddd', borderRadius: 8 }
 });

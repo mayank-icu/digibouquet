@@ -53,12 +53,14 @@ export const Stage3Message = ({
   isSlugOffensive,
   handleSlugCheck,
   isDark,
-  messageImage,
-  setMessageImage,
+  isGoldenMode,
+  messageImages,
   messageAudio,
-  setMessageAudio,
-  handleImagePicked,
+  handleAddImages,
+  handleRemoveImage,
+  handleEditImage,
   handleAudioRecorded,
+  handleRemoveAudio,
   navigation,
   selectedSuggestionCategory,
   setSelectedSuggestionCategory,
@@ -104,8 +106,9 @@ export const Stage3Message = ({
             <View style={{ marginBottom: 12 }}>
               <Text style={styles.fieldLabel}>{t('common.to')}</Text>
               <TextInput
-                style={styles.recipientInput}
+                style={[styles.recipientInput, { color: themeColors.text }]}
                 placeholder={t('createBouquet.recipientPlaceholder')}
+                placeholderTextColor={themeColors.textMuted}
                 value={messageCard.recipientName}
                 onChangeText={(t: string) => setMessageCard((m: any) => ({ ...m, recipientName: t }))}
                 maxLength={30}
@@ -121,8 +124,9 @@ export const Stage3Message = ({
             <View style={{ marginBottom: 12 }}>
               <Text style={styles.fieldLabel}>{t('common.from')}</Text>
               <TextInput
-                style={styles.signatureInput}
+                style={[styles.signatureInput, { color: themeColors.text }]}
                 placeholder={t('createBouquet.senderPlaceholder')}
+                placeholderTextColor={themeColors.textMuted}
                 value={messageCard.senderName}
                 onChangeText={(t: string) => setMessageCard((m: any) => ({ ...m, senderName: t }))}
                 maxLength={30}
@@ -214,22 +218,23 @@ export const Stage3Message = ({
           <>
             {currentUser ? (
               <MessageMediaUploader
-                image={messageImage}
+                images={messageImages}
                 audio={messageAudio}
-                onImage={handleImagePicked}
+                onAddImages={handleAddImages}
+                onRemoveImage={handleRemoveImage}
+                onEditImage={handleEditImage}
                 onAudio={handleAudioRecorded}
-                onRemoveImage={() => setMessageImage(null)}
-                onRemoveAudio={() => setMessageAudio(null)}
+                onRemoveAudio={handleRemoveAudio}
                 disabled={false}
               />
             ) : (
               <TouchableOpacity
                 style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 12, padding: 10, backgroundColor: isDark ? themeColors.surface : '#FFF8F5', borderRadius: 10, borderWidth: 1, borderColor: isDark ? themeColors.border : '#EAE0D5' }}
-                onPress={() => (navigation as any).navigate('Login')}
+                onPress={() => (navigation as any).navigate('Register', { fromScreen: 'CreateBouquet' })}
               >
                 <Text style={{ fontSize: 14 }}>🔒</Text>
                 <Text style={{ fontFamily: 'Manrope-Regular', fontSize: 12, color: themeColors.textMuted, flex: 1 }}>
-                  Sign in to attach a photo or voice note
+                  Create an account or sign in to attach up to 5 photos or a voice note
                 </Text>
               </TouchableOpacity>
             )}
@@ -292,53 +297,55 @@ export const Stage3Message = ({
       </View>
 
       {/* Animation picker */}
-      <View style={styles.animSection}>
-        <Text style={[styles.sectionLabel, { fontSize: 13, fontWeight: '600', color: themeColors.text, opacity: 0.8 }]}>{t('createBouquet.animations')}</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12, paddingBottom: 10 }}>
-          {['none', 'cherry-blossom', 'snow', 'confetti', 'sparkles', 'hearts'].map(anim => {
-            let bgContent = null;
-            if (anim === 'cherry-blossom') {
-              bgContent = <View style={{ flexDirection: 'row', gap: 10, opacity: 0.4 }}><View style={{width: 8, height: 8, borderRadius: 4, backgroundColor: '#FFB7B2' }}/><View style={{width: 6, height: 6, borderRadius: 3, backgroundColor: '#FFB7B2', marginTop: 15 }}/><View style={{width: 10, height: 10, borderRadius: 5, backgroundColor: '#FFB7B2', marginTop: 5 }}/></View>;
-            } else if (anim === 'snow') {
-              bgContent = <View style={{ flexDirection: 'row', gap: 10, opacity: 0.4 }}><View style={{width: 6, height: 6, borderRadius: 3, backgroundColor: '#888' }}/><View style={{width: 8, height: 8, borderRadius: 4, backgroundColor: '#888', marginTop: 15 }}/><View style={{width: 5, height: 5, borderRadius: 2.5, backgroundColor: '#888', marginTop: 5 }}/></View>;
-            } else if (anim === 'confetti') {
-              bgContent = <View style={{ flexDirection: 'row', gap: 10, opacity: 0.4 }}><View style={{width: 6, height: 10, backgroundColor: '#E63946', transform: [{rotate: '45deg'}] }}/><View style={{width: 8, height: 8, backgroundColor: '#F4A261', marginTop: 15, transform: [{rotate: '15deg'}] }}/><View style={{width: 6, height: 10, backgroundColor: '#2A9D8F', marginTop: 5, transform: [{rotate: '75deg'}] }}/></View>;
-            } else if (anim === 'sparkles') {
-              bgContent = <View style={{ flexDirection: 'row', gap: 10, opacity: 0.4 }}><Sparkles size={12} color="#FFD700" /><View style={{marginTop: 15}}><Sparkles size={16} color="#FFD700" /></View><View style={{marginTop: 5}}><Sparkles size={10} color="#FFD700" /></View></View>;
-            } else if (anim === 'hearts') {
-              bgContent = <View style={{ flexDirection: 'row', gap: 10, opacity: 0.4 }}><Text style={{fontSize: 12, color: '#E63946'}}>❤</Text><Text style={{fontSize: 16, color: '#E63946', marginTop: 15}}>❤</Text><Text style={{fontSize: 10, color: '#E63946', marginTop: 5}}>❤</Text></View>;
-            } else {
-              bgContent = <View style={{opacity: 0.2}}><Text style={{fontSize: 20}}>🚫</Text></View>;
-            }
+      {!isGoldenMode && (
+        <View style={styles.animSection}>
+          <Text style={[styles.sectionLabel, { fontSize: 13, fontWeight: '600', color: themeColors.text, opacity: 0.8 }]}>{t('createBouquet.animations')}</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12, paddingBottom: 10 }}>
+            {['none', 'cherry-blossom', 'snow', 'confetti', 'sparkles', 'hearts'].map(anim => {
+              let bgContent = null;
+              if (anim === 'cherry-blossom') {
+                bgContent = <View style={{ flexDirection: 'row', gap: 10, opacity: 0.4 }}><View style={{width: 8, height: 8, borderRadius: 4, backgroundColor: '#FFB7B2' }}/><View style={{width: 6, height: 6, borderRadius: 3, backgroundColor: '#FFB7B2', marginTop: 15 }}/><View style={{width: 10, height: 10, borderRadius: 5, backgroundColor: '#FFB7B2', marginTop: 5 }}/></View>;
+              } else if (anim === 'snow') {
+                bgContent = <View style={{ flexDirection: 'row', gap: 10, opacity: 0.4 }}><View style={{width: 6, height: 6, borderRadius: 3, backgroundColor: '#888' }}/><View style={{width: 8, height: 8, borderRadius: 4, backgroundColor: '#888', marginTop: 15 }}/><View style={{width: 5, height: 5, borderRadius: 2.5, backgroundColor: '#888', marginTop: 5 }}/></View>;
+              } else if (anim === 'confetti') {
+                bgContent = <View style={{ flexDirection: 'row', gap: 10, opacity: 0.4 }}><View style={{width: 6, height: 10, backgroundColor: '#E63946', transform: [{rotate: '45deg'}] }}/><View style={{width: 8, height: 8, backgroundColor: '#F4A261', marginTop: 15, transform: [{rotate: '15deg'}] }}/><View style={{width: 6, height: 10, backgroundColor: '#2A9D8F', marginTop: 5, transform: [{rotate: '75deg'}] }}/></View>;
+              } else if (anim === 'sparkles') {
+                bgContent = <View style={{ flexDirection: 'row', gap: 10, opacity: 0.4 }}><Sparkles size={12} color="#FFD700" /><View style={{marginTop: 15}}><Sparkles size={16} color="#FFD700" /></View><View style={{marginTop: 5}}><Sparkles size={10} color="#FFD700" /></View></View>;
+              } else if (anim === 'hearts') {
+                bgContent = <View style={{ flexDirection: 'row', gap: 10, opacity: 0.4 }}><Text style={{fontSize: 12, color: '#E63946'}}>❤</Text><Text style={{fontSize: 16, color: '#E63946', marginTop: 15}}>❤</Text><Text style={{fontSize: 10, color: '#E63946', marginTop: 5}}>❤</Text></View>;
+              } else {
+                bgContent = <View style={{opacity: 0.2}}><Text style={{fontSize: 20}}>🚫</Text></View>;
+              }
 
-            return (
-              <TouchableOpacity
-                key={anim}
-                style={[
-                  styles.animBtn,
-                  {
-                    width: 100, height: 80,
-                    justifyContent: 'flex-end', alignItems: 'center',
-                    overflow: 'hidden', position: 'relative',
-                    borderWidth: additionalSettings.animation === anim ? 2 : 1,
-                    borderColor: additionalSettings.animation === anim ? '#7A5C58' : themeColors.border,
-                    backgroundColor: isDark ? themeColors.surface2 : '#faf8f7',
-                    paddingBottom: 8,
-                  },
-                ]}
-                onPress={() => setAdditionalSettings((s: any) => ({ ...s, animation: anim }))}
-              >
-                <View style={[StyleSheet.absoluteFill, { justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }]}>
-                  {bgContent}
-                </View>
-                <Text style={[styles.animBtnText, { fontSize: 11, textAlign: 'center', zIndex: 2, color: additionalSettings.animation === anim ? '#7A5C58' : themeColors.textMuted, fontWeight: additionalSettings.animation === anim ? '700' : '500' }]}>
-                  {anim === 'none' ? t('createBouquet.none') : anim.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' ')}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
-      </View>
+              return (
+                <TouchableOpacity
+                  key={anim}
+                  style={[
+                    styles.animBtn,
+                    {
+                      width: 100, height: 80,
+                      justifyContent: 'flex-end', alignItems: 'center',
+                      overflow: 'hidden', position: 'relative',
+                      borderWidth: additionalSettings.animation === anim ? 2 : 1,
+                      borderColor: additionalSettings.animation === anim ? '#7A5C58' : themeColors.border,
+                      backgroundColor: isDark ? themeColors.surface2 : '#faf8f7',
+                      paddingBottom: 8,
+                    },
+                  ]}
+                  onPress={() => setAdditionalSettings((s: any) => ({ ...s, animation: anim }))}
+                >
+                  <View style={[StyleSheet.absoluteFill, { justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }]}>
+                    {bgContent}
+                  </View>
+                  <Text style={[styles.animBtnText, { fontSize: 11, textAlign: 'center', zIndex: 2, color: additionalSettings.animation === anim ? '#7A5C58' : themeColors.textMuted, fontWeight: additionalSettings.animation === anim ? '700' : '500' }]}>
+                    {anim === 'none' ? t('createBouquet.none') : anim.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' ')}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+      )}
 
       {!isRandomActMode && (
         <View style={[styles.postcard, { backgroundColor: themeColors.cardBg, borderColor: themeColors.border, marginTop: 16, elevation: 0, shadowOpacity: 0 }]}>

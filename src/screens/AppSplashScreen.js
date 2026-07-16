@@ -1,5 +1,6 @@
 import { PremiumImage } from '../components/PremiumImage';
 import React, { useEffect, useState } from 'react';
+import { preloadAllFlowerImages } from '../utils/bouquetData';
 import {
   View,
   ImageBackground,
@@ -27,6 +28,8 @@ export default function AppSplashScreen({ onFinish }) {
   };
 
   useEffect(() => {
+    preloadAllFlowerImages();
+
     const safety = setTimeout(() => {
       setPointerEvents('none');
       onFinish();

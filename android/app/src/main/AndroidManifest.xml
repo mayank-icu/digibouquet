@@ -2,10 +2,10 @@
   <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" tools:node="remove"/>
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove"/>
   <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
-  <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
-  <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+  <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" tools:node="remove"/>
+  <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" tools:node="remove"/>
   <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED"/>
   <uses-permission android:name="android.permission.RECORD_AUDIO"/>
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
@@ -38,12 +38,13 @@
       <intent-filter android:autoVerify="true" data-generated="true">
         <action android:name="android.intent.action.VIEW"/>
         <data android:scheme="https" android:host="egreet.in" android:pathPrefix="/together"/>
+        <data android:scheme="https" android:host="egreet.in" android:pathPrefix="/bouquet"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
     </activity>
     <activity android:name="com.google.mlkit.vision.codescanner.internal.GmsBarcodeScanningDelegateActivity" android:screenOrientation="unspecified" tools:replace="android:screenOrientation" android:exported="false"/>
-    <receiver android:name=".widget.BouquetWidget" android:exported="false" android:label="Digi Bouquet">
+    <receiver android:name=".widget.BouquetWidget" android:exported="true" android:label="Digi Bouquet">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
         <action android:name="com.digibouquet.app.WIDGET_CLICK"/>

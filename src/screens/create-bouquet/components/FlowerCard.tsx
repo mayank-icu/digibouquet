@@ -1,9 +1,12 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { X } from 'lucide-react-native';
 import { CachedImage } from '../../../components/CachedImage';
 import { getFlowerImage, FLOWER_GROUPS } from '../../../utils/bouquetData';
 import { getFlowerTranslation } from '../../../flower-translations';
+import { HapticButton } from '../../../components/HapticButton';
+import Animated, { FadeIn, FadeOut, LinearTransition, ZoomIn, ZoomOut } from 'react-native-reanimated';
+
+const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
 
 export const LazyFlowerImage = React.memo(({ imageId, style, isGoldenMode }: { imageId: string; style: any; isGoldenMode?: boolean }) => {
   return (
@@ -29,29 +32,69 @@ export const FlowerCard = React.memo(({ group, count, onAdd, onRemove, onViewMea
 
   return (
     <View style={[styles.flowerCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+      {group.colors.length > 1 && (
+        <TouchableOpacity style={[styles.colorPillTopLeft, { backgroundColor: theme.surface2, borderColor: theme.border }]} onPress={() => onViewMeaning(group)}>
+          <View style={[styles.colorDotTopLeft, { backgroundColor: group.colors[0].hex }]} />
+          <Text style={[styles.colorTextTopLeft, { color: theme.text }]}>{group.colors.length}</Text>
+        </TouchableOpacity>
+      )}
+
       <TouchableOpacity onPress={() => onViewMeaning(group)} activeOpacity={0.7}>
         <View style={styles.flowerImgWrapper}>
           <LazyFlowerImage imageId={group.colors[0].id} style={styles.flowerImg} isGoldenMode={isGoldenMode} />
-          {count > 0 && <View style={styles.countBadge}><Text style={styles.countBadgeText}>{count}</Text></View>}
         </View>
       </TouchableOpacity>
       <Text style={[styles.flowerLabel, { color: theme.brand }]}>{translatedName}</Text>
-      <View style={styles.flowerActionRow}>
-        <TouchableOpacity style={[styles.addBtn, { backgroundColor: theme.brand }, !canAdd && styles.btnDisabled]} disabled={!canAdd} onPress={() => onAdd(group.colors[0].id)}>
-          <Text style={styles.addBtnText}>+ Add</Text>
-        </TouchableOpacity>
-        {group.colors.length > 1 && (
-          <TouchableOpacity style={styles.colorBtn} onPress={() => onViewMeaning(group)}>
-            <View style={[styles.colorDot, { backgroundColor: group.colors[0].hex, borderColor: theme.border }]} />
-            <Text style={styles.colorBtnText}>{group.colors.length}</Text>
-          </TouchableOpacity>
+      <Animated.View style={styles.flowerActionRow} layout={LinearTransition.springify()}>
+        {count > 0 ? (
+          <Animated.View 
+            style={[styles.stepperContainer, { backgroundColor: theme.surface2, borderColor: theme.border }]}
+            entering={FadeIn}
+            exiting={FadeOut}
+            layout={LinearTransition.springify()}
+          >
+            <HapticButton 
+              style={styles.stepperActionBtn} 
+              onPress={() => onRemove(group.colors)}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.stepperActionText, { color: theme.text }]}>−</Text>
+            </HapticButton>
+            
+            <View style={styles.stepperCountWrapper}>
+              <Animated.Text 
+                key={count} 
+                entering={ZoomIn.springify()} 
+                exiting={ZoomOut.springify()} 
+                style={[styles.stepperCountText, { color: theme.text, position: 'absolute' }]}
+              >
+                {count}
+              </Animated.Text>
+            </View>
+            
+            <HapticButton 
+              style={[styles.stepperActionBtn, !canAdd && styles.btnDisabled]} 
+              disabled={!canAdd} 
+              onPress={() => onAdd(group.colors[0].id)}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.stepperActionText, { color: theme.text }]}>+</Text>
+            </HapticButton>
+          </Animated.View>
+        ) : (
+          <AnimatedTouchableOpacity 
+            style={[styles.stepperAddBtn, { backgroundColor: theme.brand }, !canAdd && styles.btnDisabled]} 
+            disabled={!canAdd} 
+            onPress={() => onAdd(group.colors[0].id)}
+            activeOpacity={0.8}
+            entering={FadeIn}
+            exiting={FadeOut}
+            layout={LinearTransition.springify()}
+          >
+            <Text style={styles.stepperAddBtnText}>+ Add</Text>
+          </AnimatedTouchableOpacity>
         )}
-        {count > 0 && (
-          <TouchableOpacity style={styles.removeBtn} onPress={() => onRemove(group.colors)}>
-            <X size={16} color="white" />
-          </TouchableOpacity>
-        )}
-      </View>
+      </Animated.View>
     </View>
   );
 });
@@ -78,23 +121,6 @@ const styles = StyleSheet.create({
     width: 110,
     height: 110,
   },
-  countBadge: {
-    position: 'absolute',
-    top: -5,
-    right: -5,
-    backgroundColor: '#ff4444',
-    borderRadius: 12,
-    minWidth: 24,
-    height: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 4,
-  },
-  countBadgeText: {
-    color: 'white',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
   flowerLabel: {
     fontSize: 14,
     fontWeight: '600',
@@ -105,46 +131,79 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
-  },
-  addBtn: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
+    alignSelf: 'stretch',
   },
   btnDisabled: {
     opacity: 0.5,
   },
-  addBtnText: {
-    color: '#FFFFFF',
-    fontSize: 13,
-    fontWeight: 'bold',
-  },
-  colorBtn: {
+  colorPillTopLeft: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    zIndex: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.05)',
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 12,
+    borderWidth: 1,
   },
-  colorDot: {
+  colorDotTopLeft: {
     width: 12,
     height: 12,
     borderRadius: 6,
-    marginRight: 4,
-    borderWidth: 1,
+    marginRight: 6,
   },
-  colorBtnText: {
+  colorTextTopLeft: {
     fontSize: 12,
-    color: '#666',
+    fontWeight: '600',
+    fontFamily: 'Manrope-SemiBold',
   },
-  removeBtn: {
-    backgroundColor: '#ff4444',
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    justifyContent: 'center',
+  stepperContainer: {
+    flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    alignSelf: 'stretch',
+    overflow: 'hidden',
+  },
+  stepperActionBtn: {
+    flex: 1,
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  stepperActionText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    fontFamily: 'Manrope-Bold',
+  },
+  stepperCountWrapper: {
+    width: 24,
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  stepperCountText: {
+    fontSize: 14,
+    fontFamily: 'Manrope-Bold',
+    fontWeight: 'bold',
+  },
+  stepperAddBtn: {
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+    flex: 1,
+  },
+  stepperAddBtnText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontFamily: 'Manrope-Bold',
+    fontWeight: 'bold',
   },
 });

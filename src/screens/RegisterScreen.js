@@ -14,6 +14,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useSwipeNavigation } from '../hooks/useSwipeNavigation';
+import { applyPendingReferral } from '../utils/referral';
 
 function GoogleG({ size = 20 }) {
   return (
@@ -47,7 +48,7 @@ const isMajorEmailProvider = (emailStr) => {
   return ALLOWED_PROVIDERS.includes(domain);
 };
 
-export default function RegisterScreen({ navigation }) {
+export default function RegisterScreen({ navigation, route }) {
   const insets = useSafeAreaInsets();
   const { theme: t, isDark } = useTheme();
   const { t: tr } = useLanguage();
@@ -92,7 +93,11 @@ export default function RegisterScreen({ navigation }) {
   ];
 
   const handleBack = () => {
-    navigation.replace('MainTabs');
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.replace('MainTabs');
+    }
   };
 
   const swipeHandlers = useSwipeNavigation({
@@ -101,9 +106,9 @@ export default function RegisterScreen({ navigation }) {
 
   React.useEffect(() => {
     if (currentUser) {
-      navigation.replace('ProActivation');
+      navigation.replace('ProActivation', { fromScreen: route.params?.fromScreen });
     }
-  }, [currentUser, navigation]);
+  }, [currentUser, navigation, route.params?.fromScreen]);
 
   const handleRegister = async () => {
     setError('');
@@ -124,6 +129,7 @@ export default function RegisterScreen({ navigation }) {
       const cred = await signUp(email.trim(), password);
       if (cred?.user) {
         await updateProfile(cred.user, { displayName: name.trim() });
+        await applyPendingReferral(cred.user);
       }
     } catch (e) {
       const code = e.code;
@@ -256,7 +262,7 @@ export default function RegisterScreen({ navigation }) {
 
         <HapticButton 
           style={styles.switchRow} 
-          onPress={() => navigation.navigate('Login')}
+          onPress={() => navigation.navigate('Login', { fromScreen: route.params?.fromScreen })}
           activeOpacity={0.7}
         >
           <Text style={[styles.switchText, { color: t.textMuted, textAlign: 'center' }]}>

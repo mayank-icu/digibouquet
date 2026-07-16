@@ -116,7 +116,7 @@ export const SuccessModal = ({
 
             <TouchableOpacity
               style={{ paddingVertical: 12, alignItems: 'center' }}
-              onPress={() => { setShowSuccessModal(false); navigation.navigate('Home' as never); }}
+              onPress={() => { setShowSuccessModal(false); navigation.navigate('MainTabs' as never); }}
             >
               <Text style={{ fontFamily: 'Manrope-SemiBold', fontSize: 14, color: '#aaa' }}>{t('createBouquet.close')}</Text>
             </TouchableOpacity>
@@ -147,9 +147,19 @@ export const ReviewFallbackModal = ({
           <View style={{ width: '100%', marginTop: 24, gap: 12 }}>
             <TouchableOpacity
               style={{ backgroundColor: '#7A5C58', borderRadius: 14, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8 }}
-              onPress={() => {
-                Linking.openURL('https://play.google.com/store/apps/details?id=com.egreet.digibouquet');
+              onPress={async () => {
                 setShowReviewFallbackModal(false);
+                const marketUrl = 'market://details?id=com.digibouquet.app';
+                const webUrl = 'https://play.google.com/store/apps/details?id=com.digibouquet.app';
+                try {
+                  await Linking.openURL(marketUrl);
+                } catch (err) {
+                  try {
+                    await Linking.openURL(webUrl);
+                  } catch (webErr) {
+                    console.error('Failed to open store URL from fallback modal:', webErr);
+                  }
+                }
               }}
             >
               <Text style={{ color: '#fff', fontFamily: 'Manrope-Bold', fontSize: 16 }}>Open Play Store</Text>

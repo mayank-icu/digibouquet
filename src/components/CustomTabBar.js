@@ -1,6 +1,6 @@
 import { HapticButton } from './HapticButton';
 import React, { useRef, useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Animated, DeviceEventEmitter } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../contexts/ThemeContext';
@@ -23,6 +23,17 @@ export default function CustomTabBar({ state, descriptors, navigation }) {
       friction: 11,
     }).start();
   }, [state.index]);
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const sub = DeviceEventEmitter.addListener('toggleMenu', (isOpen) => {
+      setIsMenuOpen(isOpen);
+    });
+    return () => sub.remove();
+  }, []);
+
+  if (isMenuOpen) return null;
 
   return (
     <Animated.View

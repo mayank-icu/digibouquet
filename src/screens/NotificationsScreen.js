@@ -7,7 +7,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   collection, query, orderBy, limit,
-  onSnapshot, doc, writeBatch, getDoc, deleteDoc,
+  onSnapshot, doc, writeBatch, getDoc, deleteDoc, updateDoc,
 } from 'firebase/firestore';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Swipeable } from 'react-native-gesture-handler';
@@ -106,7 +106,20 @@ export default function NotificationsScreen({ navigation }) {
   }, [notifs, currentUser]);
 
   const handleOpen = useCallback(async (notif) => {
-    // Always open modal to show notification details
+    // If it's a reply notification, go directly to bouquet view
+    if (notif.type === 'reply') {
+      const bId = notif.bouquetId || notif.data?.bouquetId;
+      if (bId) {
+        // Mark as read immediately
+        if (!notif.read && currentUser) {
+          updateDoc(doc(db, 'notifications', currentUser.uid, 'items', notif.id), { read: true }).catch(()=>{});
+        }
+        navigation.navigate('BouquetView', { id: bId, isCreator: true });
+        return;
+      }
+    }
+
+    // Always open modal to show notification details for other types
     setSelectedNotif(notif);
     setDetailsModal(true);
     setBouquetDetails(null); // Reset previous details

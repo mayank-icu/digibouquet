@@ -14,7 +14,7 @@ import { useSwipeNavigation } from '../hooks/useSwipeNavigation';
 
 const C = { bg: '#FAF7F2', rose: '#7A5C58', muted: '#997E7A', dark: '#5C4844', border: '#EAE0D5', white: '#fff', mid: '#EAE0D5' };
 
-const STORE_URL = 'https://play.google.com/store/apps/details?id=com.egreet.digibouquet';
+const STORE_URL = 'https://play.google.com/store/apps/details?id=com.digibouquet.app';
 
 export default function AboutScreen({ navigation }) {
   const insets = useSafeAreaInsets();
@@ -38,15 +38,28 @@ export default function AboutScreen({ navigation }) {
   ];
 
   const handleRateUs = async () => {
+    let success = false;
     try {
       const isAvailable = await StoreReview.isAvailableAsync();
-      if (isAvailable) {
+      const hasAction = await StoreReview.hasAction();
+      if (isAvailable && hasAction) {
         await StoreReview.requestReview();
-      } else {
-        Linking.openURL(STORE_URL);
+        success = true;
       }
-    } catch {
-      Linking.openURL(STORE_URL);
+    } catch (e) {
+      console.warn('In-app review failed on About screen:', e);
+    }
+    if (!success) {
+      const marketUrl = 'market://details?id=com.digibouquet.app';
+      try {
+        await Linking.openURL(marketUrl);
+      } catch (err) {
+        try {
+          await Linking.openURL(STORE_URL);
+        } catch (webErr) {
+          console.error('Failed to open store URL from About screen:', webErr);
+        }
+      }
     }
   };
 

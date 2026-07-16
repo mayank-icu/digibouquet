@@ -84,8 +84,6 @@ Message: "${text}"
 `;
 
   try {
-    console.log('[SARVAM DEBUG] Initiating request to Sarvam API...');
-    const startTime = Date.now();
     const res = await fetch('https://api.sarvam.ai/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -99,43 +97,36 @@ Message: "${text}"
       })
     });
 
-    console.log(`[SARVAM DEBUG] Received HTTP Status: ${res.status} in ${Date.now() - startTime}ms`);
-
     if (!res.ok) {
-      const errorText = await res.text();
-      console.error(`[SARVAM DEBUG] API Error Body:`, errorText);
-      throw new Error(`Sarvam API error: ${res.status} - ${errorText}`);
+      throw new Error(`Sarvam API error: ${res.status}`);
     }
 
     const data = await res.json();
     const replyText = data.choices?.[0]?.message?.content || '';
-    
-    console.log('[SARVAM DEBUG] Raw AI Reply:', replyText);
 
     // Extract JSON from response (handle markdown blocks if any)
     const jsonMatch = replyText.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       try {
         const parsed = JSON.parse(jsonMatch[0]);
-        console.log('[SARVAM DEBUG] Successfully parsed JSON:', parsed);
         return {
           isSafe: parsed.isSafe,
           reason: parsed.reason,
           tags: parsed.tags || []
         };
       } catch (parseError) {
-        console.error('[SARVAM DEBUG] JSON Parse Error:', parseError, 'for string:', jsonMatch[0]);
+        // Parse error handled below
       }
     }
 
-    console.warn('[SARVAM DEBUG] Failed to parse JSON, falling back to safe defaults.');
-    // Default safe if we can't parse, to avoid blocking legitimate users on AI parse errors
-    return { isSafe: true, tags: ['general'] };
+    // Default safe if we can't parse, fallback to local checks
+    const local = checkLocalSafety(text);
+    return { isSafe: local.isSafe, tags: ['general'] };
 
   } catch (error) {
-    console.error('[SARVAM DEBUG] Sarvam AI moderation completely failed:', error);
-    // On API failure, return safe but log it, so we don't completely break the app experience for users if token limits hit during demo
-    return { isSafe: true, tags: ['fallback-unverified'], reason: 'Moderation service unavailable, bypassed for demo.' };
+    // On API failure, use local check
+    const local = checkLocalSafety(text);
+    return { isSafe: local.isSafe, tags: ['fallback-unverified'], reason: 'Moderation service unavailable, bypassed for demo.' };
   }
 };
 

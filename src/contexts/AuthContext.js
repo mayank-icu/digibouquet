@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -14,6 +14,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { auth } from '../firebase';
+import { applyPendingReferral } from '../utils/referral';
 
 const GOOGLE_WEB_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID;
 
@@ -25,14 +26,17 @@ export function AuthProvider({ children }) {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [isProActivationShown, setIsProActivationShown] = useState(false);
 
-  // Configure Google Sign-In
-  // NOTE: Do NOT set offlineAccess or forceCodeForRefreshToken here.
-  // Those flags trigger a second OAuth consent screen after account selection.
-  // We only need the idToken for Firebase credential — no server-side Google API access needed.
+  // playServicesReady is set to true once hasPlayServices() resolves.
+  // We call it eagerly on mount so it's done before the user taps "Continue with Google".
+  const playServicesReady = useRef(false);
+
   useEffect(() => {
-    GoogleSignin.configure({
-      webClientId: GOOGLE_WEB_CLIENT_ID,
-    });
+    // Pre-warm Google Play Services check so it's already resolved by tap time.
+    // hasPlayServices() warms up the underlying GMS connection; subsequent calls
+    // in the signIn flow are near-instant after this resolves.
+    GoogleSignin.hasPlayServices({ autoResolve: true })
+      .then(() => { playServicesReady.current = true; })
+      .catch(() => { /* non-fatal — signInWithGoogle will handle it */ });
   }, []);
 
 
@@ -75,7 +79,13 @@ export function AuthProvider({ children }) {
   const signInWithGoogle = async () => {
     try {
       setGoogleLoading(true);
-      await GoogleSignin.hasPlayServices();
+
+      // Skip hasPlayServices() if already pre-warmed on mount — this removes it
+      // from the critical tap-to-picker path for the common case.
+      if (!playServicesReady.current) {
+        await GoogleSignin.hasPlayServices({ autoResolve: true });
+        playServicesReady.current = true;
+      }
 
       const { data } = await GoogleSignin.signIn();
 
@@ -87,13 +97,17 @@ export function AuthProvider({ children }) {
       const userCredential = await signInWithCredential(auth, credential);
       const additionalInfo = getAdditionalUserInfo(userCredential);
 
-      if (additionalInfo && !additionalInfo.isNewUser) {
-        Toast.show({
-          type: 'success',
-          text1: 'Welcome back!',
-          text2: 'You have successfully signed in with Google.',
-          visibilityTime: 3000,
-        });
+      if (additionalInfo) {
+        if (!additionalInfo.isNewUser) {
+          Toast.show({
+            type: 'success',
+            text1: 'Welcome back!',
+            text2: 'You have successfully signed in with Google.',
+            visibilityTime: 3000,
+          });
+        } else {
+          await applyPendingReferral(userCredential.user);
+        }
       }
     } catch (error) {
       console.error('Google sign-in error:', error);

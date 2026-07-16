@@ -20,12 +20,13 @@ import {
   Alert,
   Share,
   AppState,
-  PixelRatio } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+  PixelRatio,
+  KeyboardAvoidingView } from 'react-native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import { Music, Play, ExternalLink } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
-import { doc, getDoc, setDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, deleteDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Audio } from 'expo-av';
 import YoutubePlayer from 'react-native-youtube-iframe';
@@ -62,6 +63,7 @@ import { getFlowerTranslation } from '../flower-translations';
 
 import { getFlowerImage } from '../utils/bouquetData';
 import { CachedImage } from '../components/CachedImage';
+import { useSwipeToClose } from '../hooks/useSwipeToClose';
 // react-native-manage-wallpaper is a native module that can throw on import
 // on some Android versions (notably SDK 36). Lazy-require it with a guard.
 let ManageWallpaper: any = null;
@@ -179,6 +181,7 @@ interface BouquetData {
   senderName?: string;
   messageCard?: { message?: string; recipientName?: string; senderName?: string };
   messageImageUrl?: string;
+  messageImageUrls?: string[];
   messageAudioUrl?: string;
   song?: { previewUrl?: string; url?: string; albumArt?: string; name?: string; artist?: string; id?: string; startTime?: number; clipDuration?: number; duration?: string; isItunes?: boolean };
   arrangement?: number;
@@ -250,9 +253,11 @@ const PARTICLE_CONFIGS: Record<string, { size: number; color: string; shape: 'ci
   ],
   sparkles: [{ size: 6, color: '#f1c40f', shape: 'star', twinkle: true }],
   'golden-sparkles': [
-    { size: 10, color: '#D4AF37', shape: 'star', twinkle: true }, 
-    { size: 6, color: '#F5C842', shape: 'star', twinkle: true }, 
-    { size: 8, color: '#C9960C', shape: 'star', twinkle: true }
+    { size: 16, color: '#D4AF37', shape: 'star', twinkle: true }, 
+    { size: 10, color: '#F5C842', shape: 'star', twinkle: true }, 
+    { size: 12, color: '#C9960C', shape: 'star', twinkle: true },
+    { size: 14, color: '#FFDF73', shape: 'star', twinkle: true },
+    { size: 8, color: '#FFF3A1', shape: 'star', twinkle: true }
   ],
   hearts:   [{ size: 12, color: '#e74c3c', shape: 'heart' }],
 };
@@ -476,7 +481,6 @@ export default function BouquetView() {
   const { getTextSize } = useAccessibility();
   const { theme: rawTheme } = useTheme();
   const { getEffectiveTheme } = useAccessibility();
-  const th = getEffectiveTheme(rawTheme);
   const insets = useSafeAreaInsets();
 
   // ── Core state ──────────────────────────────────────────────────────────────
@@ -521,6 +525,8 @@ export default function BouquetView() {
   const [hasReplied, setHasReplied] = useState(false);
   const [showRepliesSection, setShowRepliesSection] = useState(false);
   const [loadingReplies, setLoadingReplies] = useState(false);
+  const [submittingReply, setSubmittingReply] = useState(false);
+  const [resolvedBouquetId, setResolvedBouquetId] = useState<string | null>(null);
 
   // ── Particle effects ────────────────────────────────────────────────────────
   const [particles, setParticles] = useState<any[]>([]);
@@ -529,6 +535,7 @@ export default function BouquetView() {
   const [touchEffects, setTouchEffects] = useState<any[]>([]);
   const tiltX = useRef(new Animated.Value(0)).current;
   const tiltY = useRef(new Animated.Value(0)).current;
+  const flowerInfoAnimatingOut = useRef(false);
 
   // ── Translation ─────────────────────────────────────────────────────────────
   const [translatedData, setTranslatedData] = useState<{ message: string; recipient: string; sender: string } | null>(null);
@@ -549,59 +556,50 @@ export default function BouquetView() {
 
   // ── Overlay / entrance ──────────────────────────────────────────────────────
   const [showImageFullScreen, setShowImageFullScreen] = useState(false);
+  const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
   const [showFullScreenFlowers, setShowFullScreenFlowers] = useState(!openWallpaperModal);
   const [floatingFlowers, setFloatingFlowers] = useState<FloatingFlower[]>([]);
 
   // ── Flower info modal ───────────────────────────────────────────────────────
   const [selectedFlowerInfo, setSelectedFlowerInfo] = useState<(typeof FLOWER_MEANINGS)[string] & { id: string } | null>(null);
-  const flowerInfoSlide = useRef(new Animated.Value(800)).current;
-  const flowerInfoPanY = useRef(new Animated.Value(0)).current;
-  const flowerInfoOverlay = useRef(new Animated.Value(0)).current;
-  const flowerInfoScrollY = useRef(0);
-  const flowerInfoAnimatingOut = useRef(false);
-  const flowerInfoPanResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponderCapture: (_, gs) => {
-        if (gs.dy <= 2) return false;
-        if (Math.abs(gs.dx) > Math.abs(gs.dy)) return false;
-        if (flowerInfoScrollY.current > 6) return false;
-        return true;
-      },
-      onPanResponderMove: (_, gs) => { if (gs.dy > 0) flowerInfoSlide.setValue(gs.dy); },
-      onPanResponderRelease: (_, gs) => {
-        if (gs.dy > 80 || gs.vy > 0.5) {
-          flowerInfoAnimatingOut.current = true;
-          Animated.parallel([
-            Animated.spring(flowerInfoSlide, {
-              toValue: 800,
-              velocity: gs.vy,
-              useNativeDriver: true,
-              tension: 65,
-              friction: 11,
-            }),
-            Animated.timing(flowerInfoOverlay, {
-              toValue: 0,
-              duration: 220,
-              useNativeDriver: true,
-            })
-          ]).start(() => {
-            setSelectedFlowerInfo(null);
-          });
-        } else {
-          Animated.spring(flowerInfoSlide, { toValue: 0, useNativeDriver: true, tension: 80, friction: 10 }).start();
-        }
-      },
-      onPanResponderTerminate: () => {
-        Animated.spring(flowerInfoSlide, { toValue: 0, useNativeDriver: true }).start();
-      },
-    })
-  ).current;
+
+  const {
+    slideAnim: flowerInfoSlide,
+    panY: flowerInfoPanY,
+    overlayOpacity: flowerInfoOverlay,
+    panHandlers: flowerInfoPanHandlers,
+    isInteractive: flowerInfoInteractive,
+  } = useSwipeToClose(!!selectedFlowerInfo, () => setSelectedFlowerInfo(null));
 
   // ── Download & Wallpaper ──────────────────────────────────────────────────
   const bouquetViewRef = useRef<View>(null);
   const bouquetCanvasRef = useRef<View>(null);
   const [isCapturing, setIsCapturing] = useState(false);
   const [saveOptionsModalVisible, setSaveOptionsModalVisible] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      // Screen is focused
+      return () => {
+        // Screen is blurred
+        if (isPlayingSong) {
+          setIsPlayingSong(false);
+        }
+        if (youtubePlaying) {
+          setYoutubePlaying(false);
+        }
+        if (soundRef.current) {
+          soundRef.current.pauseAsync().catch(() => {});
+        }
+        if (isPlayingVoiceNote) {
+          setIsPlayingVoiceNote(false);
+        }
+        if (voiceNoteSoundRef.current) {
+          voiceNoteSoundRef.current.pauseAsync().catch(() => {});
+        }
+      };
+    }, [isPlayingSong, youtubePlaying, isPlayingVoiceNote])
+  );
 
   const handleSaveCard = () => {
     setSaveOptionsModalVisible(true);
@@ -612,7 +610,7 @@ export default function BouquetView() {
     if (isCapturing) return;
     setIsCapturing(true);
     try {
-      const { status } = await MediaLibrary.requestPermissionsAsync();
+      const { status } = await MediaLibrary.requestPermissionsAsync(true);
       if (status !== 'granted') {
         Alert.alert(
           t('bouquetView.permissionRequired') || 'Permission required',
@@ -657,7 +655,7 @@ export default function BouquetView() {
     if (isCapturing) return;
     setIsCapturing(true);
     try {
-      const { status } = await MediaLibrary.requestPermissionsAsync();
+      const { status } = await MediaLibrary.requestPermissionsAsync(true);
       if (status !== 'granted') {
         Alert.alert(
           t('bouquetView.permissionRequired') || 'Permission required',
@@ -729,6 +727,18 @@ export default function BouquetView() {
 
   // ─── Helpers ────────────────────────────────────────────────────────────────
   const isV2 = bouquetData?.version === 2;
+
+  const th = getEffectiveTheme((bouquetData as any)?.isGoldenEdition ? {
+    ...rawTheme,
+    bg: '#0F0C0A',
+    surface: '#1F1A15',
+    surface2: '#2A1F1A',
+    border: '#3D2E27',
+    text: '#F5C842',
+    textMuted: '#D4AF37',
+    brand: '#C9960C',
+    cardBg: '#1A1200'
+  } : rawTheme);
 
   const recipientName =
     translatedData?.recipient ||
@@ -811,45 +821,32 @@ export default function BouquetView() {
         setIsScratchRevealed(true);
       }
 
-      // Try AsyncStorage cache
-      const looksLikeUuid =
-        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
-      const cacheKey = `bouquet_${id}`;
-      const cachedRaw = looksLikeUuid ? await AsyncStorage.getItem(cacheKey) : null;
-
-      if (cachedRaw) {
-        try {
-          const parsed: BouquetData = JSON.parse(cachedRaw);
-          setBouquetData(parsed);
-          setLoading(false);
-          const repliedKey = `bouquet_replied_${id}`;
-          const hasRepliedBefore = await AsyncStorage.getItem(repliedKey);
-          setHasReplied(hasRepliedBefore === 'true');
-          return;
-        } catch (e) {
-          console.error('Cache parse error:', e);
-        }
-      }
-
       try {
         let bouquetId = id;
 
         // 1. Resolve slug to ID
-        const scopedSlugRef = doc(db, 'slugs', `bouquet__${id}`);
-        const scopedSlugSnap = await getDoc(scopedSlugRef);
+        const looksLikeUuid =
+          /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
 
-        if (scopedSlugSnap.exists()) {
-          bouquetId = scopedSlugSnap.data().cardId;
-        } else {
-          const slugRef = doc(db, 'slugs', id);
-          const slugSnap = await getDoc(slugRef);
-          if (slugSnap.exists()) {
-            const slugData = slugSnap.data();
-            if (slugData.cardType === 'bouquet' || slugData.type === 'bouquet') {
-              bouquetId = slugData.cardId;
+        if (!looksLikeUuid) {
+          const scopedSlugRef = doc(db, 'slugs', `bouquet__${id}`);
+          const scopedSlugSnap = await getDoc(scopedSlugRef);
+
+          if (scopedSlugSnap.exists()) {
+            bouquetId = scopedSlugSnap.data().cardId;
+          } else {
+            const slugRef = doc(db, 'slugs', id);
+            const slugSnap = await getDoc(slugRef);
+            if (slugSnap.exists()) {
+              const slugData = slugSnap.data();
+              if (slugData.cardType === 'bouquet' || slugData.type === 'bouquet') {
+                bouquetId = slugData.cardId;
+              }
             }
           }
         }
+
+        setResolvedBouquetId(bouquetId);
 
         // 2. Try AsyncStorage FIRST for instant load
         const cacheKey = `bouquet_${bouquetId}`;
@@ -859,6 +856,25 @@ export default function BouquetView() {
             const parsed: BouquetData = JSON.parse(cachedRaw);
             setBouquetData(parsed);
             setLoading(false); // Show the bouquet immediately
+
+            // Set creator state from cached data
+            const deviceId = await getDeviceId();
+            const createdKey = `bouquet_created_${bouquetId}`;
+            const didCreate = await AsyncStorage.getItem(createdKey);
+            if (didCreate === 'true') setIsCreator(true);
+            if (currentUser && (parsed as any).userId === currentUser.uid) setIsCreator(true);
+            if ((parsed as any).userId === deviceId) setIsCreator(true);
+
+            // Load cached replies
+            const repliesCacheKey = `bouquet_replies_${bouquetId}`;
+            const cachedReplies = await AsyncStorage.getItem(repliesCacheKey);
+            if (cachedReplies) {
+              const parsedReplies = JSON.parse(cachedReplies);
+              if (parsedReplies && parsedReplies.length > 0) {
+                setExistingReplies(parsedReplies);
+                setHasReplied(true);
+              }
+            }
             
             // Generate flowers for wallpaper
             const flowerIds = (parsed.selectedFlowers || [])
@@ -893,19 +909,6 @@ export default function BouquetView() {
           if (didCreate === 'true') setIsCreator(true);
           if (currentUser && (data as any).userId === currentUser.uid) setIsCreator(true);
           if ((data as any).userId === deviceId) setIsCreator(true);
-
-          // Fetch replies
-          try {
-            const repliesSnap = await getDoc(doc(db, 'bouquet-replies', `${bouquetId}_replies`));
-            if (repliesSnap.exists()) {
-              const replies: Reply[] = repliesSnap.data().replies || [];
-              if (replies.length > 0) {
-                setExistingReplies(replies);
-                setHasReplied(true);
-                await AsyncStorage.setItem(`bouquet_replies_${bouquetId}`, JSON.stringify(replies));
-              }
-            }
-          } catch (_) {}
         }
       } catch (error) {
         console.error('Error fetching bouquet:', error);
@@ -915,7 +918,29 @@ export default function BouquetView() {
     };
 
     fetchBouquet();
-  }, [id, generateFloatingFlowers]);
+  }, [id, generateFloatingFlowers, currentUser]);
+
+  // ─── Listen to replies in real-time ───────────────────────────────────────────
+  useEffect(() => {
+    if (!resolvedBouquetId) return;
+
+    const replyRef = doc(db, 'bouquet-replies', `${resolvedBouquetId}_replies`);
+    const unsubscribe = onSnapshot(replyRef, async (docSnap) => {
+      if (docSnap.exists()) {
+        const replies: Reply[] = docSnap.data().replies || [];
+        setExistingReplies(replies);
+        if (replies.length > 0) {
+          setHasReplied(true);
+          await AsyncStorage.setItem(`bouquet_replies_${resolvedBouquetId}`, JSON.stringify(replies));
+          await AsyncStorage.setItem(`bouquet_replied_${id}`, 'true');
+        }
+      }
+    }, (error) => {
+      console.error('Error listening to replies:', error);
+    });
+
+    return () => unsubscribe();
+  }, [resolvedBouquetId, id]);
 
   // ─── Re-generate flowers with actual flower types when data arrives ───────────
   useEffect(() => {
@@ -1052,7 +1077,7 @@ export default function BouquetView() {
 
     const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
       e.preventDefault();
-      navigation.navigate('Home' as never);
+      navigation.navigate('MainTabs' as never);
     });
 
     return unsubscribe;
@@ -1333,8 +1358,9 @@ export default function BouquetView() {
 
   // ─── Submit reply ─────────────────────────────────────────────────────────────
   const handleReplySubmit = useCallback(async () => {
-    if (!replyMessage.trim() || hasReplied || isCreator) return;
+    if (!replyMessage.trim() || hasReplied || isCreator || submittingReply) return;
 
+    setSubmittingReply(true);
     try {
       let bouquetId = id!;
       const scopedSlugSnap = await getDoc(doc(db, 'slugs', `bouquet__${id}`));
@@ -1356,6 +1382,8 @@ export default function BouquetView() {
       if (existingCount >= 1) {
         setHasReplied(true);
         await AsyncStorage.setItem(`bouquet_replied_${id}`, 'true');
+        setShowReplyBox(false);
+        setReplyMessage('');
         return;
       }
 
@@ -1373,6 +1401,14 @@ export default function BouquetView() {
       await AsyncStorage.setItem(`bouquet_replied_${id}`, 'true');
       setHasReplied(true);
       setReplySubmitted(true);
+      setShowReplyBox(false);
+      setReplyMessage('');
+
+      Toast.show({
+        type: 'success',
+        text1: t('bouquetView.replySent') || 'Reply sent!',
+        text2: `We have notified ${(bouquetData as any)?.senderName || 'the sender'} of your message.`,
+      });
 
       // Send push notification to the bouquet creator (Cloud Function handles it via Firestore trigger)
       // The onWrite trigger on bouquet-replies will fire automatically.
@@ -1383,8 +1419,10 @@ export default function BouquetView() {
         text1: t('bouquetView.errorReply'),
         text2: t('bouquetView.errorReplyDesc'),
       });
+    } finally {
+      setSubmittingReply(false);
     }
-  }, [id, replyMessage, hasReplied, isCreator, existingReplies]);
+  }, [id, replyMessage, hasReplied, isCreator, existingReplies, submittingReply, bouquetData]);
 
   // ─── Translate ────────────────────────────────────────────────────────────────
   const handleTranslate = useCallback(async (lang: string) => {
@@ -1490,7 +1528,6 @@ export default function BouquetView() {
   useEffect(() => {
     if (selectedFlowerInfo) {
       flowerInfoAnimatingOut.current = false;
-      flowerInfoScrollY.current = 0;
       flowerInfoPanY.setValue(0);
       flowerInfoSlide.setValue(800);
       Animated.parallel([
@@ -1508,14 +1545,6 @@ export default function BouquetView() {
       ]).start();
     }
   }, [selectedFlowerInfo]);
-
-  const closeFlowerInfoModal = () => {
-    flowerInfoAnimatingOut.current = true;
-    Animated.parallel([
-      Animated.timing(flowerInfoSlide, { toValue: 800, duration: 220, useNativeDriver: true }),
-      Animated.timing(flowerInfoOverlay, { toValue: 0, duration: 220, useNativeDriver: true }),
-    ]).start(() => setSelectedFlowerInfo(null));
-  };
 
   // ─── Reset animations on data change ──────────────────────────────────────────
   useEffect(() => {
@@ -1609,8 +1638,8 @@ export default function BouquetView() {
   }, [filteredLanguages, detectedLanguage]);
 
   return (
-    <View style={styles.pageContainer}>
-      <StatusBar barStyle="dark-content" />
+    <View style={[styles.pageContainer, { backgroundColor: th.bg }]}>
+      <StatusBar barStyle={(bouquetData as any)?.isGoldenEdition ? "light-content" : "dark-content"} />
 
       {/* Persistent X Button (Overlay style) - Hidden during capture */}
       {!isCapturing && (
@@ -1660,8 +1689,10 @@ export default function BouquetView() {
                         width: flower.size,
                         height: flower.size,
                         transform: [{ rotate: `${flower.rotation}deg` }],
-                        tintColor: '#D4AF37',
-                        opacity: 0.5
+                        shadowColor: '#D4AF37',
+                        shadowOffset: { width: 0, height: 0 },
+                        shadowOpacity: 1,
+                        shadowRadius: 8
                       }
                     ]}
                     resizeMode="contain"
@@ -1718,10 +1749,11 @@ export default function BouquetView() {
             scrollEnabled={!isScratching}
           >
           {/* ─── GOLDEN BOUQUET FEATURE ─────────────────────────────────────────────────── */}
-          {(bouquetData as any).isGoldenEdition && (
-            <View style={styles.goldenHeaderBanner}>
-              <Text style={styles.goldenHeaderTitle}>✨ Golden Edition Bouquet</Text>
-              <Text style={styles.goldenHeaderSub}>An exclusive, premium golden arrangement.</Text>
+          {(bouquetData as any)?.isGoldenEdition && (
+            <View style={{ marginBottom: 16, marginTop: 16, alignSelf: 'center' }}>
+              <View style={{ backgroundColor: '#D4AF37', borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3, shadowColor: '#D4AF37', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.6, shadowRadius: 6, elevation: 4 }}>
+                <Text style={{ fontFamily: 'Manrope-Bold', fontSize: 9, color: '#1A1200', letterSpacing: 1.2 }}>LIMITED EDITION</Text>
+              </View>
             </View>
           )}
           {/* ─── END GOLDEN BOUQUET FEATURE ────────────────────────────────────────────── */}
@@ -1751,7 +1783,8 @@ export default function BouquetView() {
                           { width: canvasWidth, height: canvasWidth, zIndex: 0 },
                           isEucalyptus
                             ? { transform: [{translateX: Animated.multiply(tiltX, 0.5)}, {translateY: Animated.add(Animated.multiply(tiltY, 0.5), -25)}, {scale: 1.1}] }
-                            : { transform: [{translateX: Animated.multiply(tiltX, 0.5)}, {translateY: Animated.multiply(tiltY, 0.5)}] }
+                            : { transform: [{translateX: Animated.multiply(tiltX, 0.5)}, {translateY: Animated.multiply(tiltY, 0.5)}] },
+                          (bouquetData as any)?.isGoldenEdition && { shadowColor: '#D4AF37', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 1, shadowRadius: 10, elevation: 10 }
                         ]}
                         resizeMode={isGreenery ? "cover" : "stretch"}
                       />
@@ -1783,10 +1816,7 @@ export default function BouquetView() {
                           onPress={() => flowerInfo && setSelectedFlowerInfo({ ...flowerInfo, id: flower.id })}
                           activeOpacity={0.85}
                         >
-                          <Animated.Image source={img as any} style={[styles.flowerV2Img as any, { transform: [{translateX: tiltX}, {translateY: tiltY}, { rotate: `${flower.rotation}deg` }] }]} resizeMode="contain" />
-                          {(bouquetData as any)?.isGoldenEdition && (
-                            <Animated.Image source={img as any} style={[styles.flowerV2Img as any, { position: 'absolute', top: 0, left: 0, tintColor: '#D4AF37', opacity: 0.5, transform: [{translateX: tiltX}, {translateY: tiltY}, { rotate: `${flower.rotation}deg` }] }]} resizeMode="contain" />
-                          )}
+                          <Animated.Image source={img as any} style={[styles.flowerV2Img as any, { transform: [{translateX: tiltX}, {translateY: tiltY}, { rotate: `${flower.rotation}deg` }] }, (bouquetData as any)?.isGoldenEdition && { shadowColor: '#D4AF37', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 1, shadowRadius: 8, elevation: 8 }]} resizeMode="contain" />
                         </TouchableOpacity>
                       );
                     })
@@ -1804,10 +1834,7 @@ export default function BouquetView() {
                             onPress={() => flowerInfo && setSelectedFlowerInfo({ ...flowerInfo, id: flowerId })}
                             activeOpacity={0.85}
                           >
-                            <Image source={img as any} style={styles.flowerLegacy as any} resizeMode="contain" />
-                            {(bouquetData as any)?.isGoldenEdition && (
-                              <Image source={img as any} style={[styles.flowerLegacy as any, { position: 'absolute', top: 0, left: 0, tintColor: '#D4AF37', opacity: 0.5 }]} resizeMode="contain" />
-                            )}
+                            <Image source={img as any} style={[styles.flowerLegacy as any, (bouquetData as any)?.isGoldenEdition && { shadowColor: '#D4AF37', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 1, shadowRadius: 8, elevation: 8 }]} resizeMode="contain" />
                           </TouchableOpacity>
                         );
                       })}
@@ -1825,11 +1852,11 @@ export default function BouquetView() {
           </View>
 
           {/* ── Message card ──────────────────────────────────────────────── */}
-          <View style={styles.messageCard}>
+          <View style={[styles.messageCard, { backgroundColor: (th as any).cardBg || '#fff', borderColor: th.border || '#eaeaea' }]}>
             <View style={{ padding: 24, paddingTop: 8 }}>
-              <View style={styles.messageCardHeader}>
+              <View style={[styles.messageCardHeader, { borderBottomColor: th.border || '#f0f0f0' }]}>
                 <Text style={[styles.recipientTitle, { color: th.text }]}>{t('bouquetView.forLabel')} {recipientName}</Text>
-                <Text style={styles.senderSubtitle}>{t('bouquetView.fromLabel')} {senderName}</Text>
+                <Text style={[styles.senderSubtitle, { color: th.textMuted }]}>{t('bouquetView.fromLabel')} {senderName}</Text>
                 {(() => {
                   const dateVal = (bouquetData as any).updatedAt || (bouquetData as any).createdAt;
                   if (!dateVal) return null;
@@ -1840,7 +1867,7 @@ export default function BouquetView() {
                   if (!validDate || isNaN(validDate.getTime())) return null;
                   
                   return (
-                    <Text style={styles.dateText}>
+                    <Text style={[styles.dateText, { color: th.textMuted }]}>
                       {validDate.toLocaleDateString('en-US', { 
                         year: 'numeric', 
                         month: 'long', 
@@ -1911,23 +1938,89 @@ export default function BouquetView() {
                 />
               </View>
 
-              {/* Image Attachment */}
-              {bouquetData.messageImageUrl && (
-                <TouchableOpacity 
-                  style={{ marginTop: 16, marginBottom: 8, borderRadius: 12, overflow: 'hidden' }}
-                  onPress={() => setShowImageFullScreen(true)}
-                  activeOpacity={0.9}
-                >
-                  <CachedImage 
-                    source={{ uri: bouquetData.messageImageUrl }} 
-                    style={{ width: '100%', height: 240 }} 
-                    resizeMode="cover"
-                  />
-                  <View style={{ position: 'absolute', right: 12, bottom: 12, backgroundColor: 'rgba(0,0,0,0.5)', padding: 6, borderRadius: 20 }}>
-                    <Feather name="maximize-2" size={16} color="#fff" />
+              {/* Image Attachment – mosaic collage grid */}
+              {(() => {
+                const imgUrls = bouquetData.messageImageUrls?.length
+                  ? bouquetData.messageImageUrls
+                  : bouquetData.messageImageUrl
+                  ? [bouquetData.messageImageUrl]
+                  : [];
+                if (imgUrls.length === 0) return null;
+                const GAP = 3;
+                const openGallery = (index: number) => {
+                  setActiveGalleryIndex(index);
+                  setShowImageFullScreen(true);
+                };
+                const ImgThumb = ({ uri, idx }: { uri: string; idx: number }) => (
+                  <TouchableOpacity
+                    onPress={() => openGallery(idx)}
+                    activeOpacity={0.88}
+                    style={{ flex: 1, borderRadius: 8, overflow: 'hidden', backgroundColor: '#f0ece8' }}
+                  >
+                    <CachedImage source={{ uri }} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+                    {imgUrls.length > 1 && (
+                      <View style={{ position: 'absolute', right: 8, bottom: 8, backgroundColor: 'rgba(0,0,0,0.45)', borderRadius: 10, padding: 4 }}>
+                        <Feather name="maximize-2" size={12} color="#fff" />
+                      </View>
+                    )}
+                  </TouchableOpacity>
+                );
+                const count = imgUrls.length;
+                return (
+                  <View style={{ marginTop: 16, marginBottom: 8 }}>
+                    {count === 1 && (
+                      <View style={{ height: 240, borderRadius: 12, overflow: 'hidden' }}>
+                        <ImgThumb uri={imgUrls[0]} idx={0} />
+                        <View style={{ position: 'absolute', right: 12, bottom: 12, backgroundColor: 'rgba(0,0,0,0.5)', padding: 6, borderRadius: 20 }}>
+                          <Feather name="maximize-2" size={16} color="#fff" />
+                        </View>
+                      </View>
+                    )}
+                    {count === 2 && (
+                      <View style={{ height: 190, flexDirection: 'row', gap: GAP, borderRadius: 12, overflow: 'hidden' }}>
+                        <ImgThumb uri={imgUrls[0]} idx={0} />
+                        <ImgThumb uri={imgUrls[1]} idx={1} />
+                      </View>
+                    )}
+                    {count === 3 && (
+                      <View style={{ height: 210, flexDirection: 'row', gap: GAP, borderRadius: 12, overflow: 'hidden' }}>
+                        <View style={{ flex: 1.4 }}><ImgThumb uri={imgUrls[0]} idx={0} /></View>
+                        <View style={{ flex: 1, gap: GAP }}>
+                          <ImgThumb uri={imgUrls[1]} idx={1} />
+                          <ImgThumb uri={imgUrls[2]} idx={2} />
+                        </View>
+                      </View>
+                    )}
+                    {count === 4 && (
+                      <View style={{ height: 220, gap: GAP, borderRadius: 12, overflow: 'hidden' }}>
+                        <View style={{ flex: 1, flexDirection: 'row', gap: GAP }}>
+                          <ImgThumb uri={imgUrls[0]} idx={0} />
+                          <ImgThumb uri={imgUrls[1]} idx={1} />
+                        </View>
+                        <View style={{ flex: 1, flexDirection: 'row', gap: GAP }}>
+                          <ImgThumb uri={imgUrls[2]} idx={2} />
+                          <ImgThumb uri={imgUrls[3]} idx={3} />
+                        </View>
+                      </View>
+                    )}
+                    {count >= 5 && (
+                      <View style={{ height: 240, flexDirection: 'row', gap: GAP, borderRadius: 12, overflow: 'hidden' }}>
+                        <View style={{ flex: 1.3 }}><ImgThumb uri={imgUrls[0]} idx={0} /></View>
+                        <View style={{ flex: 1, gap: GAP }}>
+                          <View style={{ flex: 1, flexDirection: 'row', gap: GAP }}>
+                            <ImgThumb uri={imgUrls[1]} idx={1} />
+                            <ImgThumb uri={imgUrls[2]} idx={2} />
+                          </View>
+                          <View style={{ flex: 1, flexDirection: 'row', gap: GAP }}>
+                            <ImgThumb uri={imgUrls[3]} idx={3} />
+                            <ImgThumb uri={imgUrls[4]} idx={4} />
+                          </View>
+                        </View>
+                      </View>
+                    )}
                   </View>
-                </TouchableOpacity>
-              )}
+                );
+              })()}
 
               {/* Voice Note Attachment */}
               {bouquetData.messageAudioUrl && (
@@ -2038,12 +2131,12 @@ export default function BouquetView() {
               </View>
             ) : (
               <>
-                {existingReplies.length > 0 && (
-                  <View style={styles.repliesContainer}>
-                    <Text style={styles.repliesTitle}>{t('bouquetView.reply')}</Text>
-                    <View style={styles.replyItem}>
-                      <Text style={styles.replyText}>{existingReplies[0].message}</Text>
-                      <Text style={styles.replyTimestamp}>
+                {isCreator && existingReplies.length > 0 && (
+                  <View style={[styles.repliesContainer, { backgroundColor: '#fff', borderColor: '#EAE0D5', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 2 }]}>
+                    <Text style={[styles.repliesTitle, { fontFamily: 'PlayfairDisplay-Bold', color: '#5C4844', fontSize: 16, marginBottom: 8 }]}>Reply from Recipient</Text>
+                    <View style={[styles.replyItem, { backgroundColor: th.surface || '#FFF5F0', borderWidth: 0, padding: 16, borderRadius: 12 }]}>
+                      <Text style={[styles.replyText, { color: th.text || '#333', fontSize: 15, lineHeight: 24, fontStyle: 'italic' }]}>{"\"" + existingReplies[0].message + "\""}</Text>
+                      <Text style={[styles.replyTimestamp, { color: th.textMuted || '#999', marginTop: 8 }]}>
                         {new Date(existingReplies[0].timestamp).toLocaleString()}
                       </Text>
                     </View>
@@ -2052,15 +2145,27 @@ export default function BouquetView() {
 
                 {!isCreator && (
                   hasReplied || existingReplies.length >= 1 ? (
-                    <View style={styles.alreadyReplied}>
-                      <Feather name={replySubmitted ? 'check-circle' : 'mail'} size={14} color="#004085" style={{ marginRight: 6 }} />
-                      <Text style={styles.alreadyRepliedText}>
-                        {replySubmitted ? t('bouquetView.replySent') : t('bouquetView.alreadyReplied')}
-                      </Text>
-                    </View>
+                    existingReplies.length > 0 ? (
+                      <View style={[styles.repliesContainer, { backgroundColor: '#fff', borderColor: '#EAE0D5', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 2 }]}>
+                        <Text style={[styles.repliesTitle, { fontFamily: 'PlayfairDisplay-Bold', color: '#5C4844', fontSize: 16, marginBottom: 8 }]}>Your Reply</Text>
+                        <View style={[styles.replyItem, { backgroundColor: th.surface || '#FFF5F0', borderWidth: 0, padding: 16, borderRadius: 12 }]}>
+                          <Text style={[styles.replyText, { color: th.text || '#333', fontSize: 15, lineHeight: 24, fontStyle: 'italic' }]}>{"\"" + existingReplies[0].message + "\""}</Text>
+                          <Text style={[styles.replyTimestamp, { color: th.textMuted || '#999', marginTop: 8 }]}>
+                            {new Date(existingReplies[0].timestamp).toLocaleString()}
+                          </Text>
+                        </View>
+                      </View>
+                    ) : (
+                      <View style={[styles.alreadyReplied, { padding: 16, flexDirection: 'row', alignItems: 'center' }]}>
+                        <ActivityIndicator size="small" color="#7A5C58" style={{ marginRight: 10 }} />
+                        <Text style={[styles.alreadyRepliedText, { fontWeight: '600', fontSize: 15, color: '#7A5C58' }]}>
+                          Loading your reply...
+                        </Text>
+                      </View>
+                    )
                   ) : (
                   <>
-                    {!showReplyBox && (
+                    {!showReplyBox && !isCreator && (
                       <TouchableOpacity
                         style={styles.replyBtn}
                         onPress={() => setShowReplyBox(true)}
@@ -2069,39 +2174,58 @@ export default function BouquetView() {
                         <Text style={styles.replyBtnText}>{t('bouquetView.sendReply')}</Text>
                       </TouchableOpacity>
                     )}
-                    {showReplyBox && (
-                      <View style={styles.replyBox}>
-                        <View style={styles.replyInputWrapper}>
-                          <TextInput
-                            style={styles.replyInput}
-                            value={replyMessage}
-                            onChangeText={setReplyMessage}
-                            placeholder={t('bouquetView.writeReplyHere')}
-                            maxLength={500}
-                            multiline
-                            numberOfLines={4}
-                          />
-                          <Text style={styles.charCountInside}>{replyMessage.length}/500</Text>
-                        </View>
-                        <View style={styles.replyInputFooter}>
-                          <View style={styles.replyBtns}>
-                            <TouchableOpacity
-                              style={styles.cancelBtn}
-                              onPress={() => { setShowReplyBox(false); setReplyMessage(''); }}
+                    <Modal
+                      visible={showReplyBox}
+                      transparent={true}
+                      animationType="fade"
+                      onRequestClose={() => { if (!submittingReply) setShowReplyBox(false); }}
+                    >
+                      <KeyboardAvoidingView 
+                        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                        style={{ flex: 1, justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)', padding: 20 }}
+                      >
+                        <View style={{ backgroundColor: '#fff', borderRadius: 16, padding: 24, shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.1, shadowRadius: 20, elevation: 5 }}>
+                          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                            <Text style={{ fontSize: 18, fontFamily: 'PlayfairDisplay-Bold', color: '#333' }}>{t('bouquetView.sendReply')}</Text>
+                            <TouchableOpacity 
+                              onPress={() => { if (!submittingReply) { setShowReplyBox(false); setReplyMessage(''); } }}
+                              disabled={submittingReply}
+                              style={submittingReply && { opacity: 0.5 }}
                             >
-                              <Text style={styles.cancelBtnText}>{t('common.cancel')}</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              style={[styles.sendBtn, !replyMessage.trim() && styles.sendBtnDisabled]}
-                              onPress={handleReplySubmit}
-                              disabled={!replyMessage.trim()}
-                            >
-                              <Text style={styles.sendBtnText}>{t('feedback.send')}</Text>
+                              <Feather name="x" size={24} color={submittingReply ? "#ccc" : "#666"} />
                             </TouchableOpacity>
                           </View>
+                          
+                          <View style={styles.replyInputWrapper}>
+                            <TextInput
+                              style={[styles.replyInput, { minHeight: 140, backgroundColor: th.surface || '#f8f9fa', borderColor: th.border || '#e9ecef', fontSize: 16, color: th.text }]}
+                              value={replyMessage}
+                              onChangeText={setReplyMessage}
+                              placeholder={t('bouquetView.writeReplyHere')}
+                              placeholderTextColor={th.textMuted || "#adb5bd"}
+                              maxLength={500}
+                              multiline
+                              numberOfLines={5}
+                              autoFocus
+                              editable={!submittingReply}
+                            />
+                            <Text style={styles.charCountInside}>{replyMessage.length}/500</Text>
+                          </View>
+                          
+                          <TouchableOpacity
+                            style={[{ marginTop: 20, backgroundColor: '#7A5C58', paddingVertical: 14, borderRadius: 12, alignItems: 'center' }, (!replyMessage.trim() || submittingReply) && { opacity: 0.5 }]}
+                            onPress={handleReplySubmit}
+                            disabled={!replyMessage.trim() || submittingReply}
+                          >
+                            {submittingReply ? (
+                              <ActivityIndicator color="#fff" size="small" />
+                            ) : (
+                              <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600' }}>{t('bouquetView.sendReply')}</Text>
+                            )}
+                          </TouchableOpacity>
                         </View>
-                      </View>
-                    )}
+                      </KeyboardAvoidingView>
+                    </Modal>
                   </>
                   )
                 )}
@@ -2128,6 +2252,11 @@ export default function BouquetView() {
                       videoId={bouquetData.song.id}
                       onReady={handleYouTubeReady}
                       onChangeState={handleYouTubeStateChange}
+                      forceAndroidAutoplay={Platform.OS === 'android'}
+                      webViewProps={{
+                        mediaPlaybackRequiresUserAction: false,
+                        androidLayerType: 'hardware',
+                      }}
                       initialPlayerParams={{
                         controls: true,
                         rel: false,
@@ -2325,7 +2454,7 @@ export default function BouquetView() {
         visible={!!selectedFlowerInfo}
         transparent
         animationType="none"
-        onRequestClose={closeFlowerInfoModal}
+        onRequestClose={() => setSelectedFlowerInfo(null)}
       >
         <View style={StyleSheet.absoluteFill}>
           {/* Overlay */}
@@ -2333,11 +2462,12 @@ export default function BouquetView() {
             pointerEvents={selectedFlowerInfo ? 'auto' : 'none'}
             style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.55)', opacity: flowerInfoOverlay }]}
           >
-            <TouchableOpacity style={{ flex: 1 }} activeOpacity={1} onPress={closeFlowerInfoModal} />
+            <TouchableOpacity style={{ flex: 1 }} activeOpacity={1} onPress={() => setSelectedFlowerInfo(null)} />
           </Animated.View>
 
           {/* Sheet */}
           <Animated.View
+            pointerEvents={flowerInfoInteractive ? 'auto' : 'none'}
             style={[
               styles.modalCard,
               {
@@ -2347,13 +2477,11 @@ export default function BouquetView() {
                 transform: [{ translateY: Animated.add(flowerInfoSlide, flowerInfoPanY) }],
               },
             ]}
-            {...flowerInfoPanResponder.panHandlers}
+            {...flowerInfoPanHandlers}
           >
             {/* Pull handle */}
-            <View style={{ width: 40, height: 4, borderRadius: 2, backgroundColor: rawTheme.border, alignSelf: 'center', marginBottom: 16 }} />
-
-            <TouchableOpacity style={styles.modalClose} onPress={closeFlowerInfoModal}>
-              <Feather name="x" size={16} color={rawTheme.text} />
+            <TouchableOpacity activeOpacity={1} style={{ alignSelf: 'center', paddingTop: 10, paddingBottom: 6, marginBottom: 10, marginTop: -10 }}>
+              <View style={{ width: 40, height: 4, borderRadius: 2, backgroundColor: rawTheme.border }} />
             </TouchableOpacity>
 
             {selectedFlowerInfo && (
@@ -2379,27 +2507,35 @@ export default function BouquetView() {
           </Animated.View>
         </View>
       </Modal>
-      {/* Image Full-Screen Modal */}
+      {/* Image Gallery Full-Screen Modal */}
       <Modal visible={showImageFullScreen} transparent={true} animationType="fade" onRequestClose={() => setShowImageFullScreen(false)}>
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.95)', justifyContent: 'center', alignItems: 'center' }}>
-          <TouchableOpacity 
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.97)', justifyContent: 'center', alignItems: 'center' }}>
+          {/* Close */}
+          <TouchableOpacity
             style={{ position: 'absolute', top: Platform.OS === 'ios' ? 60 : 40, right: 20, zIndex: 10, padding: 10 }}
             onPress={() => setShowImageFullScreen(false)}
           >
             <Feather name="x" size={28} color="#fff" />
           </TouchableOpacity>
-          <TouchableOpacity 
+          {/* Download active image */}
+          <TouchableOpacity
             style={{ position: 'absolute', top: Platform.OS === 'ios' ? 60 : 40, left: 20, zIndex: 10, padding: 10 }}
             onPress={async () => {
               try {
-                if (!bouquetData?.messageImageUrl) return;
-                const { status } = await MediaLibrary.requestPermissionsAsync();
+                const imgUrls = bouquetData?.messageImageUrls?.length
+                  ? bouquetData.messageImageUrls
+                  : bouquetData?.messageImageUrl
+                  ? [bouquetData.messageImageUrl]
+                  : [];
+                const activeUrl = imgUrls[activeGalleryIndex];
+                if (!activeUrl) return;
+                const { status } = await MediaLibrary.requestPermissionsAsync(true);
                 if (status !== 'granted') {
                   Alert.alert(t('bouquetView.permissionRequired') || 'Permission required', 'We need permission to save the image.');
                   return;
                 }
-                const uri = FileSystem.documentDirectory + 'attached_image.jpg';
-                const { uri: downloadedUri } = await FileSystem.downloadAsync(bouquetData.messageImageUrl, uri);
+                const uri = FileSystem.documentDirectory + `attached_image_${activeGalleryIndex}.jpg`;
+                const { uri: downloadedUri } = await FileSystem.downloadAsync(activeUrl, uri);
                 await MediaLibrary.saveToLibraryAsync(downloadedUri);
                 Alert.alert('Success', 'Image saved to gallery.');
               } catch (error) {
@@ -2409,13 +2545,67 @@ export default function BouquetView() {
           >
             <Feather name="download" size={24} color="#fff" />
           </TouchableOpacity>
-          {bouquetData?.messageImageUrl && (
-            <CachedImage 
-               source={{ uri: bouquetData.messageImageUrl }} 
-               style={{ width: SCREEN_WIDTH, height: SCREEN_HEIGHT * 0.8 }} 
-               resizeMode="contain" 
-            />
-          )}
+          {/* Image display */}
+          {(() => {
+            const imgUrls = bouquetData?.messageImageUrls?.length
+              ? bouquetData.messageImageUrls
+              : bouquetData?.messageImageUrl
+              ? [bouquetData.messageImageUrl]
+              : [];
+            const total = imgUrls.length;
+            const activeUrl = imgUrls[activeGalleryIndex];
+            return (
+              <View style={{ width: SCREEN_WIDTH, alignItems: 'center' }}>
+                {activeUrl && (
+                  <CachedImage
+                    source={{ uri: activeUrl }}
+                    style={{ width: SCREEN_WIDTH, height: SCREEN_HEIGHT * 0.75 }}
+                    resizeMode="contain"
+                  />
+                )}
+                {/* Page indicator */}
+                {total > 1 && (
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 16 }}>
+                    <TouchableOpacity
+                      onPress={() => setActiveGalleryIndex(i => Math.max(0, i - 1))}
+                      style={{ padding: 10, opacity: activeGalleryIndex === 0 ? 0.3 : 1 }}
+                    >
+                      <Feather name="chevron-left" size={28} color="#fff" />
+                    </TouchableOpacity>
+                    <Text style={{ color: '#fff', fontSize: 14, fontFamily: 'Manrope-SemiBold', minWidth: 50, textAlign: 'center' }}>
+                      {activeGalleryIndex + 1} / {total}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => setActiveGalleryIndex(i => Math.min(total - 1, i + 1))}
+                      style={{ padding: 10, opacity: activeGalleryIndex === total - 1 ? 0.3 : 1 }}
+                    >
+                      <Feather name="chevron-right" size={28} color="#fff" />
+                    </TouchableOpacity>
+                  </View>
+                )}
+                {/* Thumbnail indicators */}
+                {total > 1 && (
+                  <View style={{ flexDirection: 'row', gap: 10, marginTop: 12 }}>
+                    {imgUrls.map((url, i) => (
+                      <TouchableOpacity key={i} onPress={() => setActiveGalleryIndex(i)}>
+                        <View style={{
+                          width: 48,
+                          height: 48,
+                          borderRadius: 8,
+                          overflow: 'hidden',
+                          borderWidth: 2,
+                          borderColor: i === activeGalleryIndex ? '#fff' : 'transparent',
+                          opacity: i === activeGalleryIndex ? 1 : 0.5,
+                        }}>
+                          <CachedImage source={{ uri: url }} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+                        </View>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                )}
+              </View>
+            );
+          })()}
         </View>
       </Modal>
 
@@ -2427,6 +2617,8 @@ export default function BouquetView() {
         title={t('history.share') || 'Share Bouquet'}
         subtitle={t('share.subtitle') || 'Choose how to share this bouquet'}
         shareText={t('share.defaultText') || 'I made a digital bouquet for you! 🌸'}
+        onShareImage={handleShareImage}
+        bouquetData={bouquetData}
       />
 
 
@@ -2518,11 +2710,11 @@ export default function BouquetView() {
             style={styles.overlayCloseBtn} 
             onPress={() => {
               if (shouldGoToHomeOnClose) {
-                navigation.navigate('Home' as never);
+                navigation.navigate('MainTabs' as never);
               } else if (navigation.canGoBack()) {
                 navigation.goBack();
               } else {
-                navigation.navigate('Home' as never);
+                navigation.navigate('MainTabs' as never);
               }
             }}
           >
@@ -2545,7 +2737,7 @@ export default function BouquetView() {
       )}
 
       {showScratchAnimation && (
-        <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
+        <View style={[StyleSheet.absoluteFillObject, { zIndex: 9999, elevation: 9999 }]} pointerEvents="none">
           <LottieView
             source={{ uri: 'https://raw.githubusercontent.com/mayank-icu/digibouquet-assets/main/animations/scratch.json' }}
             autoPlay

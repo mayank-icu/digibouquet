@@ -109,3 +109,64 @@ export async function uploadAudio(uri, folder = 'bouquet-audio') {
   const json = await res.json();
   return { url: json.secure_url, publicId: json.public_id };
 }
+
+/**
+ * Delete an asset from Cloudinary.
+ * @param {string} publicId - Cloudinary public ID
+ * @param {string} resourceType - 'image' | 'video' (video handles audio too)
+ * @returns {Promise<any>}
+ */
+export async function deleteAsset(publicId, resourceType = 'image') {
+  if (!publicId) return;
+  const timestamp = Math.round(Date.now() / 1000);
+  const params = {
+    public_id: publicId,
+    timestamp,
+  };
+  const signature = await getSignature(params);
+
+  const formData = new FormData();
+  formData.append('public_id', publicId);
+  formData.append('api_key', API_KEY);
+  formData.append('timestamp', timestamp);
+  formData.append('signature', signature);
+
+  const res = await fetch(`${UPLOAD_URL}/${resourceType}/destroy`, {
+    method: 'POST',
+    body: formData,
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Asset delete failed: ${err}`);
+  }
+  const json = await res.json();
+  return json;
+}
+
+/**
+ * Extract the Cloudinary public_id from a secure/unsecure URL.
+ * @param {string} url - Cloudinary URL string
+ * @returns {string|null}
+ */
+export function getPublicIdFromUrl(url) {
+  if (!url || typeof url !== 'string') return null;
+  if (!url.includes('res.cloudinary.com')) return null;
+
+  const parts = url.split('/');
+  const uploadIndex = parts.indexOf('upload');
+  if (uploadIndex === -1 || uploadIndex === parts.length - 1) return null;
+
+  let afterUpload = parts.slice(uploadIndex + 1);
+  // If first part starts with 'v' followed by numbers (version tag), skip it
+  if (afterUpload[0] && afterUpload[0].startsWith('v') && !isNaN(afterUpload[0].substring(1))) {
+    afterUpload = afterUpload.slice(1);
+  }
+
+  const pathWithExtension = afterUpload.join('/');
+  const dotIndex = pathWithExtension.lastIndexOf('.');
+  if (dotIndex !== -1) {
+    return pathWithExtension.substring(0, dotIndex);
+  }
+  return pathWithExtension;
+}
+

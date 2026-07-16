@@ -16,7 +16,7 @@ const CREAM = '#FAF7F2';
 const DARK = '#5C4844';
 const WHITE = '#fff';
 
-export default function ProActivationScreen({ navigation }) {
+export default function ProActivationScreen({ navigation, route }) {
   const insets = useSafeAreaInsets();
   const { theme: t, isDark } = useTheme();
   const { t: tr } = useLanguage();
@@ -52,7 +52,11 @@ export default function ProActivationScreen({ navigation }) {
   };
 
   const handleContinue = () => {
-    navigation.replace('Home');
+    if (route.params?.fromScreen === 'CreateBouquet') {
+      navigation.navigate('CreateBouquet');
+    } else {
+      navigation.replace('MainTabs');
+    }
   };
 
   return (
@@ -121,8 +125,8 @@ export default function ProActivationScreen({ navigation }) {
       </Animated.View>
 
       {/* Animation Overlay */}
-      <Modal visible={showAnimation} transparent animationType="fade">
-        <View style={styles.animationOverlay}>
+      {showAnimation && (
+        <View style={[StyleSheet.absoluteFill, styles.animationOverlay]} pointerEvents="none">
           <LottieView
             ref={lottieRef}
             source={{ uri: 'https://raw.githubusercontent.com/mayank-icu/digibouquet-assets/main/animations/pro-activate.json' }}
@@ -132,7 +136,7 @@ export default function ProActivationScreen({ navigation }) {
             onAnimationFinish={handleAnimationFinish}
           />
         </View>
-      </Modal>
+      )}
     </View>
   );
 }
@@ -235,10 +239,9 @@ const styles = StyleSheet.create({
     color: WHITE,
   },
   animationOverlay: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    zIndex: 999,
   },
   overlayAnimation: {
     width: 300,

@@ -861,7 +861,7 @@ export default function ProfileScreen({ navigation }) {
                     style={[styles.sheetBtn, { backgroundColor: tTheme.surface2 || '#F5F5F5' }]} 
                     onPress={handleDisconnectEmail}
                   >
-                    <Text style={[styles.sheetBtnText, { color: RED }]}>Disconnect Email Login</Text>
+                    <Text style={[styles.sheetBtnText, { color: RED }]}>{t('profile.disconnectEmail') || 'Disconnect Email Login'}</Text>
                   </HapticButton>
                 </View>
               )}

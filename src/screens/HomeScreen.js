@@ -3,7 +3,7 @@ import { HapticButton } from '../components/HapticButton';
 import React, { useEffect, useState, useCallback, useRef, forwardRef, useImperativeHandle, memo } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet, StatusBar, Modal, Animated, Platform, Linking, TextInput,
-  Dimensions, PanResponder, BackHandler, InteractionManager, LayoutAnimation
+  Dimensions, PanResponder, BackHandler, InteractionManager, LayoutAnimation, DeviceEventEmitter
 } from 'react-native';
 // ─── GOLDEN BOUQUET FEATURE: imports ─────────────────────────────────────────
 import { LinearGradient } from 'expo-linear-gradient';
@@ -137,6 +137,7 @@ const HamburgerMenu = memo(forwardRef(({ navigation, currentUser, translate, get
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const closeMenu = () => {
+    DeviceEventEmitter.emit('toggleMenu', false);
     Animated.parallel([
       Animated.timing(slideAnim, { toValue: -300, duration: 180, useNativeDriver: true }),
       Animated.timing(fadeAnim, { toValue: 0, duration: 180, useNativeDriver: true }),
@@ -146,6 +147,7 @@ const HamburgerMenu = memo(forwardRef(({ navigation, currentUser, translate, get
   };
 
   const openMenu = () => {
+    DeviceEventEmitter.emit('toggleMenu', true);
     setMenuVisible(true);
     Animated.parallel([
       Animated.timing(slideAnim, { toValue: 0, duration: 200, useNativeDriver: true }),
@@ -171,6 +173,7 @@ const HamburgerMenu = memo(forwardRef(({ navigation, currentUser, translate, get
   }, [menuVisible]);
 
   const navTo = (screen, params = {}) => {
+    DeviceEventEmitter.emit('toggleMenu', false);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     navigation.navigate(screen, params);
     Animated.parallel([
@@ -183,11 +186,27 @@ const HamburgerMenu = memo(forwardRef(({ navigation, currentUser, translate, get
 
   const handleRateUs = async () => {
     closeMenu();
-    const storeUrl = 'https://play.google.com/store/apps/details?id=com.egreet.digibouquet';
-    if (Platform.OS !== 'web' && await StoreReview.isAvailableAsync()) {
-      await StoreReview.requestReview();
-    } else {
-      Linking.openURL(storeUrl);
+    let success = false;
+    try {
+      if (Platform.OS !== 'web' && await StoreReview.isAvailableAsync() && await StoreReview.hasAction()) {
+        await StoreReview.requestReview();
+        success = true;
+      }
+    } catch (e) {
+      console.warn('In-app review failed to open from menu:', e);
+    }
+    if (!success) {
+      const marketUrl = 'market://details?id=com.digibouquet.app';
+      const webUrl = 'https://play.google.com/store/apps/details?id=com.digibouquet.app';
+      try {
+        await Linking.openURL(marketUrl);
+      } catch (err) {
+        try {
+          await Linking.openURL(webUrl);
+        } catch (webErr) {
+          console.error('Failed to open store URL from menu:', webErr);
+        }
+      }
     }
   };
 
@@ -196,19 +215,20 @@ const HamburgerMenu = memo(forwardRef(({ navigation, currentUser, translate, get
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
-  if (!menuVisible && slideAnim._value === -300) return null;
-
   return (
     <View 
       style={[StyleSheet.absoluteFill, { zIndex: 9999, elevation: 9999 }]} 
-      pointerEvents={menuVisible ? 'auto' : 'none'}
+      pointerEvents={menuVisible ? 'box-none' : 'none'}
     >
-      <View style={styles.menuOverlay}>
-        <Animated.View style={[styles.menuCloseArea, { opacity: fadeAnim, backgroundColor: 'rgba(0,0,0,0.4)' }]}>
+      <View style={styles.menuOverlay} pointerEvents="box-none">
+        <Animated.View style={[styles.menuCloseArea, { opacity: fadeAnim, backgroundColor: 'rgba(0,0,0,0.4)' }]} pointerEvents={menuVisible ? 'auto' : 'none'}>
           <HapticButton style={{ flex: 1 }} onPress={closeMenu} activeOpacity={1} />
         </Animated.View>
-        <Animated.View style={[styles.menuContainer, { transform: [{ translateX: slideAnim }], backgroundColor: t.bg }]}>
-          <View style={[styles.menuHeader, { paddingTop: insets.top + 8, borderBottomColor: t.border }]}>
+        <Animated.View 
+          style={[styles.menuContainer, { transform: [{ translateX: slideAnim }], backgroundColor: t.bg }]}
+          pointerEvents={menuVisible ? 'auto' : 'none'}
+        >
+          <View style={[styles.menuHeader, { paddingTop: insets.top + 8, borderBottomColor: t.border }]} pointerEvents="box-none">
             <PremiumImage source={require('./textlogo-oneline.png')} style={styles.menuLogo} resizeMode="contain" />
             <HapticButton onPress={closeMenu}>
               <Feather name="x" size={24} color={t.text} />
@@ -305,6 +325,8 @@ export default function HomeScreen({ navigation }) {
   const { currentUser } = useAuth();
   const showAlert = useCustomAlert();
   const [lottieProgress] = useState(() => new Animated.Value(isDark ? 0.5 : 0));
+  const [showUpdateOverlay, setShowUpdateOverlay] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
 
   const tabTranslateY = useRef(new Animated.Value(0)).current;
   const lastScrollY = useRef(0);
@@ -444,6 +466,56 @@ export default function HomeScreen({ navigation }) {
       }
     });
   }, []);
+
+  useEffect(() => {
+    const checkOverlay = async () => {
+      try {
+        const val = await AsyncStorage.getItem('hasShownNewUpdateOverlay_v1_1');
+        if (val !== 'true') {
+          setTimeout(() => {
+            setShowUpdateOverlay(true);
+          }, 600);
+        }
+      } catch (err) {
+        console.warn('Error checking update overlay status', err);
+      }
+    };
+    checkOverlay();
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    const checkConnection = async () => {
+      try {
+        const response = await fetch('https://clients3.google.com/generate_204', {
+          method: 'GET',
+          headers: { 'Cache-Control': 'no-cache' },
+          // @ts-ignore
+          timeout: 4000
+        });
+        const online = response.status === 204 || response.ok;
+        if (active) {
+          if (online !== isOnline) {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            setIsOnline(online);
+          }
+        }
+      } catch (err) {
+        if (active && isOnline) {
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+          setIsOnline(false);
+        }
+      }
+    };
+
+    checkConnection();
+    const interval = setInterval(checkConnection, 10000);
+
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
+  }, [isOnline]);
 
   useEffect(() => { 
     const task = InteractionManager.runAfterInteractions(() => {
@@ -642,6 +714,15 @@ export default function HomeScreen({ navigation }) {
         </View>
       </View>
 
+      {!isOnline && (
+        <View style={[styles.offlineBanner, { backgroundColor: isDark ? '#4A2A2A' : '#FDE8E8', borderBottomColor: isDark ? '#5E3333' : '#F8D7DA' }]}>
+          <Feather name="wifi-off" size={14} color={isDark ? '#E57373' : '#C0392B'} style={{ marginRight: 8 }} />
+          <Text style={[styles.offlineText, { color: isDark ? '#FFCDD2' : '#C0392B' }]}>
+            No internet connection. Some features may be unavailable.
+          </Text>
+        </View>
+      )}
+
       <Animated.ScrollView
         style={styles.scroll}
         contentContainerStyle={[styles.content, { paddingBottom: 110 }]}
@@ -728,20 +809,27 @@ export default function HomeScreen({ navigation }) {
                       delayLongPress={350}
                       activeOpacity={0.85}
                     >
-                      <View style={[styles.bouquetFlowerCard, { backgroundColor: t.bg, borderColor: t.border }]}>
-                        {flowerIds.length === 0 ? (
-                          <MaterialCommunityIcons name="flower-outline" size={22} color={t.border} />
-                        ) : (
-                      flowerIds.map((fid, i) => (
-                        <PremiumImage
-                          key={i}
-                          source={getFlowerImg(fid)}
-                          style={[styles.bouquetRowFlowerImg, { marginLeft: i > 0 ? -8 : 0, zIndex: 3 - i }]}
-                          resizeMode="contain"
-                        />
-                      ))
-                    )}
-                  </View>
+                      <View style={{ position: 'relative' }}>
+                        <View style={[styles.bouquetFlowerCard, { backgroundColor: t.bg, borderColor: t.border }]}>
+                          {flowerIds.length === 0 ? (
+                            <MaterialCommunityIcons name="flower-outline" size={22} color={t.border} />
+                          ) : (
+                            flowerIds.map((fid, i) => (
+                              <PremiumImage
+                                key={i}
+                                source={getFlowerImg(fid)}
+                                style={[styles.bouquetRowFlowerImg, { marginLeft: i > 0 ? -8 : 0, zIndex: 3 - i }]}
+                                resizeMode="contain"
+                              />
+                            ))
+                          )}
+                        </View>
+                        {item.isGoldenEdition && (
+                          <View style={styles.limitedBadgeHome}>
+                            <Text style={styles.limitedBadgeText}>✦ LIMITED</Text>
+                          </View>
+                        )}
+                      </View>
                   <View style={{ flex: 1 }}>
                     <Text style={[styles.bouquetRowRecipient, { color: t.text }]} numberOfLines={1}>{translate('common.to')} {recipient}</Text>
                     <Text style={[styles.bouquetRowDate, { color: t.textMuted }]}>
@@ -793,8 +881,77 @@ export default function HomeScreen({ navigation }) {
         visible={shareModalVisible}
         url={shareUrl}
         recipientName={shareRecipientName}
+        bouquetData={sheetItem}
         onClose={() => setShareModalVisible(false)}
       />
+
+      {/* What's New Overlay */}
+      <Modal
+        visible={showUpdateOverlay}
+        transparent={true}
+        animationType="fade"
+        statusBarTranslucent={true}
+      >
+        <View style={styles.modalBackdrop}>
+          <View style={[styles.updateModalContainer, { backgroundColor: t.surface, borderColor: t.border }]}>
+            {/* Header stars/glow */}
+            <View style={styles.updateModalHeader}>
+              <View style={[styles.iconWrapper, { backgroundColor: isDark ? 'rgba(196, 151, 143, 0.15)' : 'rgba(122, 92, 88, 0.1)' }]}>
+                <MaterialCommunityIcons name="shimmer" size={32} color={t.brand} />
+              </View>
+              <Text style={[styles.updateModalTitle, { color: t.text }]}>{translate('home.whatsNewTitle') || "What's New"}</Text>
+              <Text style={[styles.updateModalSubtitle, { color: t.textMuted }]}>
+                {translate('home.whatsNewSubtitle') || "We've added some beautiful new ways to connect and spread joy."}
+              </Text>
+            </View>
+
+            {/* Updates list */}
+            <View style={styles.updateItemsList}>
+              {/* Golden Bouquet */}
+              <View style={styles.updateItemRow}>
+                <View style={[styles.itemIconWrapper, { backgroundColor: 'rgba(212, 175, 55, 0.12)' }]}>
+                  <MaterialCommunityIcons name="flower-tulip" size={24} color="#D4AF37" />
+                </View>
+                <View style={styles.itemTextContainer}>
+                  <Text style={[styles.itemTitle, { color: t.text }]}>{translate('home.whatsNewGoldenTitle') || "Golden Bouquet"}</Text>
+                  <Text style={[styles.itemDescription, { color: t.textMuted }]}>
+                    {translate('home.whatsNewGoldenDesc') || "Express ultimate gratitude with our radiant, shimmering premium bouquet style designed for special moments."}
+                  </Text>
+                </View>
+              </View>
+
+              {/* Random Acts of Kindness */}
+              <View style={styles.updateItemRow}>
+                <View style={[styles.itemIconWrapper, { backgroundColor: 'rgba(226, 88, 88, 0.12)' }]}>
+                  <MaterialCommunityIcons name="heart-pulse" size={24} color="#E25858" />
+                </View>
+                <View style={styles.itemTextContainer}>
+                  <Text style={[styles.itemTitle, { color: t.text }]}>{translate('home.whatsNewRaokTitle') || "Random Acts of Kindness"}</Text>
+                  <Text style={[styles.itemDescription, { color: t.textMuted }]}>
+                    {translate('home.whatsNewRaokDesc') || "Send and receive anonymous digital bouquets globally, sharing warmth and positivity with those who need it."}
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+            {/* Sounds Good Button */}
+            <HapticButton
+              style={[styles.soundsGoodBtn, { backgroundColor: t.brand }]}
+              onPress={async () => {
+                try {
+                  await AsyncStorage.setItem('hasShownNewUpdateOverlay_v1_1', 'true');
+                } catch (e) {
+                  console.warn(e);
+                }
+                setShowUpdateOverlay(false);
+              }}
+              activeOpacity={0.9}
+            >
+              <Text style={styles.soundsGoodBtnText}>{translate('home.whatsNewClose') || "Sounds good"}</Text>
+            </HapticButton>
+          </View>
+        </View>
+      </Modal>
 
 
 
@@ -934,6 +1091,22 @@ const styles = StyleSheet.create({
   bouquetRowFlowerImg: { width: 34, height: 34 },
   bouquetRowRecipient: { fontFamily: 'Manrope-SemiBold', fontSize: 14, color: DARK },
   bouquetRowDate: { fontFamily: 'Manrope-Regular', fontSize: 12, color: MUTED, marginTop: 2 },
+  limitedBadgeHome: {
+    position: 'absolute',
+    bottom: 0,
+    width: 72,
+    backgroundColor: '#D4AF37',
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    alignItems: 'center',
+    paddingVertical: 2,
+  },
+  limitedBadgeText: {
+    fontFamily: 'Manrope-Bold',
+    fontSize: 7,
+    color: '#1A1200',
+    letterSpacing: 0.8,
+  },
   // Bottom nav (Floating Card style)
   bottomNav: {
     position: 'absolute',
@@ -1047,6 +1220,107 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
   },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  updateModalContainer: {
+    width: '100%',
+    maxWidth: 360,
+    borderRadius: 28,
+    borderWidth: 1,
+    padding: 24,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.15,
+    shadowRadius: 15,
+    elevation: 8,
+  },
+  updateModalHeader: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  iconWrapper: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+  },
+  updateModalTitle: {
+    fontFamily: 'Manrope-Bold',
+    fontSize: 22,
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  updateModalSubtitle: {
+    fontFamily: 'Manrope-Regular',
+    fontSize: 14,
+    textAlign: 'center',
+    lineHeight: 20,
+    paddingHorizontal: 8,
+  },
+  updateItemsList: {
+    width: '100%',
+    gap: 20,
+    marginBottom: 28,
+  },
+  updateItemRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 16,
+  },
+  itemIconWrapper: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  itemTextContainer: {
+    flex: 1,
+  },
+  itemTitle: {
+    fontFamily: 'Manrope-Bold',
+    fontSize: 16,
+    marginBottom: 4,
+  },
+  itemDescription: {
+    fontFamily: 'Manrope-Regular',
+    fontSize: 13,
+    lineHeight: 18,
+  },
+  soundsGoodBtn: {
+    width: '100%',
+    paddingVertical: 14,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  soundsGoodBtnText: {
+    fontFamily: 'Manrope-Bold',
+    fontSize: 16,
+    color: '#FAF7F2',
+  },
+  offlineBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    width: '100%',
+  },
+  offlineText: {
+    fontFamily: 'Manrope-Medium',
+    fontSize: 13,
+    textAlign: 'center',
+  },
 });
 
 // ─── GOLDEN BOUQUET FEATURE ───────────────────────────────────────────────────
@@ -1057,6 +1331,7 @@ const GOLD_CREAM  = '#FBF3DC';
 const GOLD_BORDER = '#D4AF37';
 
 function GoldenBouquetBanner({ navigation }) {
+  const { t: translate } = useLanguage();
   const shimmerAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim   = useRef(new Animated.Value(1)).current;
   const shineAnim   = useRef(new Animated.Value(-30)).current;
@@ -1117,11 +1392,11 @@ function GoldenBouquetBanner({ navigation }) {
                   transform: [{ translateX: shineAnim }, { skewX: '-20deg' }],
                 }}
               />
-              <Text style={goldenStyles.pillText}>LIMITED EDITION</Text>
+              <Text style={goldenStyles.pillText}>{translate('home.limitedEdition') || 'LIMITED EDITION'}</Text>
             </View>
           </View>
-          <Text style={goldenStyles.title}>Golden Bouquet</Text>
-          <Text style={goldenStyles.subtitle}>Tap to unlock or enter referral code</Text>
+          <Text style={goldenStyles.title}>{translate('home.goldenBouquet') || 'Golden Bouquet'}</Text>
+          <Text style={goldenStyles.subtitle}>{translate('home.goldenBouquetDesc') || 'Tap to unlock or enter referral code'}</Text>
         </View>
 
         <View style={goldenStyles.arrowWrap}>
@@ -1210,14 +1485,14 @@ function ActionCardsRow({ navigation, currentUser, translate, t, showAlert }) {
 
   const handleRaokPress = () => {
     if (!currentUser) {
-      showAlert('Login Required', 'You must be logged in to send a Random Act of Kindness.', [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Login', onPress: () => navigation.navigate('Login') }
+      showAlert(translate('home.loginRequired') || 'Login Required', translate('home.loginToSpreadKindness') || 'You must be logged in to send a Random Act of Kindness.', [
+        { text: translate('home.cancel') || 'Cancel', style: 'cancel' },
+        { text: translate('home.login') || 'Login', onPress: () => navigation.navigate('Login') }
       ]);
       return;
     }
     if (bannedUntil) {
-      showAlert('Feature Disabled', 'Feature temporarily disabled due to safety violations.');
+      showAlert(translate('home.featureDisabled') || 'Feature Disabled', translate('home.safetyViolationDesc') || 'Feature temporarily disabled due to safety violations.');
     } else {
       navigation.navigate('CreateBouquet', { randomActMode: true, fadeUp: true });
     }
@@ -1235,7 +1510,7 @@ function ActionCardsRow({ navigation, currentUser, translate, t, showAlert }) {
             <MaterialCommunityIcons name="flower-tulip-outline" size={22} color={t.brand} />
           </View>
         </View>
-        <Text style={[styles.createCardTitle, { color: t.text, fontSize: 16 }]} numberOfLines={1}>Create Bouquet</Text>
+        <Text style={[styles.createCardTitle, { color: t.text, fontSize: 16 }]} numberOfLines={1}>{translate('home.createBouquet') || 'Create Bouquet'}</Text>
         <Text style={[styles.createCardSub, { color: t.textMuted, fontSize: 12, marginTop: 4 }]} numberOfLines={2}>
           {translate('home.createNewDesc')}
         </Text>
@@ -1251,9 +1526,9 @@ function ActionCardsRow({ navigation, currentUser, translate, t, showAlert }) {
             <MaterialCommunityIcons name="heart-outline" size={22} color={t.brand} />
           </View>
         </View>
-        <Text style={[styles.createCardTitle, { color: t.text, fontSize: 16 }]} numberOfLines={1}>Spread Kindness</Text>
+        <Text style={[styles.createCardTitle, { color: t.text, fontSize: 16 }]} numberOfLines={1}>{translate('home.spreadKindness') || 'Spread Kindness'}</Text>
         <Text style={[styles.createCardSub, { color: t.textMuted, fontSize: 12, marginTop: 4 }]} numberOfLines={2}>
-          {bannedUntil ? 'Temporarily disabled' : 'Send a mystery bouquet to brighten a stranger\'s day.'}
+          {bannedUntil ? (translate('home.temporarilyDisabled') || 'Temporarily disabled') : (translate('home.spreadKindnessDesc') || 'Send a mystery bouquet to brighten a stranger\'s day.')}
         </Text>
       </HapticButton>
     </View>

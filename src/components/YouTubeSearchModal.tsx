@@ -498,6 +498,10 @@ function YouTubeSearchModal({ visible, onClose, onSongSelect, currentSong }: Pro
                   videoId={selected.id}
                   onReady={handleYouTubeReady}
                   onChangeState={handleYouTubeStateChange}
+                  forceAndroidAutoplay={Platform.OS === 'android'}
+                  webViewProps={{
+                    mediaPlaybackRequiresUserAction: false,
+                  }}
                   initialPlayerParams={{ controls: true, rel: false }}
                 />
                 {youtubeReady && youtubeDuration > 0 && (

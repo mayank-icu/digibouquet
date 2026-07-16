@@ -233,7 +233,7 @@ export default function BirthFlowerWallpaperScreen() {
   const handleDownload = async () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     try {
-      const { status } = await MediaLibrary.requestPermissionsAsync();
+      const { status } = await MediaLibrary.requestPermissionsAsync(true);
       if (status !== 'granted') {
         Toast.show({ type: 'error', text1: 'Permission to access photos denied.' });
         return;

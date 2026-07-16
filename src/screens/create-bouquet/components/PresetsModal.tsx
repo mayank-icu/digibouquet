@@ -1,36 +1,39 @@
-import React, { useMemo, useState, memo, useRef } from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
-import Modal from 'react-native-modal';
+import React, { useMemo, useState, memo, useRef, forwardRef, useImperativeHandle, useCallback } from 'react';
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, Modal, Animated } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { getTranslatedPreset, PRESETS } from '../../../utils/bouquetData';
 import { Search as SearchIcon } from 'lucide-react-native';
 import { v4 as uuidv4 } from 'uuid';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSwipeToClose } from '../../../hooks/useSwipeToClose';
 
-export const PresetsModal = memo(({ 
-  visible, 
-  onClose, 
+export const PresetsModal = memo(forwardRef(({ 
   locale, 
   themeColors, 
   t, 
   onSelectPreset,
   background,
   generateRandomPosition
-}) => {
+}, ref) => {
+  const [visible, setVisible] = useState(false);
+  const onClose = useCallback(() => setVisible(false), []);
+
+  useImperativeHandle(ref, () => ({
+    open: () => { setVisible(true); setPresetSearchQuery(''); },
+    close: onClose
+  }));
   const insets = useSafeAreaInsets();
   const [presetSearchQuery, setPresetSearchQuery] = useState('');
-  const [scrollOffset, setScrollOffset] = useState(0);
   const flashListRef = useRef(null);
 
-  const handleOnScroll = (event) => {
-    setScrollOffset(event.nativeEvent.contentOffset.y);
-  };
-
-  const handleScrollTo = (p) => {
-    if (flashListRef.current) {
-      flashListRef.current.scrollToOffset({ offset: p, animated: true });
-    }
-  };
+  const {
+    slideAnim,
+    panY,
+    overlayOpacity,
+    panHandlers,
+    onScroll,
+    isInteractive
+  } = useSwipeToClose(visible, onClose);
 
   const translatedPresets = useMemo(() => {
     return Object.keys(PRESETS).reduce((acc, key) => {
@@ -59,39 +62,37 @@ export const PresetsModal = memo(({
     </TouchableOpacity>
   ), [handlePresetSelect, themeColors]);
 
-  if (!visible) return null;
-
   return (
-    <Modal
-      isVisible={visible}
-      onSwipeComplete={onClose}
-      swipeDirection="down"
-      propagateSwipe={true}
-      scrollTo={handleScrollTo}
-      scrollOffset={scrollOffset}
-      scrollOffsetMax={100} // Trigger swipe down when near top
-      onBackdropPress={onClose}
-      style={{ margin: 0, justifyContent: 'flex-end' }}
-      animationIn="slideInUp"
-      animationOut="slideOutDown"
-      backdropOpacity={0.5}
-      useNativeDriverForBackdrop
-    >
-      <View
-        style={[
-          styles.presetsContainer,
-          {
-            backgroundColor: themeColors.cardBg,
-            paddingBottom: insets.bottom + 16,
-          },
-        ]}
-      >
-        {/* Drag handle */}
-        <TouchableOpacity activeOpacity={1} style={{ alignItems: 'center', paddingTop: 10, paddingBottom: 6, marginTop: -8 }}>
-          <View style={{ width: 36, height: 4, borderRadius: 2, backgroundColor: themeColors.border }} />
-        </TouchableOpacity>
+    <Modal visible={visible} transparent animationType="none" onRequestClose={onClose}>
+      <View style={StyleSheet.absoluteFill}>
+        {/* Dim overlay */}
+        <Animated.View
+          pointerEvents={visible ? 'auto' : 'none'}
+          style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.5)', opacity: overlayOpacity }]}
+        >
+          <TouchableOpacity style={{ flex: 1 }} activeOpacity={1} onPress={onClose} />
+        </Animated.View>
 
-        <View style={[styles.searchBar, { backgroundColor: themeColors.inputBg, borderColor: themeColors.border }]}>
+        {/* Sheet */}
+        <Animated.View
+          pointerEvents={isInteractive ? 'auto' : 'none'}
+          style={[
+            styles.presetsContainer,
+            {
+              position: 'absolute', left: 0, right: 0, bottom: 0,
+              backgroundColor: themeColors.cardBg,
+              paddingBottom: insets.bottom + 16,
+              transform: [{ translateY: Animated.add(slideAnim, panY) }],
+            },
+          ]}
+          {...panHandlers}
+        >
+          {/* Drag handle */}
+          <TouchableOpacity activeOpacity={1} style={{ alignItems: 'center', paddingTop: 10, paddingBottom: 6, marginTop: -8 }}>
+            <View style={{ width: 36, height: 4, borderRadius: 2, backgroundColor: themeColors.border }} />
+          </TouchableOpacity>
+
+          <View style={[styles.searchBar, { backgroundColor: themeColors.inputBg, borderColor: themeColors.border }]}>
             <SearchIcon size={15} color={themeColors.textMuted} style={{ marginRight: 8 }} />
             <TextInput 
               style={{ flex: 1, fontSize: 14, paddingVertical: 14, color: themeColors.text }} 
@@ -101,27 +102,28 @@ export const PresetsModal = memo(({
               onChangeText={setPresetSearchQuery} 
             />
           </View>
-          
-        <View style={{ flex: 1, minHeight: 200 }}>
-          <FlashList
-            ref={flashListRef}
-            data={filteredData}
-            keyExtractor={([key]) => key}
-            numColumns={2}
-            estimatedItemSize={60}
-            keyboardShouldPersistTaps="handled"
-            onScroll={handleOnScroll}
-            scrollEventThrottle={16}
-            bounces={false}
-            showsVerticalScrollIndicator={false}
-            renderItem={renderItem}
-            contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 4 }}
-          />
-        </View>
+            
+          <View style={{ flex: 1, minHeight: 200 }}>
+            <FlashList
+              ref={flashListRef}
+              data={filteredData}
+              keyExtractor={([key]) => key}
+              numColumns={2}
+              estimatedItemSize={60}
+              keyboardShouldPersistTaps="handled"
+              onScroll={onScroll}
+              scrollEventThrottle={16}
+              bounces={false}
+              showsVerticalScrollIndicator={false}
+              renderItem={renderItem}
+              contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 4 }}
+            />
+          </View>
+        </Animated.View>
       </View>
     </Modal>
   );
-});
+}));
 
 const styles = StyleSheet.create({
   presetsContainer: {

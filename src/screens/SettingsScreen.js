@@ -15,12 +15,14 @@ import { useSwipeNavigation } from '../hooks/useSwipeNavigation';
 import { useAccessibility } from '../contexts/AccessibilityContext';
 import { useAuth } from '../contexts/AuthContext';
 
-import { collection, query, where, getDocs, doc, writeBatch } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, writeBatch, updateDoc, setDoc } from 'firebase/firestore';
 import { deleteUser, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
 import { db } from '../firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from '../utils/haptics';
 import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
+import { scheduleHolidayNotifications } from '../utils/notifications';
 
 const BRAND = '#7A5C58';
 const CREAM = '#FAF7F2';
@@ -262,7 +264,13 @@ export default function SettingsScreen({ navigation }) {
           });
           return;
         }
-        const tokenData = await Notifications.getExpoPushTokenAsync();
+        // SDK 52+: projectId must be passed explicitly for production builds
+        const projectId =
+          Constants?.expoConfig?.extra?.eas?.projectId ??
+          Constants?.easConfig?.projectId;
+        const tokenData = await Notifications.getExpoPushTokenAsync(
+          projectId ? { projectId } : undefined
+        );
         expoPushToken = tokenData.data;
       } catch (e) {
         console.warn('Failed to request notification permission', e);
@@ -274,6 +282,14 @@ export default function SettingsScreen({ navigation }) {
 
     if (currentUser) {
       try {
+        // Save / clear token in user's own doc so RAOK Cloud Function can find it
+        await setDoc(
+          doc(db, 'users', currentUser.uid),
+          { expoPushToken: expoPushToken ?? null },
+          { merge: true }
+        );
+
+        // Also update all existing bouquet-cards for reply notifications
         const bouquetSnap = await getDocs(query(collection(db, 'bouquet-cards'), where('userId', '==', currentUser.uid)));
         if (!bouquetSnap.empty) {
           const batch = writeBatch(db);
@@ -288,6 +304,13 @@ export default function SettingsScreen({ navigation }) {
       } catch (e) {
         console.error('Error syncing notification settings:', e);
       }
+    }
+
+    // Reschedule holiday notifications now that the user has opted in
+    if (newValue) {
+      // Clear the cached schedule key so notifications are re-scheduled immediately
+      await AsyncStorage.removeItem('holiday_notifications_scheduled_key');
+      scheduleHolidayNotifications();
     }
 
     Toast.show({

@@ -137,13 +137,20 @@ function BouquetCard({ item, onPress, onLongPress }) {
       delayLongPress={350}
       activeOpacity={0.85}
     >
-      <View style={[styles.cardFlowerCard, { backgroundColor: t.bg, borderColor: t.border }]}>
-        {flowerIds.length === 0
-          ? <MaterialCommunityIcons name="flower-outline" size={26} color={t.border} />
-          : flowerIds.map((fid, i) => (
-              <PremiumImage key={i} source={getFlowerImg(fid)} style={[styles.cardFlowerImg, { zIndex: 3 - i, marginLeft: i > 0 ? -8 : 0 }]} resizeMode="contain" />
-            ))
-        }
+      <View style={{ position: 'relative' }}>
+        <View style={[styles.cardFlowerCard, { backgroundColor: t.bg, borderColor: t.border }]}>
+          {flowerIds.length === 0
+            ? <MaterialCommunityIcons name="flower-outline" size={26} color={t.border} />
+            : flowerIds.map((fid, i) => (
+                <PremiumImage key={i} source={getFlowerImg(fid)} style={[styles.cardFlowerImg, { zIndex: 3 - i, marginLeft: i > 0 ? -8 : 0 }]} resizeMode="contain" />
+              ))
+          }
+        </View>
+        {item.isGoldenEdition && (
+          <View style={styles.limitedBadge}>
+            <Text style={styles.limitedBadgeText}>✦ LIMITED</Text>
+          </View>
+        )}
       </View>
       <View style={styles.cardInfo}>
         <Text style={[styles.cardRecipient, { color: t.text }]} numberOfLines={1}>{tr('common.to')} {recipient}</Text>
@@ -530,13 +537,20 @@ export default function HistoryScreen({ navigation, route }) {
                 const flowerIds = getFlowerIds(item);
                 return (
                   <HapticButton style={[styles.card, { backgroundColor: t.cardBg }]} onPress={() => openSheet(item, false)} onLongPress={() => openSheet(item, false)} delayLongPress={350} activeOpacity={0.85}>
-                    <View style={[styles.cardFlowerCard, { backgroundColor: t.bg, borderColor: t.border }]}>
-                      {flowerIds.length === 0
-                        ? <MaterialCommunityIcons name="flower-outline" size={26} color={t.border} />
-                        : flowerIds.map((fid, i) => (
-                            <PremiumImage key={i} source={getFlowerImg(fid)} style={[styles.cardFlowerImg, { zIndex: 3 - i, marginLeft: i > 0 ? -8 : 0 }]} resizeMode="contain" />
-                          ))
-                      }
+                    <View style={{ position: 'relative' }}>
+                      <View style={[styles.cardFlowerCard, { backgroundColor: t.bg, borderColor: t.border }]}>
+                        {flowerIds.length === 0
+                          ? <MaterialCommunityIcons name="flower-outline" size={26} color={t.border} />
+                          : flowerIds.map((fid, i) => (
+                              <PremiumImage key={i} source={getFlowerImg(fid)} style={[styles.cardFlowerImg, { zIndex: 3 - i, marginLeft: i > 0 ? -8 : 0 }]} resizeMode="contain" />
+                            ))
+                        }
+                      </View>
+                      {item.isGoldenEdition && (
+                        <View style={styles.limitedBadge}>
+                          <Text style={styles.limitedBadgeText}>✦ LIMITED</Text>
+                        </View>
+                      )}
                     </View>
                     <View style={styles.cardInfo}>
                       <Text style={[styles.cardRecipient, { color: t.text }]} numberOfLines={1}>{tr('common.from')} {item.senderName || tr('history.someoneSpecial')}</Text>
@@ -570,6 +584,7 @@ export default function HistoryScreen({ navigation, route }) {
         visible={shareModalVisible}
         url={shareUrl}
         recipientName={shareRecipientName}
+        bouquetData={sheetItem}
         onClose={() => setShareModalVisible(false)}
       />
     </View>
@@ -604,6 +619,22 @@ const styles = StyleSheet.create({
   cardRecipient: { fontFamily: 'Manrope-Bold', fontSize: 15, color: DARK, marginBottom: 2 },
   cardDate: { fontFamily: 'Manrope-Regular', fontSize: 12, color: MUTED, marginBottom: 2 },
   cardLink: { fontFamily: 'Manrope-Regular', fontSize: 11, color: BRAND_DARK },
+  limitedBadge: {
+    position: 'absolute',
+    bottom: 0,
+    width: 72,
+    backgroundColor: '#D4AF37',
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    alignItems: 'center',
+    paddingVertical: 2,
+  },
+  limitedBadgeText: {
+    fontFamily: 'Manrope-Bold',
+    fontSize: 7,
+    color: '#1A1200',
+    letterSpacing: 0.8,
+  },
   empty: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 16, padding: 40, marginTop: -140 },
   emptySvg: { transform: [{ translateY: -15 }] },
   emptyTitle: { fontFamily: 'Manrope-SemiBold', fontSize: 16, color: DARK },

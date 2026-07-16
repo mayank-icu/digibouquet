@@ -31,7 +31,11 @@ export default function ForgotPasswordScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   const handleBack = () => {
-    navigation.replace('MainTabs');
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.replace('MainTabs');
+    }
   };
 
   const swipeHandlers = useSwipeNavigation({

@@ -20,6 +20,7 @@ import { searchBouquets, applyClientFilters, seedAllShopData } from '../utils/se
 import { SkeletonBar } from './HomeSkeletonScreen';
 import { FLORIST_DIRECTORY } from '../data/floristDirectory';
 import { CachedImage } from '../components/CachedImage';
+import LottieView from 'lottie-react-native';
 const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -217,6 +218,7 @@ function SwipeableBottomSheet({ visible, onClose, children, maxHeight = '90%' })
   const scrollY     = useRef(0);
   const dismissing  = useRef(false);
   const [shouldRender, setShouldRender] = useState(visible);
+  const [isInteractive, setIsInteractive] = useState(false);
 
   const touchStartY = useRef(0);
   const activeGesture = useRef(false);
@@ -230,11 +232,17 @@ function SwipeableBottomSheet({ visible, onClose, children, maxHeight = '90%' })
       overlayAnim.setValue(0);
       setScrollEnabled(true);
       activeGesture.current = false;
+      setIsInteractive(false);
       Animated.parallel([
         Animated.spring(translateY,  { toValue: 0, useNativeDriver: true, bounciness: 4, speed: 14 }),
         Animated.timing(overlayAnim, { toValue: 1, duration: 200, useNativeDriver: true }),
-      ]).start();
+      ]).start((result) => {
+        if (result.finished) {
+          setIsInteractive(true);
+        }
+      });
     } else {
+      setIsInteractive(false);
       if (shouldRender && !dismissing.current) {
         dismissing.current = true;
         Animated.parallel([
@@ -252,6 +260,7 @@ function SwipeableBottomSheet({ visible, onClose, children, maxHeight = '90%' })
   const dismiss = useCallback(() => {
     if (dismissing.current) return;
     dismissing.current = true;
+    setIsInteractive(false);
     Animated.parallel([
       Animated.timing(translateY,  { toValue: 800, duration: 250, useNativeDriver: true }),
       Animated.timing(overlayAnim, { toValue: 0,   duration: 220, useNativeDriver: true }),
@@ -280,10 +289,15 @@ function SwipeableBottomSheet({ visible, onClose, children, maxHeight = '90%' })
       if (gs.dy > 60 || gs.vy > 0.5) {
         dismiss();
       } else {
+        setIsInteractive(false);
         Animated.parallel([
           Animated.spring(translateY,  { toValue: 0, useNativeDriver: true, bounciness: 5, speed: 14 }),
           Animated.timing(overlayAnim, { toValue: 1, duration: 150, useNativeDriver: true }),
-        ]).start();
+        ]).start((result) => {
+          if (result.finished) {
+            setIsInteractive(true);
+          }
+        });
       }
     },
   }), [dismiss]);
@@ -317,10 +331,15 @@ function SwipeableBottomSheet({ visible, onClose, children, maxHeight = '90%' })
       if (dy > 60) {
         dismiss();
       } else {
+        setIsInteractive(false);
         Animated.parallel([
           Animated.spring(translateY,  { toValue: 0, useNativeDriver: true, bounciness: 5, speed: 14 }),
           Animated.timing(overlayAnim, { toValue: 1, duration: 150, useNativeDriver: true }),
-        ]).start();
+        ]).start((result) => {
+          if (result.finished) {
+            setIsInteractive(true);
+          }
+        });
       }
     }
     activeGesture.current = false;
@@ -341,6 +360,7 @@ function SwipeableBottomSheet({ visible, onClose, children, maxHeight = '90%' })
         {/* Tap on backdrop to dismiss */}
         <HapticButton style={{ ...StyleSheet.absoluteFillObject }} activeOpacity={1} onPress={dismiss} />
         <Animated.View
+          pointerEvents={isInteractive ? 'auto' : 'none'}
           style={[
             { backgroundColor: '#FAF7F2', borderTopLeftRadius: 24, borderTopRightRadius: 24,
               maxHeight: maxHeight, overflow: 'hidden' },
@@ -1076,7 +1096,7 @@ Rules:
             onPress={triggerAISuggestion}
             activeOpacity={0.7}
           >
-            <Feather name="sparkles" size={14} color="#8CA18F" style={{ marginRight: 4 }} />
+            <MaterialCommunityIcons name="shimmer" size={14} color="#8CA18F" style={{ marginRight: 4 }} />
             <Text style={styles.betaTagText}>Ask AI</Text>
           </HapticButton>
         </View>
@@ -1192,7 +1212,7 @@ Rules:
             <View style={styles.emptyContainer}>
               <MaterialCommunityIcons name="flower-outline" size={44} color={MUTED} />
               <Text style={[styles.stateText, { color: MUTED, marginTop: 12 }]}>No bouquets found</Text>
-              <Text style={{ fontFamily: 'Manrope-Regular', fontSize: 13, color: MUTED, marginTop: 4, textAlign: 'center', marginHorizontal: 20 }}>Try adjusting your filters, or tap "Ask Sarah" in the search bar for an AI suggestion.</Text>
+              <Text style={{ fontFamily: 'Manrope-Regular', fontSize: 13, color: MUTED, marginTop: 4, textAlign: 'center', marginHorizontal: 20 }}>Try adjusting your filters, or tap &quot;Ask Sarah&quot; in the search bar for an AI suggestion.</Text>
             </View>
           )
         }
@@ -1375,7 +1395,7 @@ Rules:
               <MaterialCommunityIcons name="store-alert-outline" size={48} color={MUTED} style={{ marginBottom: 12 }} />
               <Text style={{ fontFamily: 'Manrope-Bold', fontSize: 15, color: DARK, marginBottom: 4 }}>No Results Found</Text>
               <Text style={{ fontFamily: 'Manrope-Regular', fontSize: 13, color: MUTED, textAlign: 'center', marginBottom: 24 }}>
-                We couldn't verify details about this store in our popular directories.
+                We couldn&apos;t verify details about this store in our popular directories.
               </Text>
               <HapticButton 
                 style={{ width: '100%', height: 48, borderRadius: 24, borderWidth: 1, borderColor: t.border, alignItems: 'center', justifyContent: 'center', backgroundColor: t.cardBg }} 

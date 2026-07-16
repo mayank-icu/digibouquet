@@ -1,132 +1,50 @@
 import { HapticButton } from '../components/HapticButton';
-import React, { useRef, useEffect, useState } from 'react';
-import { Animated, PanResponder, StyleSheet, TouchableOpacity, Dimensions, View, Modal } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Animated, StyleSheet, View, Modal } from 'react-native';
 import { BlurView } from 'expo-blur';
+import { useSwipeToClose } from '../hooks/useSwipeToClose';
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
-
 export default function SharedBottomSheet({ visible, onClose, children, style = {}, overlayStyle = {} }) {
-  const slideAnim = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
-  const overlayAnim = useRef(new Animated.Value(0)).current;
-  const isAnimatingOut = useRef(false);
-  const [modalVisible, setModalVisible] = useState(visible);
-
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => false,
-      onMoveShouldSetPanResponderCapture: (_, gs) => {
-        return gs.dy > 10 && Math.abs(gs.dy) > Math.abs(gs.dx);
-      },
-      onPanResponderMove: (_, gs) => {
-        if (gs.dy > 0) slideAnim.setValue(gs.dy);
-      },
-      onPanResponderRelease: (_, gs) => {
-        if (gs.dy > 80 || gs.vy > 0.5) {
-          isAnimatingOut.current = true;
-          Animated.parallel([
-            Animated.spring(slideAnim, {
-              toValue: SCREEN_HEIGHT,
-              velocity: gs.vy,
-              useNativeDriver: true,
-              tension: 65,
-              friction: 11,
-            }),
-            Animated.timing(overlayAnim, {
-              toValue: 0,
-              duration: 220,
-              useNativeDriver: true,
-            })
-          ]).start(() => {
-            setModalVisible(false);
-            onClose();
-          });
-        } else {
-          Animated.spring(slideAnim, { toValue: 0, useNativeDriver: true, tension: 80, friction: 10 }).start();
-        }
-      },
-      onPanResponderTerminate: () => {
-        Animated.spring(slideAnim, { toValue: 0, useNativeDriver: true }).start();
-      },
-    })
-  ).current;
-
-  const overlayPanResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => false,
-      onMoveShouldSetPanResponderCapture: (_, gs) => gs.dy > 10 && Math.abs(gs.dy) > Math.abs(gs.dx),
-      onPanResponderMove: (_, gs) => {
-        if (gs.dy > 0) slideAnim.setValue(gs.dy);
-      },
-      onPanResponderRelease: (_, gs) => {
-        if (gs.dy > 80 || gs.vy > 0.5) {
-          isAnimatingOut.current = true;
-          Animated.parallel([
-            Animated.spring(slideAnim, {
-              toValue: SCREEN_HEIGHT,
-              velocity: gs.vy,
-              useNativeDriver: true,
-              tension: 65,
-              friction: 11,
-            }),
-            Animated.timing(overlayAnim, {
-              toValue: 0,
-              duration: 220,
-              useNativeDriver: true,
-            })
-          ]).start(() => {
-            setModalVisible(false);
-            onClose();
-          });
-        } else {
-          Animated.spring(slideAnim, { toValue: 0, useNativeDriver: true, tension: 80, friction: 10 }).start();
-        }
-      },
-    })
-  ).current;
+  const [mounted, setMounted] = useState(visible);
 
   useEffect(() => {
     if (visible) {
-      setModalVisible(true);
-      isAnimatingOut.current = false;
-      slideAnim.setValue(SCREEN_HEIGHT);
-      Animated.parallel([
-        Animated.spring(slideAnim, { toValue: 0, useNativeDriver: true, tension: 65, friction: 11 }),
-        Animated.timing(overlayAnim, { toValue: 1, duration: 280, useNativeDriver: true }),
-      ]).start();
-    } else if (modalVisible) {
-      if (isAnimatingOut.current) {
-        isAnimatingOut.current = false;
-        return;
-      }
-      Animated.parallel([
-        Animated.timing(slideAnim, { toValue: SCREEN_HEIGHT, duration: 220, useNativeDriver: true }),
-        Animated.timing(overlayAnim, { toValue: 0, duration: 220, useNativeDriver: true }),
-      ]).start(() => {
-        setModalVisible(false);
-      });
+      setMounted(true);
+    } else {
+      const timeout = setTimeout(() => {
+        setMounted(false);
+      }, 220); // wait for closeDuration
+      return () => clearTimeout(timeout);
     }
-  }, [visible, slideAnim, overlayAnim]);
+  }, [visible]);
 
-  if (!modalVisible) return null;
+  const {
+    slideAnim,
+    panY,
+    overlayOpacity,
+    panHandlers,
+    isInteractive
+  } = useSwipeToClose(visible, onClose);
+
+  if (!mounted) return null;
 
   return (
-    <Modal visible={modalVisible} transparent animationType="none" onRequestClose={onClose}>
+    <Modal visible={mounted} transparent animationType="none" onRequestClose={onClose}>
       <View style={[StyleSheet.absoluteFillObject, { zIndex: 9999, elevation: 999 }]} pointerEvents="box-none">
         <AnimatedBlurView
-          intensity={20}
+          intensity={overlayOpacity.interpolate({ inputRange: [0, 1], outputRange: [0, 20] })}
           tint="dark"
-          style={[styles.overlay, overlayStyle, { opacity: overlayAnim }]}
-          {...overlayPanResponder.panHandlers}
-          pointerEvents={visible ? 'auto' : 'none'}
+          style={[styles.overlay, overlayStyle, { opacity: overlayOpacity }]}
+          pointerEvents={mounted ? 'auto' : 'none'}
         >
           <HapticButton style={{ flex: 1 }} activeOpacity={1} onPress={onClose} />
         </AnimatedBlurView>
         <Animated.View
-          style={[styles.sheet, style, { transform: [{ translateY: slideAnim }] }]}
-          {...panResponder.panHandlers}
-          pointerEvents={visible ? 'auto' : 'none'}
+          style={[styles.sheet, style, { transform: [{ translateY: Animated.add(slideAnim, panY) }] }]}
+          {...panHandlers}
+          pointerEvents={isInteractive ? 'auto' : 'none'}
         >
           {children}
         </Animated.View>
@@ -147,9 +65,5 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 20,
-    elevation: 20,
   },
 });

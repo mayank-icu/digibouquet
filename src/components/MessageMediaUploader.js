@@ -2,17 +2,18 @@ import { HapticButton } from '../components/HapticButton';
 /**
  * MessageMediaUploader
  * Lets logged-in users attach:
- *   - 1 image (compressed, uploaded to Cloudinary)
+ *   - Up to 5 images (each compressed, uploaded to Cloudinary with debounce)
  *   - 1 audio note up to 10 seconds (compressed, uploaded to Cloudinary)
  *
  * Props:
- *   image      { uri, url, uploading } | null
- *   audio      { uri, url, uploading, duration } | null
- *   onImage    (result) => void
- *   onAudio    (result) => void
- *   onRemoveImage () => void
+ *   images        Array<{ uri, url, uploading, isPendingUpload }> (default [])
+ *   audio         { uri, url, uploading, isPendingUpload, duration } | null
+ *   onAddImages   (newImages) => void   — called after picker with new picks
+ *   onRemoveImage (index) => void
+ *   onEditImage   (index, { uri }) => void
+ *   onAudio       (result) => void
  *   onRemoveAudio () => void
- *   disabled   boolean
+ *   disabled      boolean
  */
 import React, { useState, useRef, useEffect } from 'react';
 import {
@@ -94,7 +95,7 @@ function DraggableText({ overlay, onUpdate, onDelete, onEdit }) {
 }
 
 export default function MessageMediaUploader({
-  image, audio, onImage, onAudio, onRemoveImage, onRemoveAudio, disabled,
+  images = [], audio, onAddImages, onRemoveImage, onEditImage, onAudio, onRemoveAudio, disabled,
 }) {
   const { theme: t } = useTheme();
   const showAlert = useCustomAlert();
@@ -111,6 +112,7 @@ export default function MessageMediaUploader({
 
   // ── Drawing Editor State ──
   const [editorVisible, setEditorVisible] = useState(false);
+  const [editingImageIndex, setEditingImageIndex] = useState(null);
   const viewShotRef = useRef(null);
   const [strokes, setStrokes] = useState([]);
   const [currentPath, setCurrentPath] = useState(null);
@@ -132,15 +134,17 @@ export default function MessageMediaUploader({
   const [imgSize, setImgSize] = useState({ w: 0, h: 0 });
   const [layoutSize, setLayoutSize] = useState({ w: 0, h: 0 });
 
+  const activeEditImage = editingImageIndex !== null ? images[editingImageIndex] : null;
+
   useEffect(() => {
-    if (image?.uri) {
-      Image.getSize(image.uri, (w, h) => {
+    if (activeEditImage?.uri) {
+      Image.getSize(activeEditImage.uri, (w, h) => {
         setImgSize({ w, h });
       }, (err) => {
         console.log('Error getting image size:', err);
       });
     }
-  }, [image?.uri]);
+  }, [activeEditImage?.uri]);
 
   // Main drawing panResponder
   const panResponder = useRef(
@@ -252,36 +256,34 @@ export default function MessageMediaUploader({
   // does not require READ_MEDIA_IMAGES / READ_MEDIA_VIDEO permissions.
   const pickImage = async () => {
     if (disabled) return;
-    
-    // Explicitly request permissions to force the ActivityResultLauncher to register
-    // This fixes the "Attempting to launch an unregistered ActivityResultLauncher" bug on Android
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      Alert.alert('Permission needed', 'Allow media library access to pick a photo.');
-      return;
-    }
+    const remainingSlots = 5 - images.length;
+    if (remainingSlots <= 0) return;
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
       quality: 0.8,
       useLaunchedPhotoPicker: true,
+      allowsMultipleSelection: true,
+      selectionLimit: remainingSlots,
     });
-    if (!result.canceled && result.assets?.[0]) {
-      let localUri = result.assets[0].uri;
-      try {
-        // Force resize width to 900px (like Cloudinary used to do) to save bandwidth
-        const manipResult = await ImageManipulator.manipulateAsync(
-          localUri,
-          [{ resize: { width: 900 } }],
-          { compress: 0.6, format: ImageManipulator.SaveFormat.JPEG }
-        );
-        localUri = manipResult.uri;
-      } catch (err) {
-        console.warn('Image manipulation failed:', err);
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const processed = [];
+      for (const asset of result.assets) {
+        let localUri = asset.uri;
+        try {
+          // Force resize width to 900px to save bandwidth
+          const manipResult = await ImageManipulator.manipulateAsync(
+            localUri,
+            [{ resize: { width: 900 } }],
+            { compress: 0.6, format: ImageManipulator.SaveFormat.JPEG }
+          );
+          localUri = manipResult.uri;
+        } catch (err) {
+          console.warn('Image manipulation failed:', err);
+        }
+        processed.push({ uri: localUri });
       }
-
-      // Immediately show image in UI and defer upload to submit
-      onImage?.({ uri: localUri, url: null, uploading: false });
+      onAddImages?.(processed);
     }
   };
 
@@ -402,17 +404,137 @@ export default function MessageMediaUploader({
 
   const isRecording = !!recording;
 
+  // ── Mosaic Collage Grid ────────────────────────────────────────────────────
+  const renderImageGrid = () => {
+    if (images.length === 0) return null;
+    const GAP = 3;
 
+    const ImageCell = ({ img, index }) => (
+      <HapticButton
+        style={{ flex: 1, borderRadius: 8, overflow: 'hidden', position: 'relative', backgroundColor: '#f0ece8' }}
+        onPress={() => { setEditingImageIndex(index); setEditorVisible(true); setStrokes([]); setTextOverlays([]); setAppliedCrop(null); }}
+        disabled={disabled || img.uploading}
+      >
+        <CachedImage source={{ uri: img.uri }} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+        {/* Uploading overlay */}
+        {(img.uploading) && (
+          <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.45)', alignItems: 'center', justifyContent: 'center', borderRadius: 8 }}>
+            <ActivityIndicator color="#fff" size="small" />
+            <Text style={{ color: '#fff', fontSize: 10, marginTop: 4, fontFamily: 'Manrope-SemiBold' }}>Uploading</Text>
+          </View>
+        )}
+        {/* Pending debounce indicator */}
+        {(img.isPendingUpload && !img.uploading) && (
+          <View style={{ position: 'absolute', bottom: 6, left: 6, backgroundColor: 'rgba(122,92,88,0.85)', borderRadius: 8, paddingHorizontal: 6, paddingVertical: 3 }}>
+            <Text style={{ color: '#fff', fontSize: 9, fontFamily: 'Manrope-SemiBold' }}>● Pending</Text>
+          </View>
+        )}
+        {/* Uploaded success indicator */}
+        {img.url && !img.uploading && !img.isPendingUpload && (
+          <View style={{ position: 'absolute', bottom: 6, left: 6, backgroundColor: 'rgba(91,173,142,0.9)', borderRadius: 10, padding: 3 }}>
+            <Feather name="check" size={10} color="#fff" />
+          </View>
+        )}
+        {/* Edit hint icon */}
+        {!img.uploading && !img.isPendingUpload && (
+          <View style={{ position: 'absolute', bottom: 6, right: 30, backgroundColor: 'rgba(0,0,0,0.45)', borderRadius: 10, padding: 4 }}>
+            <Feather name="edit-2" size={10} color="#fff" />
+          </View>
+        )}
+        {/* Remove button */}
+        <HapticButton
+          style={{ position: 'absolute', top: 5, right: 5, backgroundColor: 'rgba(0,0,0,0.55)', borderRadius: 12, padding: 4, zIndex: 10 }}
+          onPress={() => onRemoveImage?.(index)}
+          disabled={img.uploading}
+        >
+          <Feather name="x" size={12} color="#fff" />
+        </HapticButton>
+      </HapticButton>
+    );
+
+    const count = images.length;
+
+    if (count === 1) {
+      return (
+        <View style={{ height: 220, borderRadius: 10, overflow: 'hidden' }}>
+          <ImageCell img={images[0]} index={0} />
+        </View>
+      );
+    }
+
+    if (count === 2) {
+      return (
+        <View style={{ height: 180, flexDirection: 'row', gap: GAP, borderRadius: 10, overflow: 'hidden' }}>
+          <ImageCell img={images[0]} index={0} />
+          <ImageCell img={images[1]} index={1} />
+        </View>
+      );
+    }
+
+    if (count === 3) {
+      return (
+        <View style={{ height: 200, flexDirection: 'row', gap: GAP, borderRadius: 10, overflow: 'hidden' }}>
+          <View style={{ flex: 1.4 }}>
+            <ImageCell img={images[0]} index={0} />
+          </View>
+          <View style={{ flex: 1, gap: GAP }}>
+            <ImageCell img={images[1]} index={1} />
+            <ImageCell img={images[2]} index={2} />
+          </View>
+        </View>
+      );
+    }
+
+    if (count === 4) {
+      return (
+        <View style={{ height: 210, gap: GAP, borderRadius: 10, overflow: 'hidden' }}>
+          <View style={{ flex: 1, flexDirection: 'row', gap: GAP }}>
+            <ImageCell img={images[0]} index={0} />
+            <ImageCell img={images[1]} index={1} />
+          </View>
+          <View style={{ flex: 1, flexDirection: 'row', gap: GAP }}>
+            <ImageCell img={images[2]} index={2} />
+            <ImageCell img={images[3]} index={3} />
+          </View>
+        </View>
+      );
+    }
+
+    // 5 images: bento / hero layout
+    return (
+      <View style={{ height: 230, flexDirection: 'row', gap: GAP, borderRadius: 10, overflow: 'hidden' }}>
+        {/* Left: 1 large hero */}
+        <View style={{ flex: 1.3 }}>
+          <ImageCell img={images[0]} index={0} />
+        </View>
+        {/* Right: 2x2 grid */}
+        <View style={{ flex: 1, gap: GAP }}>
+          <View style={{ flex: 1, flexDirection: 'row', gap: GAP }}>
+            <ImageCell img={images[1]} index={1} />
+            <ImageCell img={images[2]} index={2} />
+          </View>
+          <View style={{ flex: 1, flexDirection: 'row', gap: GAP }}>
+            <ImageCell img={images[3]} index={3} />
+            <ImageCell img={images[4]} index={4} />
+          </View>
+        </View>
+      </View>
+    );
+  };
 
   return (
     <View style={styles.root}>
-      <HapticButton 
-        style={[styles.accordionHeader, { borderColor: '#EAE0D5', backgroundColor: isExpanded ? '#f8f9fa' : '#fff' }]} 
+      <HapticButton
+        style={[styles.accordionHeader, { borderColor: '#EAE0D5', backgroundColor: isExpanded ? '#f8f9fa' : '#fff' }]}
         onPress={() => setIsExpanded(!isExpanded)}
       >
-        <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <Feather name="paperclip" size={16} color="#7A5C58" />
-          <Text style={[styles.label, { color: '#7A5C58', marginBottom: 0 }]}>Attach Media (Photo / Voice)</Text>
+          <Text style={[styles.label, { color: '#7A5C58', marginBottom: 0 }]}>
+            Attach Media
+            {images.length > 0 ? ` (${images.length}/5 photos` : ' (Photos / Voice'}
+            {audio ? (images.length > 0 ? ' + Voice)' : ')') : (images.length > 0 ? ')' : ')')}
+          </Text>
         </View>
         <Feather name={isExpanded ? 'chevron-up' : 'chevron-down'} size={18} color="#7A5C58" />
       </HapticButton>
@@ -420,33 +542,24 @@ export default function MessageMediaUploader({
       {isExpanded && (
         <View style={[styles.row, { flexDirection: 'column', marginTop: 12 }]}>
 
-          {/* ── Image ── */}
-          {!image ? (
+          {/* ── Image Grid ── */}
+          {images.length > 0 && (
+            <View style={{ marginBottom: 10 }}>
+              {renderImageGrid()}
+            </View>
+          )}
+
+          {/* ── Add Photo button (shown if < 5 images) ── */}
+          {images.length < 5 && (
             <HapticButton
-              style={[styles.btn, styles.imageBtn, { borderColor: t.border, backgroundColor: t.cardBg }]}
+              style={[styles.btn, styles.imageBtn, { borderColor: t.border, backgroundColor: t.cardBg, height: images.length === 0 ? 100 : 48, marginBottom: 8 }]}
               onPress={pickImage}
               disabled={disabled}
             >
-              <Feather name="image" size={18} color={t.brand} />
-              <Text style={[styles.btnText, { color: t.textMuted }]}>Add Photo</Text>
-            </HapticButton>
-          ) : (
-            <HapticButton style={[styles.preview, { borderColor: t.border }]} onPress={() => setEditorVisible(true)} disabled={disabled || image.uploading}>
-              <CachedImage source={{ uri: image.uri }} style={styles.previewImg} />
-              {image.uploading && (
-                <View style={styles.uploadOverlay}>
-                  <ActivityIndicator color="#fff" size="small" />
-                </View>
-              )}
-              {image.url && (
-                <LinearGradient
-                  colors={['transparent', 'rgba(91, 173, 142, 0.8)']}
-                  style={styles.greenGradient}
-                />
-              )}
-              <HapticButton style={styles.removeBtn} onPress={onRemoveImage} disabled={image.uploading}>
-                <Feather name="x" size={14} color="#fff" />
-              </HapticButton>
+              <Feather name="image" size={16} color={t.brand} />
+              <Text style={[styles.btnText, { color: t.textMuted }]}>
+                {images.length === 0 ? 'Add Photos (up to 5)' : `Add More (${5 - images.length} left)`}
+              </Text>
             </HapticButton>
           )}
 
@@ -480,18 +593,23 @@ export default function MessageMediaUploader({
             </HapticButton>
           ) : (
             <View style={[styles.audioPreview, { borderColor: t.border, backgroundColor: t.cardBg }]}>
-              {audio.uploading ? (
-                <ActivityIndicator color={t.brand} size="small" />
+              {(audio.uploading || audio.isPendingUpload) ? (
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                  <ActivityIndicator color={t.brand} size="small" />
+                  <Text style={{ color: t.textMuted, fontSize: 11, fontFamily: 'Manrope-Regular' }}>
+                    {audio.uploading ? 'Uploading…' : 'Pending upload…'}
+                  </Text>
+                </View>
               ) : (
                 <HapticButton onPress={togglePlayback} style={styles.playBtn}>
                   <Feather name={isPlaying ? "pause" : "play"} size={16} color="white" />
                 </HapticButton>
               )}
               <Text style={[styles.audioDur, { color: t.text }]}>
-                {audio.uploading ? 'Uploading…' : `${audio.duration ?? ''}s note`}
+                {(audio.uploading || audio.isPendingUpload) ? '' : `${audio.duration ?? ''}s note`}
               </Text>
-              {audio.url && <Feather name="check-circle" size={14} color="#5BAD8E" />}
-              <HapticButton onPress={() => { onRemoveAudio(); setSound(null); setIsPlaying(false); }} disabled={audio.uploading} style={{ marginLeft: 6 }}>
+              {audio.url && !audio.uploading && <Feather name="check-circle" size={14} color="#5BAD8E" />}
+              <HapticButton onPress={() => { onRemoveAudio?.(); setSound(null); setIsPlaying(false); }} disabled={audio.uploading} style={{ marginLeft: 6 }}>
                 <Feather name="x" size={14} color={t.textMuted} />
               </HapticButton>
             </View>
@@ -500,7 +618,7 @@ export default function MessageMediaUploader({
       )}
 
       {/* Custom Image Editor Modal */}
-      <Modal visible={editorVisible && !!image} animationType="slide" transparent={false} onRequestClose={() => setEditorVisible(false)}>
+      <Modal visible={editorVisible && !!activeEditImage} animationType="slide" transparent={false} onRequestClose={() => { setEditorVisible(false); setEditingImageIndex(null); }}>
            <View style={{flex: 1, backgroundColor: '#000'}}>
              <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 16, paddingTop: 50, zIndex: 10, backgroundColor: 'rgba(0,0,0,0.5)'}}>
                <HapticButton onPress={() => {
@@ -508,6 +626,7 @@ export default function MessageMediaUploader({
                    setIsCroppingMode(false);
                  } else {
                    setEditorVisible(false);
+                   setEditingImageIndex(null);
                  }
                }}>
                  <Text style={{color: '#fff', fontSize: 16, fontFamily: 'Manrope-SemiBold'}}>Cancel</Text>
@@ -523,9 +642,11 @@ export default function MessageMediaUploader({
                      if (viewShotRef.current) {
                        try {
                          const croppedUri = await viewShotRef.current.capture();
-                         onImage?.({ uri: croppedUri, url: null, uploading: false });
+                         if (editingImageIndex !== null) onEditImage?.(editingImageIndex, { uri: croppedUri });
                          setAppliedCrop(null);
                          setIsCroppingMode(false);
+                         setEditorVisible(false);
+                         setEditingImageIndex(null);
                        } catch (err) {
                          Alert.alert('Error', 'Could not crop image');
                          setAppliedCrop(null);
@@ -534,16 +655,17 @@ export default function MessageMediaUploader({
                      }
                    }, 150);
                  } else {
-                   if (viewShotRef.current) {
-                     try {
-                       const uri = await viewShotRef.current.capture();
-                       onImage?.({ uri, url: null, uploading: false });
-                       setEditorVisible(false);
-                     } catch (err) {
-                       Alert.alert('Error', 'Could not save image');
-                     }
-                   }
-                 }
+                    if (viewShotRef.current) {
+                      try {
+                        const uri = await viewShotRef.current.capture();
+                        if (editingImageIndex !== null) onEditImage?.(editingImageIndex, { uri });
+                        setEditorVisible(false);
+                        setEditingImageIndex(null);
+                      } catch (err) {
+                        Alert.alert('Error', 'Could not save image');
+                      }
+                    }
+                  }
                }}>
                  <Text style={{color: '#5BAD8E', fontSize: 16, fontFamily: 'Manrope-SemiBold'}}>
                    {isCroppingMode ? 'Apply' : 'Save'}
@@ -593,7 +715,7 @@ export default function MessageMediaUploader({
                         options={{ format: 'jpg', quality: 0.4 }}
                       >
                                        <CachedImage 
-                      source={{ uri: image?.uri }} 
+                      source={{ uri: activeEditImage?.uri }} 
                       style={{
                         position: 'absolute',
                         left: -cropX,

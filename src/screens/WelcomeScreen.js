@@ -29,7 +29,7 @@ export default function WelcomeScreen({ navigation }) {
 
   useEffect(() => {
     if (currentUser) {
-      navigation.replace('Home');
+      navigation.replace('MainTabs');
     }
   }, [currentUser, navigation]);
 
@@ -58,7 +58,14 @@ export default function WelcomeScreen({ navigation }) {
         <View style={{ position: 'absolute', top: insets.top + 20, left: 20, right: 20, flexDirection: 'row', justifyContent: 'space-between', zIndex: 10 }}>
           {/* Theme Toggle Pill */}
           <HapticButton
-            style={[styles.themeToggle, { backgroundColor: isDark ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.85)' }]}
+            style={[
+              styles.themeToggle,
+              { 
+                backgroundColor: isDark ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.85)',
+                borderRadius: 20,
+                overflow: 'hidden'
+              }
+            ]}
             onPress={toggleTheme}
             activeOpacity={0.85}
           >
@@ -112,7 +119,7 @@ export default function WelcomeScreen({ navigation }) {
           </View>
 
           <HapticButton
-            style={styles.googleBtn}
+            style={[styles.googleBtn, { borderWidth: 1, borderColor: isDark ? 'transparent' : 'rgba(122, 92, 88, 0.15)' }]}
             onPress={handleGoogle}
             disabled={googleLoading}
             activeOpacity={0.85}
@@ -191,15 +198,11 @@ const styles = StyleSheet.create({
   googleBtn: { 
     backgroundColor: '#fff', 
     borderRadius: 28, 
-    paddingVertical: 14, 
+    paddingVertical: 17, 
     paddingHorizontal: 24,
     alignItems: 'center', 
     alignSelf: 'stretch',
-    marginBottom: 16,
-    shadowColor: '#000', 
-    shadowOpacity: 0.1, 
-    shadowRadius: 8, 
-    elevation: 3 
+    marginBottom: 16
   },
   googleInner: { 
     flexDirection: 'row', 
@@ -209,7 +212,7 @@ const styles = StyleSheet.create({
   },
   googleText: { 
     fontFamily: 'Manrope-Bold', 
-    fontSize: 16, 
+    fontSize: 17, 
     color: '#000' 
   },
   guestBtn: {

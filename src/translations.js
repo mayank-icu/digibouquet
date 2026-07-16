@@ -156,7 +156,8 @@ export default {
       "appearance": "APPEARANCE",
       "sounds": "SOUNDS",
       "theme": "Theme",
-      "themeDesc": "Choose your preferred theme"
+      "themeDesc": "Choose your preferred theme",
+      "disconnectEmail": "Disconnect Email Login"
     },
     "login": {
       "title": "Sign In",
@@ -271,6 +272,8 @@ export default {
       "widget": "WIDGET",
       "scheduledEmails": "Scheduled Emails",
       "scheduledEmailsDesc": "View & manage scheduled bouquet deliveries",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "Made with love",
       "makeTogether": "Make Bouquet Together",
       "makeTogetherDesc": "Draw flowers & write messages in real-time.",
@@ -281,7 +284,27 @@ export default {
       "removeRoomDesc": "Remove room #{code} from history?",
       "remove": "Remove",
       "creativeStudio": "Creative Studio",
-      "creativeStudioDesc": "Flower Keyboard, Birth Wallpaper & Recipes."
+      "creativeStudioDesc": "Flower Keyboard, Birth Wallpaper & Recipes.",
+      "limitedEdition": "LIMITED EDITION",
+      "goldenBouquet": "Golden Bouquet",
+      "goldenBouquetDesc": "Tap to unlock or enter referral code",
+      "createBouquet": "Create Bouquet",
+      "spreadKindness": "Spread Kindness",
+      "spreadKindnessDesc": "Send a mystery bouquet to brighten a stranger's day.",
+      "temporarilyDisabled": "Temporarily disabled",
+      "featureDisabled": "Feature Disabled",
+      "safetyViolationDesc": "Feature temporarily disabled due to safety violations.",
+      "loginRequired": "Login Required",
+      "loginToSpreadKindness": "You must be logged in to send a Random Act of Kindness.",
+      "cancel": "Cancel",
+      "login": "Login",
+      "whatsNewTitle": "What's New",
+      "whatsNewSubtitle": "We've added some beautiful new ways to connect and spread joy.",
+      "whatsNewGoldenTitle": "Golden Bouquet",
+      "whatsNewGoldenDesc": "Express ultimate gratitude with our radiant, shimmering premium bouquet style designed for special moments.",
+      "whatsNewRaokTitle": "Random Acts of Kindness",
+      "whatsNewRaokDesc": "Send and receive anonymous digital bouquets globally, sharing warmth and positivity with those who need it.",
+      "whatsNewClose": "Sounds good"
     },
     "together": {
       "reconnecting": "Reconnecting…",
@@ -470,7 +493,7 @@ export default {
       "unsavedDesc": "You have unsaved changes. Are you sure you want to leave?",
       "stay": "Stay",
       "leave": "Leave",
-      "howToCreate": "How to Create Your Bouquet",
+      "howToCreate": "How to create a bouquet",
       "availableDesc": "Great! This name is available.",
       "dyslexiaFriendly": "Dyslexia-Friendly Font",
       "dyslexiaFriendlyDesc": "Uses dyslexia-friendly font with improved spacing",
@@ -537,7 +560,20 @@ export default {
       "shareText": "I created this beautiful bouquet for you!",
       "aiGenerated": "AI Bouquet Generated",
       "useThis": "Use this →",
-      "aiGeneratedTitle": "AI Bouquet Generated"
+      "aiGeneratedTitle": "AI Bouquet Generated",
+      "selectFlowers": "Select Flowers",
+      "selectFlowersDesc": "Choose at least 3 flowers to begin. Tap a flower card to see its meaning and color options.",
+      "arrangeThem": "Arrange Them",
+      "arrangeThemDesc": "Drag flowers around the canvas. Use the toolbar to edit size, rotation, and layering.",
+      "personalizeAndSend": "Personalize & Send",
+      "personalizeAndSendDesc": "Add a heartfelt message, pick a song, and generate a unique link to share with them.",
+      "enjoyingApp": "Enjoying the app?",
+      "thankYou": "Thank You!",
+      "openPlayStore": "Open Play Store",
+      "maybeLater": "Maybe Later",
+      "sarahsSelection": "Sarah's Selection",
+      "createAccountAttach": "Create an account or sign in to attach a photo or voice note",
+      "returnToHome": "Return to Home"
     },
     "bouquetView": {
       "loading": "Loading your bouquet...",
@@ -643,7 +679,8 @@ export default {
       "clearDataDesc": "Manage cache, widget, and history data",
       "termsSubtext": "Read our terms of service agreement",
       "privacySubtext": "Learn how we protect your data privacy",
-      "creditsSubtext": "Tools, resources, and special thanks"
+      "creditsSubtext": "Tools, resources, and special thanks",
+      "dataManagementDesc": "Manage and free up local storage occupied by cached files, widgets, and received bouquets."
     },
     "share": {
       "subtitle": "Share your bouquet with someone special",
@@ -753,7 +790,6 @@ export default {
     "credits": {
       "title": "Credits",
       "specialThanks": "Special Thanks",
-      "specialThanksText": "A huge and heartfelt thank you to my wonderful friend Anna Sanders! 💖 She has tirelessly tested everything I make, providing invaluable feedback and endless support. I really love her and couldn't have done this without her help!",
       "toolsTitle": "Tools & Resources",
       "toolsSubtitle": "This app was made possible thanks to the following amazing tools and platforms:",
       "lottieFiles": "for providing beautiful, high-quality animations.",
@@ -815,6 +851,54 @@ export default {
       "title": "Choose your language",
       "subtitle": "You can change this anytime in settings.",
       "continue": "Continue"
+    },
+    "games": {
+      "title": "Blossom Garden Games",
+      "subtitle": "Relax and play our cozy flower mini-games to unlock new bouquet designs and ideas.",
+      "sortTitle": "Blossom Sort Puzzle",
+      "sortDesc": "Sort matching flower stems into identical slots. Tap to select and move.",
+      "matchTitle": "Blossom Match",
+      "matchDesc": "Swap adjacent flowers to match 3 or more in a row and trigger cascading combos.",
+      "playNow": "Play Now"
+    },
+    "golden": {
+      "title": "Golden Bouquet",
+      "subtitle": "An exclusive, limited edition arrangement designed to capture life's most precious moments.",
+      "claimTitle": "Claim Invitation",
+      "claimDesc": "Received a golden invitation? Enter your code below to unlock your creation.",
+      "inputPlaceholder": "Enter referral code",
+      "unlock": "Unlock",
+      "shareTitle": "Share the Magic",
+      "shareDesc": "Invite friends with your unique code. You both earn a Golden Credit when they use it.",
+      "signInToGetCode": "Sign in to get code",
+      "share": "Share",
+      "friendsJoined": "Friends Joined",
+      "noCredits": "No Golden Credits",
+      "noCreditsDesc": "Invite friends or use a code to earn credits.",
+      "create": "Create Golden Bouquet",
+      "ownCodeError": "You cannot use your own code.",
+      "alreadyClaimedError": "You have already claimed this code.",
+      "invalidCodeError": "Invalid code.",
+      "claimSuccess": "Claimed Successfully!",
+      "claimSuccessDesc": "You earned a Golden Credit.",
+      "failed": "Failed",
+      "error": "Error",
+      "connectionError": "Could not connect to server.",
+      "shareText": "Unlock the Golden Bouquet with my invitation! Download the app and enter my code {code} or use this link to automatically claim your credit: {link}",
+      "credit": "Credit",
+      "credits": "Credits"
+    },
+    "raok": {
+      "guidelinesTitle": "Random Act of Kindness",
+      "guidelinesSubtitle": "Send a little warmth and surprise a stranger! Here is how it works & guidelines to follow.",
+      "rule1Title": "Spread Joy Anonymously",
+      "rule1Desc": "Your bouquet and message will be randomly matched by AI to someone who needs a smile today, completely anonymously.",
+      "rule2Title": "Be Positive & Uplifting",
+      "rule2Desc": "Write warm, encouraging words. Leave comments that inspire hope, kindness, and support.",
+      "rule3Title": "No Personal Information",
+      "rule3Desc": "For your safety and others, do not include names, phone numbers, addresses, social handles, or links.",
+      "understand": "I understand",
+      "soundsGood": "Sounds good"
     }
   },
   "es": {
@@ -865,7 +949,8 @@ export default {
       "about": "Sobre Nosotros",
       "emailsLeft": "correos restantes este mes",
       "home": "Inicio",
-      "history": "Historial"
+      "history": "Historial",
+      "credits": "Créditos"
     },
     "common": {
       "cancel": "Cancelar",
@@ -883,7 +968,8 @@ export default {
       "companyName": "E Greet",
       "loading": "Cargando...",
       "enabled": "Activado",
-      "disabled": "Desactivado"
+      "disabled": "Desactivado",
+      "clear": "Borrar"
     },
     "languageScreen": {
       "title": "Idioma",
@@ -959,14 +1045,17 @@ export default {
       "createPasswordDesc": "Crea una contraseña para iniciar sesión con tu correo además de Google.",
       "passwordCreated": "¡Contraseña creada con éxito!",
       "language": "Idioma",
-      "touchSound": "Sonido Táctil",
-      "touchSoundDesc": "Reproducir sonido al tocar botones",
-      "notificationsEnabled": "Activar Notificaciones",
-      "notificationsDesc": "Recibir notificaciones de respuestas a ramos",
+      "touchSound": "Sonido táctil",
+      "touchSoundDesc": "Reproducir sonido al tocar los botones",
+      "notificationsEnabled": "Activar notificaciones",
+      "notificationsDesc": "Recibe notificaciones de respuestas a ramos",
       "appearance": "APARIENCIA",
       "sounds": "SONIDOS",
       "theme": "Tema",
-      "themeDesc": "Elige tu tema preferido"
+      "themeDesc": "Elige tu tema preferido",
+      "hapticFeedback": "Vibración táctil",
+      "hapticFeedbackDesc": "Vibrar al tocar los botones",
+      "disconnectEmail": "Desconectar inicio de sesión por correo"
     },
     "login": {
       "title": "Iniciar Sesión",
@@ -1010,7 +1099,7 @@ export default {
       "backToSignIn": "Volver al Inicio de Sesión",
       "errorSend": "No se pudo enviar el correo. Revisa la dirección e intenta de nuevo.",
       "rememberPassword": "¿Recuerdas tu contraseña?",
-      "backToLogin": "Volver al Inicio de Sesión"
+      "backToLogin": "Volver a iniciar sesión"
     },
     "feedback": {
       "title": "Enviar Comentarios",
@@ -1081,6 +1170,8 @@ export default {
       "widget": "WIDGET",
       "scheduledEmails": "Correos Programados",
       "scheduledEmailsDesc": "Ve y administra tus entregas programadas",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "Hecho con amor",
       "makeTogether": "Hacer Ramo Juntos",
       "makeTogetherDesc": "Dibuja flores y escribe mensajes en tiempo real.",
@@ -1089,7 +1180,29 @@ export default {
       "roomCode": "Código de la sala:",
       "removeRoom": "¿Eliminar Sala?",
       "removeRoomDesc": "¿Eliminar la sala #{code} del historial?",
-      "remove": "Eliminar"
+      "remove": "Eliminar",
+      "creativeStudio": "Estudio Creativo",
+      "creativeStudioDesc": "Teclado de flores, fondo de pantalla de cumpleaños y recetas.",
+      "limitedEdition": "EDICIÓN LIMITADA",
+      "goldenBouquet": "Ramo Dorado",
+      "goldenBouquetDesc": "Toca para desbloquear o introducir código de referido",
+      "createBouquet": "Crear Ramo",
+      "spreadKindness": "Difundir Bondad",
+      "spreadKindnessDesc": "Envía un ramo misterioso para alegrar el día de un desconocido.",
+      "temporarilyDisabled": "Temporalmente deshabilitado",
+      "featureDisabled": "Función deshabilitada",
+      "safetyViolationDesc": "Función deshabilitada temporalmente debido a violaciones de seguridad.",
+      "loginRequired": "Inicio de sesión requerido",
+      "loginToSpreadKindness": "Debes iniciar sesión para enviar un Acto Aleatorio de Bondad.",
+      "cancel": "Cancelar",
+      "login": "Iniciar sesión",
+      "whatsNewTitle": "Novedades",
+      "whatsNewSubtitle": "Hemos añadido nuevas y hermosas formas de conectar y difundir alegría.",
+      "whatsNewGoldenTitle": "Ramo Dorado",
+      "whatsNewGoldenDesc": "Expresa gratitud absoluta con nuestro radiante y reluciente estilo de ramo premium diseñado para momentos especiales.",
+      "whatsNewRaokTitle": "Actos Aleatorios de Bondad",
+      "whatsNewRaokDesc": "Envía y recibe ramos digitales anónimos por todo el mundo, compartiendo calidez y positividad con quienes lo necesitan.",
+      "whatsNewClose": "Suena bien"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -1187,7 +1300,7 @@ export default {
       "unsavedDesc": "Tienes cambios sin guardar. ¿Seguro que quieres salir?",
       "stay": "Quedarme",
       "leave": "Salir",
-      "howToCreate": "Cómo Crear Tu Ramo",
+      "howToCreate": "Cómo crear un ramo",
       "availableDesc": "¡Genial! Este nombre está disponible.",
       "dyslexiaFriendly": "Fuente para Dislexia",
       "dyslexiaFriendlyDesc": "Usa una fuente especial para dislexia con mejor espaciado",
@@ -1254,7 +1367,21 @@ export default {
       "shareText": "¡Te preparé este hermoso ramo!",
       "aiGenerated": "Ramo Generado con IA",
       "useThis": "Usar este →",
-      "aiGeneratedTitle": "Ramo Generado con IA"
+      "aiGeneratedTitle": "Ramo Generado con IA",
+      "loginRequiredDesc": "Inicia sesión para enviar ramos por correo electrónico.",
+      "selectFlowers": "Selecciona flores",
+      "selectFlowersDesc": "Elige al menos 3 flores para comenzar. Toca una tarjeta de flor para ver su significado y opciones de color.",
+      "arrangeThem": "Ordénalas",
+      "arrangeThemDesc": "Arrastra las flores por el lienzo. Usa la barra de herramientas para editar tamaño, rotación y capas.",
+      "personalizeAndSend": "Personaliza y envía",
+      "personalizeAndSendDesc": "Añade un mensaje sincero, elige una canción y genera un enlace único para compartir.",
+      "enjoyingApp": "¿Te gusta la app?",
+      "thankYou": "¡Gracias!",
+      "openPlayStore": "Abrir Play Store",
+      "maybeLater": "Quizás más tarde",
+      "sarahsSelection": "La Selección de Sarah",
+      "createAccountAttach": "Crea una cuenta o inicia sesión para adjuntar una foto o nota de voz",
+      "returnToHome": "Volver al inicio"
     },
     "bouquetView": {
       "loading": "Cargando tu ramo...",
@@ -1285,8 +1412,8 @@ export default {
       "noPreview": "Vista previa no disponible",
       "playingOnYouTube": "Reproduciendo en YouTube",
       "playingFromStart": "Reproduciendo desde el principio",
-      "switchToVideo": "Ver Video",
-      "switchToAudio": "Solo Audio",
+      "switchToVideo": "Ver video",
+      "switchToAudio": "Solo audio",
       "listenOnYouTube": "Abrir en YouTube",
       "sendWhatsApp": "Enviar por WhatsApp",
       "shareBouquet": "Compartir este Ramo",
@@ -1326,7 +1453,10 @@ export default {
       "fromLabel": "de",
       "shareBouquetTitle": "Compartir Ramo",
       "shareBouquetSubtitle": "Envía este hermoso ramo a los demás",
-      "noLanguagesFound": "No se encontraron idiomas"
+      "noLanguagesFound": "No se encontraron idiomas",
+      "saveCard": "Guardar tarjeta",
+      "savedSuccess": "¡Guardado con éxito!",
+      "savedSuccessDesc": "El ramo se ha guardado en tu galería de fotos."
     },
     "settings": {
       "title": "Ajustes",
@@ -1356,7 +1486,9 @@ export default {
       "cancel": "Cancelar",
       "clearDataDesc": "Administrar datos de caché, widgets e historial",
       "termsSubtext": "Lee nuestro acuerdo de términos de servicio",
-      "privacySubtext": "Conoce cómo protegemos la privacidad de tus datos"
+      "privacySubtext": "Conoce cómo protegemos la privacidad de tus datos",
+      "creditsSubtext": "Herramientas, recursos y agradecimientos especiales",
+      "dataManagementDesc": "Administra y libera el almacenamiento local ocupado por archivos en caché, widgets y ramos recibidos."
     },
     "share": {
       "subtitle": "Comparte tu ramo con esa persona especial",
@@ -1413,7 +1545,10 @@ export default {
       "successMessage": "¡Widget actualizado! Si aún no lo has añadido a tu pantalla, sigue las instrucciones en el menú de ayuda.",
       "errorTitle": "Error",
       "errorMessage": "No se pudo actualizar el widget.",
-      "from": "de {name}"
+      "from": "de {name}",
+      "clearMessage": "¿Seguro que quieres borrar este widget?",
+      "clearTitle": "Borrar widget",
+      "myWidgets": "Mis widgets"
     },
     "privacy": {
       "title": "Política de Privacidad",
@@ -1601,6 +1736,71 @@ export default {
       "songTheyChose": "Canción que eligió para ti",
       "yourMessage": "Tu mensaje para ellos",
       "done": "Hecho"
+    },
+    "ageVerification": {
+      "title": "Verificación de edad",
+      "prompt": "Introduce tu año de nacimiento. Solo lo pedimos para garantizar la seguridad infantil y cumplir con las normas de privacidad."
+    },
+    "credits": {
+      "title": "Créditos",
+      "specialThanks": "Agradecimientos especiales",
+      "toolsTitle": "Herramientas y recursos",
+      "toolsSubtitle": "Esta app fue posible gracias a las siguientes increíbles herramientas y plataformas:",
+      "lottieFiles": "por ofrecer animaciones hermosas y de alta calidad.",
+      "storyset": "por las ilustraciones tan expresivas y sorprendentes.",
+      "reactNative": "por el marco de trabajo principal.",
+      "firebase": "por los servicios de backend.",
+      "cloudflare": "por el DNS y la seguridad web.",
+      "netlify": "por el hosting y despliegue.",
+      "sarvamAI": "por las funciones inteligentes de texto y generación."
+    },
+    "games": {
+      "title": "Juegos del Jardín en Flor",
+      "subtitle": "Relájate y juega nuestros acogedores minijuegos de flores para desbloquear nuevos diseños e ideas de ramos.",
+      "sortTitle": "Puzle de Ordenar Flores",
+      "sortDesc": "Ordena los tallos de flores iguales en los mismos espacios. Toca para seleccionar y mover.",
+      "matchTitle": "Combina Flores",
+      "matchDesc": "Intercambia flores adyacentes para combinar 3 o más en fila y desencadenar combos en cascada.",
+      "playNow": "Jugar ahora"
+    },
+    "golden": {
+      "title": "Ramo Dorado",
+      "subtitle": "Un arreglo exclusivo y de edición limitada diseñado para capturar los momentos más preciados de la vida.",
+      "claimTitle": "Reclamar invitación",
+      "claimDesc": "¿Recibiste una invitación dorada? Introduce tu código abajo para desbloquear tu creación.",
+      "inputPlaceholder": "Introduce el código de referido",
+      "unlock": "Desbloquear",
+      "shareTitle": "Comparte la magia",
+      "shareDesc": "Invita a tus amigos con tu código único. Ambos ganarán un Crédito Dorado cuando lo usen.",
+      "signInToGetCode": "Inicia sesión para obtener el código",
+      "share": "Compartir",
+      "friendsJoined": "Amigos unidos",
+      "noCredits": "Sin Créditos Dorados",
+      "noCreditsDesc": "Invita a amigos o usa un código para ganar créditos.",
+      "create": "Crear Ramo Dorado",
+      "ownCodeError": "No puedes usar tu propio código.",
+      "alreadyClaimedError": "Ya has reclamado este código.",
+      "invalidCodeError": "Código inválido.",
+      "claimSuccess": "¡Reclamado con éxito!",
+      "claimSuccessDesc": "Has ganado un Crédito Dorado.",
+      "failed": "Fallido",
+      "error": "Error",
+      "connectionError": "No se pudo conectar al servidor.",
+      "shareText": "¡Desbloquea el Ramo Dorado con mi invitación! Descarga la app e introduce mi código {code} o usa este enlace para reclamar tu crédito automáticamente: {link}",
+      "credit": "Crédito",
+      "credits": "Créditos"
+    },
+    "raok": {
+      "guidelinesTitle": "Acto Aleatorio de Bondad",
+      "guidelinesSubtitle": "¡Envía un poco de calidez y sorprende a un desconocido! Así funciona y estas son las pautas a seguir.",
+      "rule1Title": "Difunde alegría de forma anónima",
+      "rule1Desc": "Tu ramo y mensaje serán emparejados aleatoriamente por IA con alguien que necesite una sonrisa hoy, completamente en anonimato.",
+      "rule2Title": "Sé positivo y alentador",
+      "rule2Desc": "Escribe palabras cálidas y alentadoras. Deja comentarios que inspiren esperanza, bondad y apoyo.",
+      "rule3Title": "Sin información personal",
+      "rule3Desc": "Por tu seguridad y la de los demás, no incluyas nombres, números de teléfono, direcciones, redes sociales ni enlaces.",
+      "understand": "Entiendo",
+      "soundsGood": "Suena bien"
     }
   },
   "fr": {
@@ -1651,7 +1851,8 @@ export default {
       "about": "À propos de nous",
       "emailsLeft": "e-mails restants ce mois-ci",
       "home": "Accueil",
-      "history": "Historique"
+      "history": "Historique",
+      "credits": "Crédits"
     },
     "common": {
       "cancel": "Annuler",
@@ -1669,7 +1870,8 @@ export default {
       "companyName": "E Greet",
       "loading": "Chargement...",
       "enabled": "Activé",
-      "disabled": "Désactivé"
+      "disabled": "Désactivé",
+      "clear": "Effacer"
     },
     "languageScreen": {
       "title": "Langue",
@@ -1743,7 +1945,19 @@ export default {
       "addPasswordLogin": "Ajouter une connexion par mot de passe",
       "createPasswordTitle": "Créer un mot de passe",
       "createPasswordDesc": "Crée un mot de passe pour te connecter avec ton e-mail ainsi qu'avec Google.",
-      "passwordCreated": "Mot de passe créé avec succès !"
+      "passwordCreated": "Mot de passe créé avec succès !",
+      "appearance": "APPARENCE",
+      "hapticFeedback": "Retour haptique",
+      "hapticFeedbackDesc": "Vibrer en appuyant sur les boutons",
+      "language": "Langue",
+      "notificationsDesc": "Recevoir des notifications pour les réponses aux bouquets",
+      "notificationsEnabled": "Activer les notifications",
+      "sounds": "SONS",
+      "theme": "Thème",
+      "themeDesc": "Choisissez votre thème préféré",
+      "touchSound": "Son tactile",
+      "touchSoundDesc": "Jouer un son en appuyant sur les boutons",
+      "disconnectEmail": "Déconnecter la connexion par e-mail"
     },
     "login": {
       "title": "Se connecter",
@@ -1786,7 +2000,7 @@ export default {
       "successText": "Lien de réinitialisation envoyé ! Vérifie ta boîte de réception et tes spams.",
       "backToSignIn": "Retour à la connexion",
       "errorSend": "Impossible d'envoyer l'e-mail de réinitialisation. Vérifie l'adresse et réessaie.",
-      "rememberPassword": "Tu te souviens de ton mot de passe ?",
+      "rememberPassword": "Vous vous souvenez de votre mot de passe ?",
       "backToLogin": "Retour à la connexion"
     },
     "feedback": {
@@ -1858,6 +2072,8 @@ export default {
       "widget": "WIDGET",
       "scheduledEmails": "E-mails programmés",
       "scheduledEmailsDesc": "Voir et gérer les livraisons de bouquets programmées",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "Créé avec tendresse",
       "makeTogether": "Créer un bouquet ensemble",
       "makeTogetherDesc": "Dessinez des fleurs et écrivez des messages en temps réel.",
@@ -1866,7 +2082,29 @@ export default {
       "roomCode": "Code du salon :",
       "removeRoom": "Supprimer le salon ?",
       "removeRoomDesc": "Supprimer le salon #{code} de l'historique ?",
-      "remove": "Supprimer"
+      "remove": "Supprimer",
+      "creativeStudio": "Studio Créatif",
+      "creativeStudioDesc": "Clavier fleuri, fond d'écran d'anniversaire et recettes.",
+      "limitedEdition": "ÉDITION LIMITÉE",
+      "goldenBouquet": "Bouquet Doré",
+      "goldenBouquetDesc": "Touchez pour débloquer ou entrer un code de parrainage",
+      "createBouquet": "Créer un Bouquet",
+      "spreadKindness": "Répandre la Gentillesse",
+      "spreadKindnessDesc": "Envoyez un bouquet mystère pour égayer la journée d'un inconnu.",
+      "temporarilyDisabled": "Temporairement désactivé",
+      "featureDisabled": "Fonctionnalité désactivée",
+      "safetyViolationDesc": "Fonctionnalité temporairement désactivée en raison de violations de sécurité.",
+      "loginRequired": "Connexion requise",
+      "loginToSpreadKindness": "Vous devez être connecté pour envoyer un Acte de Gentillesse Aléatoire.",
+      "cancel": "Annuler",
+      "login": "Connexion",
+      "whatsNewTitle": "Nouveautés",
+      "whatsNewSubtitle": "Nous avons ajouté de nouvelles et magnifiques façons de vous connecter et de répandre la joie.",
+      "whatsNewGoldenTitle": "Bouquet Doré",
+      "whatsNewGoldenDesc": "Exprimez une gratitude absolue avec notre style de bouquet premium radieux et scintillant, conçu pour les moments spéciaux.",
+      "whatsNewRaokTitle": "Actes de Gentillesse Aléatoires",
+      "whatsNewRaokDesc": "Envoyez et recevez des bouquets numériques anonymes dans le monde entier, en partageant chaleur et positivité avec ceux qui en ont besoin.",
+      "whatsNewClose": "Ça marche"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -1964,7 +2202,7 @@ export default {
       "unsavedDesc": "Tu as des modifications non enregistrées. Es-tu sûr(e) de vouloir quitter ?",
       "stay": "Rester",
       "leave": "Quitter",
-      "howToCreate": "Comment créer ton bouquet",
+      "howToCreate": "Comment créer un bouquet",
       "availableDesc": "Super ! Ce nom est disponible.",
       "dyslexiaFriendly": "Police adaptée à la dyslexie",
       "dyslexiaFriendlyDesc": "Utilise une police adaptée à la dyslexie avec un espacement amélioré",
@@ -2031,7 +2269,21 @@ export default {
       "shareText": "J'ai créé ce magnifique bouquet pour toi !",
       "aiGenerated": "Bouquet IA généré",
       "useThis": "Utiliser ceci →",
-      "aiGeneratedTitle": "Bouquet IA généré"
+      "aiGeneratedTitle": "Bouquet IA généré",
+      "loginRequiredDesc": "Veuillez vous connecter pour envoyer des bouquets par e-mail.",
+      "selectFlowers": "Sélectionnez des fleurs",
+      "selectFlowersDesc": "Choisissez au moins 3 fleurs pour commencer. Touchez une carte de fleur pour voir sa signification et ses options de couleur.",
+      "arrangeThem": "Arrangez-les",
+      "arrangeThemDesc": "Faites glisser les fleurs sur la toile. Utilisez la barre d'outils pour modifier la taille, la rotation et les calques.",
+      "personalizeAndSend": "Personnalisez et envoyez",
+      "personalizeAndSendDesc": "Ajoutez un message sincère, choisissez une chanson et générez un lien unique à partager.",
+      "enjoyingApp": "Vous aimez l'application ?",
+      "thankYou": "Merci !",
+      "openPlayStore": "Ouvrir le Play Store",
+      "maybeLater": "Peut-être plus tard",
+      "sarahsSelection": "La Sélection de Sarah",
+      "createAccountAttach": "Créez un compte ou connectez-vous pour joindre une photo ou une note vocale",
+      "returnToHome": "Retourner à l'accueil"
     },
     "bouquetView": {
       "loading": "Chargement de ton bouquet...",
@@ -2063,8 +2315,8 @@ export default {
       "playingOnYouTube": "Lecture sur YouTube",
       "playingFromStart": "Lecture depuis le début",
       "switchToVideo": "Regarder la vidéo",
-      "switchToAudio": "Audio uniquement",
-      "listenOnYouTube": "Ouvrir dans YouTube",
+      "switchToAudio": "Audio seul",
+      "listenOnYouTube": "Ouvrir sur YouTube",
       "sendWhatsApp": "Envoyer via WhatsApp",
       "shareBouquet": "Partager ce bouquet",
       "accessibilityOptions": "Options d'accessibilité",
@@ -2103,7 +2355,10 @@ export default {
       "fromLabel": "de",
       "shareBouquetTitle": "Partager le bouquet",
       "shareBouquetSubtitle": "Envoie ce magnifique bouquet à d'autres personnes",
-      "noLanguagesFound": "Aucune langue trouvée"
+      "noLanguagesFound": "Aucune langue trouvée",
+      "saveCard": "Enregistrer la carte",
+      "savedSuccess": "Enregistré avec succès !",
+      "savedSuccessDesc": "Le bouquet a été enregistré dans votre galerie photo."
     },
     "settings": {
       "title": "Paramètres",
@@ -2133,7 +2388,9 @@ export default {
       "cancel": "Annuler",
       "clearDataDesc": "Gérer les données de cache, de widget et d'historique",
       "termsSubtext": "Lire nos conditions d'utilisation",
-      "privacySubtext": "Découvrez comment nous protégeons vos données"
+      "privacySubtext": "Découvrez comment nous protégeons vos données",
+      "creditsSubtext": "Outils, ressources et remerciements spéciaux",
+      "dataManagementDesc": "Gérez et libérez le stockage local occupé par les fichiers en cache, les widgets et les bouquets reçus."
     },
     "share": {
       "subtitle": "Partage ton bouquet avec une personne chère",
@@ -2190,7 +2447,10 @@ export default {
       "successMessage": "Widget mis à jour ! Si tu ne l'as pas encore ajouté à ton écran d'accueil, suis les instructions dans le menu d'aide.",
       "errorTitle": "Erreur",
       "errorMessage": "La mise à jour du widget a échoué.",
-      "from": "de {name}"
+      "from": "de {name}",
+      "clearMessage": "Voulez-vous vraiment effacer ce widget ?",
+      "clearTitle": "Effacer le widget",
+      "myWidgets": "Mes widgets"
     },
     "privacy": {
       "title": "Politique de confidentialité",
@@ -2378,6 +2638,71 @@ export default {
       "songTheyChose": "La chanson choisie pour vous",
       "yourMessage": "Votre message pour lui/elle",
       "done": "Terminé"
+    },
+    "ageVerification": {
+      "title": "Vérification de l'âge",
+      "prompt": "Veuillez indiquer votre année de naissance. Nous ne le demandons que pour assurer la sécurité des enfants et respecter les règles de confidentialité."
+    },
+    "credits": {
+      "title": "Crédits",
+      "specialThanks": "Remerciements spéciaux",
+      "toolsTitle": "Outils et ressources",
+      "toolsSubtitle": "Cette application a été rendue possible grâce aux formidables outils et plateformes suivants :",
+      "lottieFiles": "pour ses animations magnifiques et de haute qualité.",
+      "storyset": "pour ses illustrations superbes et expressives.",
+      "reactNative": "pour le framework principal.",
+      "firebase": "pour les services backend.",
+      "cloudflare": "pour le DNS et la sécurité web.",
+      "netlify": "pour l'hébergement et le déploiement.",
+      "sarvamAI": "pour les fonctionnalités intelligentes de texte et de génération."
+    },
+    "games": {
+      "title": "Jeux du Jardin Fleuri",
+      "subtitle": "Détendez-vous et jouez à nos mini-jeux floraux et cosy pour débloquer de nouveaux designs et idées de bouquets.",
+      "sortTitle": "Puzzle de Tri des Fleurs",
+      "sortDesc": "Triez les tiges de fleurs identiques dans les emplacements correspondants. Touchez pour sélectionner et déplacer.",
+      "matchTitle": "Assortiment de Fleurs",
+      "matchDesc": "Échangez des fleurs adjacentes pour en aligner 3 ou plus et déclencher des combos en cascade.",
+      "playNow": "Jouer maintenant"
+    },
+    "golden": {
+      "title": "Bouquet Doré",
+      "subtitle": "Un arrangement exclusif et en édition limitée conçu pour capturer les moments les plus précieux de la vie.",
+      "claimTitle": "Réclamer l'invitation",
+      "claimDesc": "Vous avez reçu une invitation dorée ? Entrez votre code ci-dessous pour débloquer votre création.",
+      "inputPlaceholder": "Entrez le code de parrainage",
+      "unlock": "Débloquer",
+      "shareTitle": "Partagez la magie",
+      "shareDesc": "Invitez vos amis avec votre code unique. Vous gagnerez tous les deux un Crédit Doré lorsqu'ils l'utiliseront.",
+      "signInToGetCode": "Connectez-vous pour obtenir le code",
+      "share": "Partager",
+      "friendsJoined": "Amis inscrits",
+      "noCredits": "Aucun Crédit Doré",
+      "noCreditsDesc": "Invitez des amis ou utilisez un code pour gagner des crédits.",
+      "create": "Créer un Bouquet Doré",
+      "ownCodeError": "Vous ne pouvez pas utiliser votre propre code.",
+      "alreadyClaimedError": "Vous avez déjà réclamé ce code.",
+      "invalidCodeError": "Code invalide.",
+      "claimSuccess": "Réclamé avec succès !",
+      "claimSuccessDesc": "Vous avez gagné un Crédit Doré.",
+      "failed": "Échec",
+      "error": "Erreur",
+      "connectionError": "Impossible de se connecter au serveur.",
+      "shareText": "Débloquez le Bouquet Doré avec mon invitation ! Téléchargez l'application et entrez mon code {code} ou utilisez ce lien pour réclamer automatiquement votre crédit : {link}",
+      "credit": "Crédit",
+      "credits": "Crédits"
+    },
+    "raok": {
+      "guidelinesTitle": "Acte de Gentillesse Aléatoire",
+      "guidelinesSubtitle": "Envoyez un peu de chaleur et surprenez un inconnu ! Voici comment ça fonctionne et les règles à suivre.",
+      "rule1Title": "Répandez la joie anonymement",
+      "rule1Desc": "Votre bouquet et votre message seront associés aléatoirement par IA à quelqu'un qui a besoin d'un sourire aujourd'hui, en toute anonymat.",
+      "rule2Title": "Soyez positif et encourageant",
+      "rule2Desc": "Écrivez des mots chaleureux et encourageants. Laissez des commentaires qui inspirent l'espoir, la gentillesse et le soutien.",
+      "rule3Title": "Aucune information personnelle",
+      "rule3Desc": "Pour votre sécurité et celle des autres, n'incluez pas de noms, numéros de téléphone, adresses, identifiants de réseaux sociaux ni liens.",
+      "understand": "Je comprends",
+      "soundsGood": "Ça marche"
     }
   },
   "hi": {
@@ -2428,7 +2753,8 @@ export default {
       "about": "हमारे बारे में",
       "emailsLeft": "ईमेल इस महीने के लिए बचे हैं",
       "home": "होम",
-      "history": "हिस्ट्री"
+      "history": "हिस्ट्री",
+      "credits": "श्रेय"
     },
     "common": {
       "cancel": "रद्द करें",
@@ -2446,7 +2772,8 @@ export default {
       "companyName": "E Greet",
       "loading": "लोड हो रहा है...",
       "enabled": "सक्षम",
-      "disabled": "अक्षम"
+      "disabled": "अक्षम",
+      "clear": "साफ़ करें"
     },
     "languageScreen": {
       "title": "भाषा",
@@ -2520,7 +2847,19 @@ export default {
       "addPasswordLogin": "पासवर्ड लॉगिन जोड़ें",
       "createPasswordTitle": "पासवर्ड बनाएं",
       "createPasswordDesc": "Google के साथ-साथ अपनी ईमेल से लॉगिन करने के लिए एक पासवर्ड बनाएं।",
-      "passwordCreated": "पासवर्ड सफलतापूर्वक बन गया!"
+      "passwordCreated": "पासवर्ड सफलतापूर्वक बन गया!",
+      "appearance": "दिखावट",
+      "hapticFeedback": "हैप्टिक फीडबैक",
+      "hapticFeedbackDesc": "बटन दबाने पर वाइब्रेट करें",
+      "language": "भाषा",
+      "notificationsDesc": "गुलदस्ते के जवाबों के लिए सूचनाएं प्राप्त करें",
+      "notificationsEnabled": "सूचनाएं सक्षम करें",
+      "sounds": "ध्वनियाँ",
+      "theme": "थीम",
+      "themeDesc": "अपनी पसंदीदा थीम चुनें",
+      "touchSound": "टच साउंड",
+      "touchSoundDesc": "बटन दबाने पर ध्वनि बजाएं",
+      "disconnectEmail": "ईमेल लॉगिन डिस्कनेक्ट करें"
     },
     "login": {
       "title": "साइन इन",
@@ -2635,6 +2974,8 @@ export default {
       "widget": "विजेट",
       "scheduledEmails": "शेड्यूल किए गए ईमेल",
       "scheduledEmailsDesc": "शेड्यूल किए गए गुलदस्तों की डिलीवरी देखें और मैनेज करें",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "प्यार से बनाया गया",
       "makeTogether": "एक साथ गुलदस्ता बनाएं",
       "makeTogetherDesc": "रीयल-टाइम में फूल बनाएं और संदेश लिखें।",
@@ -2643,7 +2984,29 @@ export default {
       "roomCode": "रूम कोड:",
       "removeRoom": "रूम हटाएं?",
       "removeRoomDesc": "क्या इतिहास से रूम #{code} को हटाना चाहते हैं?",
-      "remove": "हटाएं"
+      "remove": "हटाएं",
+      "creativeStudio": "क्रिएटिव स्टूडियो",
+      "creativeStudioDesc": "फ्लावर कीबोर्ड, जन्मदिन वॉलपेपर और रेसिपीज़।",
+      "limitedEdition": "सीमित संस्करण",
+      "goldenBouquet": "गोल्डन गुलदस्ता",
+      "goldenBouquetDesc": "अनलॉक करने या रेफरल कोड दर्ज करने के लिए टैप करें",
+      "createBouquet": "गुलदस्ता बनाएं",
+      "spreadKindness": "दयालुता फैलाएं",
+      "spreadKindnessDesc": "किसी अजनबी का दिन रोशन करने के लिए एक रहस्यमय गुलदस्ता भेजें।",
+      "temporarilyDisabled": "अस्थायी रूप से अक्षम",
+      "featureDisabled": "सुविधा अक्षम",
+      "safetyViolationDesc": "सुरक्षा उल्लंघनों के कारण सुविधा अस्थायी रूप से अक्षम है।",
+      "loginRequired": "लॉगिन आवश्यक है",
+      "loginToSpreadKindness": "यादृच्छिक दयालुता का कार्य भेजने के लिए आपको लॉग इन होना चाहिए।",
+      "cancel": "रद्द करें",
+      "login": "लॉग इन करें",
+      "whatsNewTitle": "नया क्या है",
+      "whatsNewSubtitle": "हमने जुड़ने और खुशी फैलाने के कुछ सुंदर नए तरीके जोड़े हैं।",
+      "whatsNewGoldenTitle": "गोल्डन गुलदस्ता",
+      "whatsNewGoldenDesc": "खास पलों के लिए डिज़ाइन की गई हमारी चमकदार, प्रीमियम गुलदस्ता शैली के साथ अत्यंत आभार व्यक्त करें।",
+      "whatsNewRaokTitle": "यादृच्छिक दयालुता के कार्य",
+      "whatsNewRaokDesc": "पूरी दुनिया में गुमनाम डिजिटल गुलदस्ते भेजें और प्राप्त करें, जरूरतमंदों के साथ गर्माहट और सकारात्मकता साझा करें।",
+      "whatsNewClose": "ठीक लगता है"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -2745,7 +3108,7 @@ export default {
       "unsavedDesc": "आपने बदलाव सेव नहीं किए हैं। क्या आप वाकई वापस जाना चाहते हैं?",
       "stay": "रुकें",
       "leave": "बाहर जाएं",
-      "howToCreate": "अपना गुलदस्ता कैसे बनाएं",
+      "howToCreate": "गुलदस्ता कैसे बनाएं",
       "availableDesc": "बढ़िया! यह नाम उपलब्ध है。",
       "dyslexiaFriendly": "डिस्लेक्सिया-अनुकूल फ़ॉन्ट",
       "dyslexiaFriendlyDesc": "बेहतर स्पेसिंग के साथ पढ़ने में आसान फ़ॉन्ट का इस्तेमाल करता है",
@@ -2808,7 +3171,21 @@ export default {
       "shareText": "मैंने तुम्हारे लिए यह खूबसूरत गुलदस्ता बनाया है!",
       "aiGenerated": "AI गुलदस्ता बन गया",
       "useThis": "इसे इस्तेमाल करें →",
-      "aiGeneratedTitle": "AI गुलदस्ता बन गया"
+      "aiGeneratedTitle": "AI गुलदस्ता बन गया",
+      "loginRequiredDesc": "ईमेल के ज़रिए गुलदस्ते भेजने के लिए कृपया साइन इन करें।",
+      "selectFlowers": "फूल चुनें",
+      "selectFlowersDesc": "शुरू करने के लिए कम से कम 3 फूल चुनें। उसका अर्थ और रंग विकल्प देखने के लिए फूल कार्ड पर टैप करें।",
+      "arrangeThem": "उन्हें व्यवस्थित करें",
+      "arrangeThemDesc": "फूलों को कैनवास पर खींचें। आकार, घुमाव और लेयरिंग संपादित करने के लिए टूलबार का उपयोग करें।",
+      "personalizeAndSend": "वैयक्तिकृत करें और भेजें",
+      "personalizeAndSendDesc": "एक दिल छू लेने वाला संदेश जोड़ें, एक गाना चुनें, और साझा करने के लिए एक अनूठा लिंक जनरेट करें।",
+      "enjoyingApp": "ऐप का आनंद ले रहे हैं?",
+      "thankYou": "धन्यवाद!",
+      "openPlayStore": "Play Store खोलें",
+      "maybeLater": "शायद बाद में",
+      "sarahsSelection": "सारा का चयन",
+      "createAccountAttach": "फोटो या वॉइस नोट जोड़ने के लिए खाता बनाएं या साइन इन करें",
+      "returnToHome": "होम पर वापस जाएं"
     },
     "bouquetView": {
       "loading": "आपका गुलदस्ता लोड हो रहा है...",
@@ -2875,7 +3252,15 @@ export default {
       "fromLabel": "की ओर से",
       "shareBouquetTitle": "गुलदस्ता शेयर करें",
       "shareBouquetSubtitle": "यह खूबसूरत गुलदस्ता दूसरों को भेजें",
-      "noLanguagesFound": "कोई भाषा नहीं मिली"
+      "noLanguagesFound": "कोई भाषा नहीं मिली",
+      "listenOnYouTube": "YouTube पर खोलें",
+      "playingFromStart": "शुरुआत से चलाया जा रहा है",
+      "playingOnYouTube": "YouTube पर चल रहा है",
+      "saveCard": "कार्ड सहेजें",
+      "savedSuccess": "सफलतापूर्वक सहेजा गया!",
+      "savedSuccessDesc": "गुलदस्ता आपकी फोटो गैलरी में सहेज दिया गया है।",
+      "switchToAudio": "केवल ऑडियो",
+      "switchToVideo": "वीडियो देखें"
     },
     "settings": {
       "title": "सेटिंग्स",
@@ -2905,7 +3290,9 @@ export default {
       "cancel": "रद्द करें",
       "clearDataDesc": "कैश, विजेट और इतिहास डेटा प्रबंधित करें",
       "termsSubtext": "हमारी सेवा की शर्तों का अनुबंध पढ़ें",
-      "privacySubtext": "जानें कि हम आपके डेटा की गोपनीयता की सुरक्षा कैसे करते हैं"
+      "privacySubtext": "जानें कि हम आपके डेटा की गोपनीयता की सुरक्षा कैसे करते हैं",
+      "creditsSubtext": "उपकरण, संसाधन और विशेष धन्यवाद",
+      "dataManagementDesc": "कैश की गई फ़ाइलों, विजेट्स और प्राप्त गुलदस्तों द्वारा घेरे गए स्थानीय स्टोरेज को प्रबंधित करें और खाली करें।"
     },
     "share": {
       "subtitle": "अपना गुलदस्ता किसी ख़ास के साथ शेयर करें",
@@ -2962,7 +3349,10 @@ export default {
       "successMessage": "विजेट अपडेट हो गया! अगर आपने अभी तक विजेट को होम स्क्रीन पर नहीं जोड़ा है, तो हेल्प मेनू में दिए गए निर्देशों का पालन करें।",
       "errorTitle": "एरर",
       "errorMessage": "विजेट अपडेट नहीं किया जा सका।",
-      "from": "{name} की ओर से"
+      "from": "{name} की ओर से",
+      "clearMessage": "क्या आप वाकई इस विजेट को साफ़ करना चाहते हैं?",
+      "clearTitle": "विजेट साफ़ करें",
+      "myWidgets": "मेरे विजेट्स"
     },
     "privacy": {
       "title": "प्राइवेसी पॉलिसी",
@@ -3150,6 +3540,71 @@ export default {
       "songTheyChose": "आपके लिए उन्होंने जो गाना चुना",
       "yourMessage": "उनके लिए आपका संदेश",
       "done": "हो गया"
+    },
+    "ageVerification": {
+      "title": "आयु सत्यापन",
+      "prompt": "कृपया अपना जन्म वर्ष दर्ज करें। हम इसे केवल बाल सुरक्षा सुनिश्चित करने और गोपनीयता दिशानिर्देशों का पालन करने के लिए पूछते हैं।"
+    },
+    "credits": {
+      "title": "श्रेय",
+      "specialThanks": "विशेष धन्यवाद",
+      "toolsTitle": "उपकरण और संसाधन",
+      "toolsSubtitle": "यह ऐप निम्नलिखित शानदार उपकरणों और प्लेटफ़ॉर्म की बदौलत संभव हो सका:",
+      "lottieFiles": "सुंदर, उच्च-गुणवत्ता वाले एनिमेशन प्रदान करने के लिए।",
+      "storyset": "आश्चर्यजनक और अभिव्यंजक चित्रों के लिए।",
+      "reactNative": "मुख्य फ्रेमवर्क के लिए।",
+      "firebase": "बैकएंड सेवाओं के लिए।",
+      "cloudflare": "DNS और वेब सुरक्षा के लिए।",
+      "netlify": "होस्टिंग और डिप्लॉयमेंट के लिए।",
+      "sarvamAI": "इंटेलिजेंट टेक्स्ट और जनरेशन सुविधाओं के लिए।"
+    },
+    "games": {
+      "title": "ब्लॉसम गार्डन गेम्स",
+      "subtitle": "नए गुलदस्ता डिज़ाइन और विचार अनलॉक करने के लिए हमारे आरामदायक फूल मिनी-गेम्स खेलें और आराम करें।",
+      "sortTitle": "ब्लॉसम सॉर्ट पज़ल",
+      "sortDesc": "मिलते-जुलते फूलों के तनों को समान स्लॉट्स में क्रमबद्ध करें। चुनने और हिलाने के लिए टैप करें।",
+      "matchTitle": "ब्लॉसम मैच",
+      "matchDesc": "आसपास के फूलों को बदलकर 3 या अधिक की पंक्ति मिलाएं और कैस्केडिंग कॉम्बो ट्रिगर करें।",
+      "playNow": "अभी खेलें"
+    },
+    "golden": {
+      "title": "गोल्डन गुलदस्ता",
+      "subtitle": "जीवन के सबसे कीमती पलों को संजोने के लिए डिज़ाइन की गई एक विशिष्ट, सीमित संस्करण की सजावट।",
+      "claimTitle": "आमंत्रण प्राप्त करें",
+      "claimDesc": "क्या आपको गोल्डन आमंत्रण मिला है? अपनी रचना अनलॉक करने के लिए नीचे अपना कोड दर्ज करें।",
+      "inputPlaceholder": "रेफरल कोड दर्ज करें",
+      "unlock": "अनलॉक करें",
+      "shareTitle": "जादू साझा करें",
+      "shareDesc": "अपने अनूठे कोड से दोस्तों को आमंत्रित करें। जब वे इसका उपयोग करेंगे तो आप दोनों को गोल्डन क्रेडिट मिलेगा।",
+      "signInToGetCode": "कोड पाने के लिए साइन इन करें",
+      "share": "साझा करें",
+      "friendsJoined": "जुड़े हुए दोस्त",
+      "noCredits": "कोई गोल्डन क्रेडिट नहीं",
+      "noCreditsDesc": "क्रेडिट अर्जित करने के लिए दोस्तों को आमंत्रित करें या कोड का उपयोग करें।",
+      "create": "गोल्डन गुलदस्ता बनाएं",
+      "ownCodeError": "आप अपना खुद का कोड उपयोग नहीं कर सकते।",
+      "alreadyClaimedError": "आप पहले ही इस कोड का दावा कर चुके हैं।",
+      "invalidCodeError": "अमान्य कोड।",
+      "claimSuccess": "सफलतापूर्वक प्राप्त किया गया!",
+      "claimSuccessDesc": "आपने एक गोल्डन क्रेडिट अर्जित किया है।",
+      "failed": "विफल",
+      "error": "त्रुटि",
+      "connectionError": "सर्वर से कनेक्ट नहीं हो सका।",
+      "shareText": "मेरे आमंत्रण से गोल्डन गुलदस्ता अनलॉक करें! ऐप डाउनलोड करें और मेरा कोड {code} दर्ज करें या इस लिंक का उपयोग करके स्वचालित रूप से अपना क्रेडिट प्राप्त करें: {link}",
+      "credit": "क्रेडिट",
+      "credits": "क्रेडिट्स"
+    },
+    "raok": {
+      "guidelinesTitle": "यादृच्छिक दयालुता का कार्य",
+      "guidelinesSubtitle": "थोड़ी गर्माहट भेजें और किसी अजनबी को चौंका दें! यह कैसे काम करता है और पालन करने के लिए दिशानिर्देश यहां दिए गए हैं।",
+      "rule1Title": "गुमनाम रूप से खुशी फैलाएं",
+      "rule1Desc": "आपका गुलदस्ता और संदेश AI द्वारा पूरी तरह गुमनाम रूप से किसी ऐसे व्यक्ति से बेतरतीब ढंग से मिलाया जाएगा जिसे आज मुस्कान की जरूरत है।",
+      "rule2Title": "सकारात्मक और प्रोत्साहक बनें",
+      "rule2Desc": "गर्मजोशी भरे, उत्साहवर्धक शब्द लिखें। ऐसी टिप्पणियाँ छोड़ें जो आशा, दयालुता और समर्थन को प्रेरित करें।",
+      "rule3Title": "कोई व्यक्तिगत जानकारी नहीं",
+      "rule3Desc": "अपनी और दूसरों की सुरक्षा के लिए, नाम, फोन नंबर, पते, सोशल हैंडल या लिंक शामिल न करें।",
+      "understand": "मैं समझता/समझती हूं",
+      "soundsGood": "ठीक लगता है"
     }
   },
   "de": {
@@ -3200,7 +3655,8 @@ export default {
       "about": "Über uns",
       "emailsLeft": "E-Mails in diesem Monat übrig",
       "home": "Startseite",
-      "history": "Verlauf"
+      "history": "Verlauf",
+      "credits": "Danksagungen"
     },
     "common": {
       "cancel": "Abbrechen",
@@ -3218,7 +3674,8 @@ export default {
       "companyName": "E Greet",
       "loading": "Lädt...",
       "enabled": "Aktiviert",
-      "disabled": "Deaktiviert"
+      "disabled": "Deaktiviert",
+      "clear": "Löschen"
     },
     "languageScreen": {
       "title": "Sprache",
@@ -3292,7 +3749,19 @@ export default {
       "addPasswordLogin": "Passwort-Login hinzufügen",
       "createPasswordTitle": "Passwort erstellen",
       "createPasswordDesc": "Erstelle ein Passwort, um dich auch mit deiner E-Mail-Adresse statt nur über Google anzumelden.",
-      "passwordCreated": "Passwort erfolgreich erstellt!"
+      "passwordCreated": "Passwort erfolgreich erstellt!",
+      "appearance": "DARSTELLUNG",
+      "hapticFeedback": "Haptisches Feedback",
+      "hapticFeedbackDesc": "Beim Tippen auf Schaltflächen vibrieren",
+      "language": "Sprache",
+      "notificationsDesc": "Benachrichtigungen für Antworten auf Sträuße erhalten",
+      "notificationsEnabled": "Benachrichtigungen aktivieren",
+      "sounds": "TÖNE",
+      "theme": "Design",
+      "themeDesc": "Wähle dein bevorzugtes Design",
+      "touchSound": "Berührungston",
+      "touchSoundDesc": "Beim Tippen auf Schaltflächen einen Ton abspielen",
+      "disconnectEmail": "E-Mail-Anmeldung trennen"
     },
     "login": {
       "title": "Anmelden",
@@ -3407,6 +3876,8 @@ export default {
       "widget": "WIDGET",
       "scheduledEmails": "Geplante E-Mails",
       "scheduledEmailsDesc": "Geplante Blumenstrauß-Lieferungen ansehen & verwalten",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "Mit Liebe gemacht",
       "makeTogether": "Zusammen Blumenstrauß machen",
       "makeTogetherDesc": "Zeichnet in Echtzeit Blumen & schreibt Nachrichten.",
@@ -3415,7 +3886,29 @@ export default {
       "roomCode": "Raumcode:",
       "removeRoom": "Raum entfernen?",
       "removeRoomDesc": "Raum #{code} aus dem Verlauf entfernen?",
-      "remove": "Entfernen"
+      "remove": "Entfernen",
+      "creativeStudio": "Kreativ-Studio",
+      "creativeStudioDesc": "Blumen-Tastatur, Geburtstags-Hintergrundbild & Rezepte.",
+      "limitedEdition": "LIMITIERTE EDITION",
+      "goldenBouquet": "Goldener Strauß",
+      "goldenBouquetDesc": "Tippen, um freizuschalten oder Empfehlungscode einzugeben",
+      "createBouquet": "Strauß erstellen",
+      "spreadKindness": "Freundlichkeit verbreiten",
+      "spreadKindnessDesc": "Sende einen Überraschungsstrauß, um den Tag eines Fremden zu erhellen.",
+      "temporarilyDisabled": "Vorübergehend deaktiviert",
+      "featureDisabled": "Funktion deaktiviert",
+      "safetyViolationDesc": "Funktion aufgrund von Sicherheitsverstößen vorübergehend deaktiviert.",
+      "loginRequired": "Anmeldung erforderlich",
+      "loginToSpreadKindness": "Du musst angemeldet sein, um eine zufällige Freundlichkeitstat zu senden.",
+      "cancel": "Abbrechen",
+      "login": "Anmelden",
+      "whatsNewTitle": "Neuigkeiten",
+      "whatsNewSubtitle": "Wir haben schöne neue Wege hinzugefügt, um Verbindungen zu schaffen und Freude zu verbreiten.",
+      "whatsNewGoldenTitle": "Goldener Strauß",
+      "whatsNewGoldenDesc": "Drücke ultimative Dankbarkeit mit unserem strahlenden, schimmernden Premium-Straußstil für besondere Momente aus.",
+      "whatsNewRaokTitle": "Zufällige Freundlichkeitstaten",
+      "whatsNewRaokDesc": "Sende und empfange anonyme digitale Sträuße weltweit und teile Wärme und Positivität mit denen, die sie brauchen.",
+      "whatsNewClose": "Klingt gut"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -3513,7 +4006,7 @@ export default {
       "unsavedDesc": "Du hast ungespeicherte Änderungen. Möchtest du wirklich verlassen?",
       "stay": "Bleiben",
       "leave": "Verlassen",
-      "howToCreate": "So erstellst du deinen Blumenstrauß",
+      "howToCreate": "So erstellst du einen Strauß",
       "availableDesc": "Super! Dieser Name ist verfügbar.",
       "dyslexiaFriendly": "Legasthenie-freundliche Schriftart",
       "dyslexiaFriendlyDesc": "Verwendet eine lesefreundliche Schriftart mit verbesserten Abständen",
@@ -3580,7 +4073,21 @@ export default {
       "shareText": "Ich habe diesen wunderschönen Blumenstrauß für dich gemacht!",
       "aiGenerated": "KI-Blumenstrauß erstellt",
       "useThis": "Diesen verwenden →",
-      "aiGeneratedTitle": "KI-Blumenstrauß erstellt"
+      "aiGeneratedTitle": "KI-Blumenstrauß erstellt",
+      "loginRequiredDesc": "Bitte melde dich an, um Sträuße per E-Mail zu versenden.",
+      "selectFlowers": "Blumen auswählen",
+      "selectFlowersDesc": "Wähle mindestens 3 Blumen aus, um zu beginnen. Tippe auf eine Blumenkarte, um ihre Bedeutung und Farboptionen zu sehen.",
+      "arrangeThem": "Arrangiere sie",
+      "arrangeThemDesc": "Ziehe die Blumen auf der Leinwand herum. Nutze die Werkzeugleiste, um Größe, Drehung und Ebenen zu bearbeiten.",
+      "personalizeAndSend": "Personalisieren & senden",
+      "personalizeAndSendDesc": "Füge eine herzliche Nachricht hinzu, wähle ein Lied aus und erstelle einen einzigartigen Link zum Teilen.",
+      "enjoyingApp": "Gefällt dir die App?",
+      "thankYou": "Danke!",
+      "openPlayStore": "Play Store öffnen",
+      "maybeLater": "Vielleicht später",
+      "sarahsSelection": "Sarahs Auswahl",
+      "createAccountAttach": "Erstelle ein Konto oder melde dich an, um ein Foto oder eine Sprachnotiz anzuhängen",
+      "returnToHome": "Zurück zur Startseite"
     },
     "bouquetView": {
       "loading": "Dein Blumenstrauß wird geladen...",
@@ -3647,7 +4154,15 @@ export default {
       "fromLabel": "von",
       "shareBouquetTitle": "Blumenstrauß teilen",
       "shareBouquetSubtitle": "Sende diesen schönen Blumenstrauß an andere",
-      "noLanguagesFound": "Keine Sprachen gefunden"
+      "noLanguagesFound": "Keine Sprachen gefunden",
+      "listenOnYouTube": "In YouTube öffnen",
+      "playingFromStart": "Wiedergabe von Anfang an",
+      "playingOnYouTube": "Wiedergabe auf YouTube",
+      "saveCard": "Karte speichern",
+      "savedSuccess": "Erfolgreich gespeichert!",
+      "savedSuccessDesc": "Der Strauß wurde in deiner Fotogalerie gespeichert.",
+      "switchToAudio": "Nur Audio",
+      "switchToVideo": "Video ansehen"
     },
     "settings": {
       "title": "Einstellungen",
@@ -3677,7 +4192,9 @@ export default {
       "cancel": "Abbrechen",
       "clearDataDesc": "Cache, Widget- und Verlaufsdaten verwalten",
       "termsSubtext": "Lesen Sie unsere Nutzungsbedingungen",
-      "privacySubtext": "Erfahren Sie, wie wir Ihren Datenschutz gewährleisten"
+      "privacySubtext": "Erfahren Sie, wie wir Ihren Datenschutz gewährleisten",
+      "creditsSubtext": "Tools, Ressourcen und besonderer Dank",
+      "dataManagementDesc": "Verwalte und gib lokalen Speicherplatz frei, der von zwischengespeicherten Dateien, Widgets und erhaltenen Sträußen belegt wird."
     },
     "share": {
       "subtitle": "Teile deinen Blumenstrauß mit jemandem Besonderen",
@@ -3734,7 +4251,10 @@ export default {
       "successMessage": "Widget aktualisiert! Wenn du das Widget noch nicht zu deinem Startbildschirm hinzugefügt hast, folge den Anweisungen im Hilfemenü.",
       "errorTitle": "Fehler",
       "errorMessage": "Fehler beim Aktualisieren des Widgets.",
-      "from": "von {name}"
+      "from": "von {name}",
+      "clearMessage": "Möchtest du dieses Widget wirklich löschen?",
+      "clearTitle": "Widget löschen",
+      "myWidgets": "Meine Widgets"
     },
     "privacy": {
       "title": "Datenschutzrichtlinie",
@@ -3922,6 +4442,71 @@ export default {
       "songTheyChose": "Lied, das sie für dich ausgewählt haben",
       "yourMessage": "Deine Nachricht an sie",
       "done": "Fertig"
+    },
+    "ageVerification": {
+      "title": "Altersverifizierung",
+      "prompt": "Bitte gib dein Geburtsjahr ein. Wir fragen danach nur, um den Kinderschutz zu gewährleisten und die Datenschutzrichtlinien einzuhalten."
+    },
+    "credits": {
+      "title": "Danksagungen",
+      "specialThanks": "Besonderer Dank",
+      "toolsTitle": "Tools & Ressourcen",
+      "toolsSubtitle": "Diese App wurde dank folgender großartiger Tools und Plattformen möglich:",
+      "lottieFiles": "für wunderschöne, hochwertige Animationen.",
+      "storyset": "für die beeindruckenden und ausdrucksstarken Illustrationen.",
+      "reactNative": "für das zugrunde liegende Framework.",
+      "firebase": "für Backend-Dienste.",
+      "cloudflare": "für DNS und Websicherheit.",
+      "netlify": "für Hosting und Deployment.",
+      "sarvamAI": "für intelligente Text- und Generierungsfunktionen."
+    },
+    "games": {
+      "title": "Blossom Garden Spiele",
+      "subtitle": "Entspann dich und spiele unsere gemütlichen Blumen-Minispiele, um neue Straußdesigns und Ideen freizuschalten.",
+      "sortTitle": "Blossom-Sortier-Puzzle",
+      "sortDesc": "Sortiere passende Blumenstiele in identische Fächer. Tippe zum Auswählen und Verschieben.",
+      "matchTitle": "Blossom Match",
+      "matchDesc": "Tausche benachbarte Blumen, um 3 oder mehr in einer Reihe zu kombinieren und Kettenkombos auszulösen.",
+      "playNow": "Jetzt spielen"
+    },
+    "golden": {
+      "title": "Goldener Strauß",
+      "subtitle": "Ein exklusives, limitiertes Arrangement, das die kostbarsten Momente des Lebens einfängt.",
+      "claimTitle": "Einladung einlösen",
+      "claimDesc": "Eine goldene Einladung erhalten? Gib unten deinen Code ein, um deine Kreation freizuschalten.",
+      "inputPlaceholder": "Empfehlungscode eingeben",
+      "unlock": "Freischalten",
+      "shareTitle": "Teile die Magie",
+      "shareDesc": "Lade Freunde mit deinem einzigartigen Code ein. Ihr erhaltet beide ein Gold-Guthaben, wenn sie ihn verwenden.",
+      "signInToGetCode": "Anmelden, um den Code zu erhalten",
+      "share": "Teilen",
+      "friendsJoined": "Beigetretene Freunde",
+      "noCredits": "Keine Gold-Guthaben",
+      "noCreditsDesc": "Lade Freunde ein oder nutze einen Code, um Guthaben zu verdienen.",
+      "create": "Goldenen Strauß erstellen",
+      "ownCodeError": "Du kannst deinen eigenen Code nicht verwenden.",
+      "alreadyClaimedError": "Du hast diesen Code bereits eingelöst.",
+      "invalidCodeError": "Ungültiger Code.",
+      "claimSuccess": "Erfolgreich eingelöst!",
+      "claimSuccessDesc": "Du hast ein Gold-Guthaben verdient.",
+      "failed": "Fehlgeschlagen",
+      "error": "Fehler",
+      "connectionError": "Verbindung zum Server nicht möglich.",
+      "shareText": "Schalte den Goldenen Strauß mit meiner Einladung frei! Lade die App herunter und gib meinen Code {code} ein oder nutze diesen Link, um dein Guthaben automatisch zu erhalten: {link}",
+      "credit": "Guthaben",
+      "credits": "Guthaben"
+    },
+    "raok": {
+      "guidelinesTitle": "Zufällige Freundlichkeitstat",
+      "guidelinesSubtitle": "Sende etwas Wärme und überrasche einen Fremden! So funktioniert es und diese Richtlinien solltest du befolgen.",
+      "rule1Title": "Verbreite Freude anonym",
+      "rule1Desc": "Dein Strauß und deine Nachricht werden von der KI zufällig und völlig anonym mit jemandem verbunden, der heute ein Lächeln braucht.",
+      "rule2Title": "Sei positiv und aufbauend",
+      "rule2Desc": "Schreibe warmherzige, ermutigende Worte. Hinterlasse Kommentare, die Hoffnung, Freundlichkeit und Unterstützung vermitteln.",
+      "rule3Title": "Keine persönlichen Daten",
+      "rule3Desc": "Zu deiner und der Sicherheit anderer: gib keine Namen, Telefonnummern, Adressen, Social-Media-Handles oder Links an.",
+      "understand": "Verstanden",
+      "soundsGood": "Klingt gut"
     }
   },
   "ar": {
@@ -3972,7 +4557,8 @@ export default {
       "about": "من نحن",
       "emailsLeft": "رسائل بريد متبقية هذا الشهر",
       "home": "الرئيسية",
-      "history": "السجل"
+      "history": "السجل",
+      "credits": "شكر وتقدير"
     },
     "common": {
       "cancel": "إلغاء",
@@ -3990,7 +4576,8 @@ export default {
       "companyName": "E Greet",
       "loading": "جاري التحميل...",
       "enabled": "مفعّل",
-      "disabled": "معطّل"
+      "disabled": "معطّل",
+      "clear": "مسح"
     },
     "languageScreen": {
       "title": "اللغة",
@@ -4064,7 +4651,19 @@ export default {
       "addPasswordLogin": "إضافة تسجيل الدخول بكلمة المرور",
       "createPasswordTitle": "إنشاء كلمة مرور",
       "createPasswordDesc": "أنشئ كلمة مرور لتسجيل الدخول باستخدام بريدك الإلكتروني وكذلك Google.",
-      "passwordCreated": "تم إنشاء كلمة المرور بنجاح!"
+      "passwordCreated": "تم إنشاء كلمة المرور بنجاح!",
+      "appearance": "المظهر",
+      "hapticFeedback": "الاستجابة اللمسية",
+      "hapticFeedbackDesc": "الاهتزاز عند النقر على الأزرار",
+      "language": "اللغة",
+      "notificationsDesc": "تلقي إشعارات لردود الباقات",
+      "notificationsEnabled": "تفعيل الإشعارات",
+      "sounds": "الأصوات",
+      "theme": "المظهر (الثيم)",
+      "themeDesc": "اختر المظهر المفضل لديك",
+      "touchSound": "صوت اللمس",
+      "touchSoundDesc": "تشغيل صوت عند النقر على الأزرار",
+      "disconnectEmail": "قطع الاتصال بتسجيل الدخول عبر البريد الإلكتروني"
     },
     "login": {
       "title": "تسجيل الدخول",
@@ -4106,7 +4705,9 @@ export default {
       "sendLink": "إرسال رابط إعادة التعيين",
       "successText": "تم إرسال رابط إعادة التعيين! تحقق من صندوق الوارد ومجلد الرسائل غير المرغوب فيها.",
       "backToSignIn": "العودة لتسجيل الدخول",
-      "errorSend": "تعذر إرسال بريد إعادة التعيين. تحقق من العنوان وحاول مرة أخرى."
+      "errorSend": "تعذر إرسال بريد إعادة التعيين. تحقق من العنوان وحاول مرة أخرى.",
+      "backToLogin": "العودة إلى تسجيل الدخول",
+      "rememberPassword": "هل تتذكر كلمة المرور الخاصة بك؟"
     },
     "feedback": {
       "title": "إرسال ملاحظات",
@@ -4177,6 +4778,8 @@ export default {
       "widget": "الويدجت",
       "scheduledEmails": "رسائل مجدولة",
       "scheduledEmailsDesc": "عرض وإدارة مواعيد تسليم الباقات المجدولة",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "صُنعت بحب",
       "makeTogether": "اصنع باقة معًا",
       "makeTogetherDesc": "ارسم الزهور واكتب الرسائل في الوقت الفعلي.",
@@ -4185,7 +4788,29 @@ export default {
       "roomCode": "رمز الغرفة:",
       "removeRoom": "إزالة الغرفة؟",
       "removeRoomDesc": "هل تريد إزالة الغرفة #{code} من السجل؟",
-      "remove": "إزالة"
+      "remove": "إزالة",
+      "creativeStudio": "الاستوديو الإبداعي",
+      "creativeStudioDesc": "لوحة مفاتيح الزهور، خلفية عيد الميلاد والوصفات.",
+      "limitedEdition": "إصدار محدود",
+      "goldenBouquet": "الباقة الذهبية",
+      "goldenBouquetDesc": "اضغط للفتح أو إدخال رمز الإحالة",
+      "createBouquet": "إنشاء باقة",
+      "spreadKindness": "نشر اللطف",
+      "spreadKindnessDesc": "أرسل باقة غامضة لإسعاد يوم شخص غريب.",
+      "temporarilyDisabled": "معطّل مؤقتًا",
+      "featureDisabled": "الميزة معطّلة",
+      "safetyViolationDesc": "تم تعطيل الميزة مؤقتًا بسبب انتهاكات السلامة.",
+      "loginRequired": "تسجيل الدخول مطلوب",
+      "loginToSpreadKindness": "يجب عليك تسجيل الدخول لإرسال عمل عشوائي من اللطف.",
+      "cancel": "إلغاء",
+      "login": "تسجيل الدخول",
+      "whatsNewTitle": "ما الجديد",
+      "whatsNewSubtitle": "لقد أضفنا طرقًا جديدة وجميلة للتواصل ونشر الفرح.",
+      "whatsNewGoldenTitle": "الباقة الذهبية",
+      "whatsNewGoldenDesc": "عبّر عن الامتنان المطلق مع أسلوبنا المتلألئ والفاخر من الباقات المصمم للحظات الخاصة.",
+      "whatsNewRaokTitle": "أعمال اللطف العشوائية",
+      "whatsNewRaokDesc": "أرسل واستقبل باقات رقمية مجهولة الهوية حول العالم، وشارك الدفء والإيجابية مع من يحتاجها.",
+      "whatsNewClose": "يبدو جيدًا"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -4283,7 +4908,7 @@ export default {
       "unsavedDesc": "لديك تغييرات غير محفوظة. هل أنت متأكد أنك تريد المغادرة؟",
       "stay": "البقاء",
       "leave": "المغادرة",
-      "howToCreate": "كيف تصمم باقتك",
+      "howToCreate": "كيفية إنشاء باقة",
       "availableDesc": "رائع! هذا الاسم متاح.",
       "dyslexiaFriendly": "خط ملائم لعسر القراءة",
       "dyslexiaFriendlyDesc": "يستخدم خطاً ملائماً لعسر القراءة مع تباعد محسّن",
@@ -4350,7 +4975,21 @@ export default {
       "shareText": "لقد صممت هذه الباقة الجميلة خصيصاً لك!",
       "aiGenerated": "تم توليد الباقة بالذكاء الاصطناعي",
       "useThis": "استخدم هذا ←",
-      "aiGeneratedTitle": "تم توليد الباقة بالذكاء الاصطناعي"
+      "aiGeneratedTitle": "تم توليد الباقة بالذكاء الاصطناعي",
+      "loginRequiredDesc": "يرجى تسجيل الدخول لإرسال الباقات عبر البريد الإلكتروني.",
+      "selectFlowers": "اختر الأزهار",
+      "selectFlowersDesc": "اختر 3 أزهار على الأقل للبدء. اضغط على بطاقة زهرة لرؤية معناها وخيارات ألوانها.",
+      "arrangeThem": "رتّبها",
+      "arrangeThemDesc": "اسحب الأزهار حول اللوحة. استخدم شريط الأدوات لتعديل الحجم والدوران والطبقات.",
+      "personalizeAndSend": "خصّص وأرسل",
+      "personalizeAndSendDesc": "أضف رسالة صادقة، اختر أغنية، وأنشئ رابطًا فريدًا لمشاركته.",
+      "enjoyingApp": "هل تستمتع بالتطبيق؟",
+      "thankYou": "شكرًا لك!",
+      "openPlayStore": "فتح متجر Play",
+      "maybeLater": "ربما لاحقًا",
+      "sarahsSelection": "مختارات سارة",
+      "createAccountAttach": "أنشئ حسابًا أو سجّل الدخول لإرفاق صورة أو ملاحظة صوتية",
+      "returnToHome": "العودة إلى الرئيسية"
     },
     "bouquetView": {
       "loading": "جاري تحميل باقتك...",
@@ -4417,7 +5056,15 @@ export default {
       "fromLabel": "من",
       "shareBouquetTitle": "مشاركة الباقة",
       "shareBouquetSubtitle": "أرسل هذه الباقة الجميلة للآخرين",
-      "noLanguagesFound": "لم يتم العثور على لغات"
+      "noLanguagesFound": "لم يتم العثور على لغات",
+      "listenOnYouTube": "فتح في يوتيوب",
+      "playingFromStart": "التشغيل من البداية",
+      "playingOnYouTube": "التشغيل على يوتيوب",
+      "saveCard": "حفظ البطاقة",
+      "savedSuccess": "تم الحفظ بنجاح!",
+      "savedSuccessDesc": "تم حفظ الباقة في معرض الصور الخاص بك.",
+      "switchToAudio": "الصوت فقط",
+      "switchToVideo": "مشاهدة الفيديو"
     },
     "settings": {
       "title": "الإعدادات",
@@ -4447,7 +5094,9 @@ export default {
       "cancel": "إلغاء",
       "clearDataDesc": "إدارة ذاكرة التخزين المؤقت والودجت وبيانات السجل",
       "termsSubtext": "اقرأ اتفاقية شروط الخدمة الخاصة بنا",
-      "privacySubtext": "تعرف على كيفية حماية خصوصية بياناتك"
+      "privacySubtext": "تعرف على كيفية حماية خصوصية بياناتك",
+      "creditsSubtext": "الأدوات والموارد والشكر الخاص",
+      "dataManagementDesc": "إدارة وتحرير مساحة التخزين المحلية التي تشغلها الملفات المخبأة والودجت والباقات المستلمة."
     },
     "share": {
       "subtitle": "شارك باقتك مع شخص عزيز",
@@ -4504,7 +5153,10 @@ export default {
       "successMessage": "تم تحديث الويدجت! إذا لم تقم بإضافته إلى شاشتك الرئيسية بعد، فاتبع التعليمات الموجودة في قائمة المساعدة.",
       "errorTitle": "خطأ",
       "errorMessage": "فشل تحديث الويدجت.",
-      "from": "من {name}"
+      "from": "من {name}",
+      "clearMessage": "هل أنت متأكد أنك تريد مسح هذا الودجت؟",
+      "clearTitle": "مسح الودجت",
+      "myWidgets": "الودجت الخاصة بي"
     },
     "privacy": {
       "title": "سياسة الخصوصية",
@@ -4692,6 +5344,71 @@ export default {
       "songTheyChose": "الأغنية التي اختاروها لك",
       "yourMessage": "رسالتك إليهم",
       "done": "تم"
+    },
+    "ageVerification": {
+      "title": "التحقق من العمر",
+      "prompt": "يرجى إدخال سنة ميلادك. نطلب ذلك فقط لضمان سلامة الأطفال والامتثال لإرشادات الخصوصية."
+    },
+    "credits": {
+      "title": "شكر وتقدير",
+      "specialThanks": "شكر خاص",
+      "toolsTitle": "الأدوات والموارد",
+      "toolsSubtitle": "أصبح هذا التطبيق ممكنًا بفضل الأدوات والمنصات الرائعة التالية:",
+      "lottieFiles": "لتوفير رسوم متحركة جميلة وعالية الجودة.",
+      "storyset": "للرسوم التوضيحية المذهلة والمعبرة.",
+      "reactNative": "للإطار الأساسي.",
+      "firebase": "لخدمات الواجهة الخلفية.",
+      "cloudflare": "لخدمة DNS وأمان الويب.",
+      "netlify": "للاستضافة والنشر.",
+      "sarvamAI": "لميزات النصوص الذكية والتوليد."
+    },
+    "games": {
+      "title": "ألعاب حديقة الأزهار",
+      "subtitle": "استرخِ والعب ألعابنا المصغرة الودودة الخاصة بالأزهار لفتح تصاميم وأفكار باقات جديدة.",
+      "sortTitle": "لغز فرز الأزهار",
+      "sortDesc": "افرز سيقان الأزهار المتطابقة في الفتحات المطابقة. اضغط للاختيار والتحريك.",
+      "matchTitle": "مطابقة الأزهار",
+      "matchDesc": "بدّل الأزهار المتجاورة لمطابقة 3 أو أكثر في صف وأطلق تسلسلات متتالية.",
+      "playNow": "العب الآن"
+    },
+    "golden": {
+      "title": "الباقة الذهبية",
+      "subtitle": "تنسيق حصري وإصدار محدود مصمم لالتقاط أثمن لحظات الحياة.",
+      "claimTitle": "المطالبة بالدعوة",
+      "claimDesc": "هل تلقيت دعوة ذهبية؟ أدخل رمزك أدناه لفتح إبداعك.",
+      "inputPlaceholder": "أدخل رمز الإحالة",
+      "unlock": "فتح",
+      "shareTitle": "شارك السحر",
+      "shareDesc": "ادعُ أصدقاءك برمزك الفريد. سيحصل كلاكما على رصيد ذهبي عند استخدامه.",
+      "signInToGetCode": "سجّل الدخول للحصول على الرمز",
+      "share": "مشاركة",
+      "friendsJoined": "الأصدقاء المنضمون",
+      "noCredits": "لا يوجد رصيد ذهبي",
+      "noCreditsDesc": "ادعُ أصدقاءك أو استخدم رمزًا لكسب الأرصدة.",
+      "create": "إنشاء باقة ذهبية",
+      "ownCodeError": "لا يمكنك استخدام رمزك الخاص.",
+      "alreadyClaimedError": "لقد طالبت بهذا الرمز بالفعل.",
+      "invalidCodeError": "رمز غير صالح.",
+      "claimSuccess": "تمت المطالبة بنجاح!",
+      "claimSuccessDesc": "لقد ربحت رصيدًا ذهبيًا.",
+      "failed": "فشل",
+      "error": "خطأ",
+      "connectionError": "تعذر الاتصال بالخادم.",
+      "shareText": "افتح الباقة الذهبية بدعوتي! نزّل التطبيق وأدخل الرمز {code} أو استخدم هذا الرابط للمطالبة برصيدك تلقائيًا: {link}",
+      "credit": "رصيد",
+      "credits": "أرصدة"
+    },
+    "raok": {
+      "guidelinesTitle": "عمل عشوائي من اللطف",
+      "guidelinesSubtitle": "أرسل بعض الدفء وفاجئ شخصًا غريبًا! إليك كيف يعمل الأمر وإرشادات يجب اتباعها.",
+      "rule1Title": "انشر الفرح بشكل مجهول",
+      "rule1Desc": "سيتم مطابقة باقتك ورسالتك عشوائيًا بواسطة الذكاء الاصطناعي مع شخص يحتاج إلى ابتسامة اليوم، بشكل مجهول تمامًا.",
+      "rule2Title": "كن إيجابيًا ومشجعًا",
+      "rule2Desc": "اكتب كلمات دافئة ومشجعة. اترك تعليقات تلهم الأمل واللطف والدعم.",
+      "rule3Title": "لا معلومات شخصية",
+      "rule3Desc": "من أجل سلامتك وسلامة الآخرين، لا تدرج أسماء أو أرقام هواتف أو عناوين أو حسابات تواصل اجتماعي أو روابط.",
+      "understand": "فهمت",
+      "soundsGood": "يبدو جيدًا"
     }
   },
   "ko": {
@@ -4742,7 +5459,8 @@ export default {
       "about": "앱 정보",
       "emailsLeft": "이번 달 남은 이메일",
       "home": "홈",
-      "history": "기록"
+      "history": "기록",
+      "credits": "크레딧"
     },
     "common": {
       "cancel": "취소",
@@ -4760,7 +5478,8 @@ export default {
       "companyName": "E Greet",
       "loading": "로딩 중...",
       "enabled": "활성화됨",
-      "disabled": "비활성화됨"
+      "disabled": "비활성화됨",
+      "clear": "지우기"
     },
     "languageScreen": {
       "title": "언어",
@@ -4834,7 +5553,19 @@ export default {
       "addPasswordLogin": "비밀번호 로그인 추가",
       "createPasswordTitle": "비밀번호 만들기",
       "createPasswordDesc": "구글뿐만 아니라 이메일로도 로그인할 수 있도록 비밀번호를 만드세요.",
-      "passwordCreated": "비밀번호가 성공적으로 생성되었습니다!"
+      "passwordCreated": "비밀번호가 성공적으로 생성되었습니다!",
+      "appearance": "외관",
+      "hapticFeedback": "햅틱 피드백",
+      "hapticFeedbackDesc": "버튼을 누를 때 진동",
+      "language": "언어",
+      "notificationsDesc": "꽃다발 답장에 대한 알림 받기",
+      "notificationsEnabled": "알림 활성화",
+      "sounds": "소리",
+      "theme": "테마",
+      "themeDesc": "선호하는 테마를 선택하세요",
+      "touchSound": "터치 사운드",
+      "touchSoundDesc": "버튼을 누를 때 소리 재생",
+      "disconnectEmail": "이메일 로그인 연결 해제"
     },
     "login": {
       "title": "로그인",
@@ -4876,7 +5607,9 @@ export default {
       "sendLink": "재설정 링크 보내기",
       "successText": "재설정 링크를 보냈습니다! 이메일의 받은 편지함과 스팸함을 확인해주세요.",
       "backToSignIn": "로그인 화면으로 돌아가기",
-      "errorSend": "재설정 이메일을 보낼 수 없습니다. 주소를 확인하고 다시 시도해주세요."
+      "errorSend": "재설정 이메일을 보낼 수 없습니다. 주소를 확인하고 다시 시도해주세요.",
+      "backToLogin": "로그인으로 돌아가기",
+      "rememberPassword": "비밀번호가 기억나시나요?"
     },
     "feedback": {
       "title": "의견 보내기",
@@ -4947,6 +5680,8 @@ export default {
       "widget": "위젯",
       "scheduledEmails": "예약된 이메일",
       "scheduledEmailsDesc": "예약된 꽃다발 전송 내역을 보고 관리하세요",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "사랑을 담아 만든",
       "makeTogether": "함께 부케 만들기",
       "makeTogetherDesc": "실시간으로 꽃을 그리고 메시지를 작성하세요.",
@@ -4955,7 +5690,29 @@ export default {
       "roomCode": "방 코드:",
       "removeRoom": "방을 삭제하시겠습니까?",
       "removeRoomDesc": "기록에서 #{code} 방을 삭제하시겠습니까?",
-      "remove": "삭제"
+      "remove": "삭제",
+      "creativeStudio": "크리에이티브 스튜디오",
+      "creativeStudioDesc": "꽃 키보드, 생일 배경화면 및 레시피.",
+      "limitedEdition": "한정판",
+      "goldenBouquet": "골든 부케",
+      "goldenBouquetDesc": "잠금 해제하거나 추천 코드를 입력하려면 탭하세요",
+      "createBouquet": "꽃다발 만들기",
+      "spreadKindness": "친절 나누기",
+      "spreadKindnessDesc": "낯선 사람의 하루를 밝혀줄 미스터리 꽃다발을 보내세요.",
+      "temporarilyDisabled": "일시적으로 비활성화됨",
+      "featureDisabled": "기능 비활성화됨",
+      "safetyViolationDesc": "안전 위반으로 인해 기능이 일시적으로 비활성화되었습니다.",
+      "loginRequired": "로그인 필요",
+      "loginToSpreadKindness": "무작위 친절 행동을 보내려면 로그인해야 합니다.",
+      "cancel": "취소",
+      "login": "로그인",
+      "whatsNewTitle": "새로운 소식",
+      "whatsNewSubtitle": "연결하고 기쁨을 나눌 수 있는 아름다운 새로운 방법을 추가했습니다.",
+      "whatsNewGoldenTitle": "골든 부케",
+      "whatsNewGoldenDesc": "특별한 순간을 위해 디자인된 화려하고 반짝이는 프리미엄 부케 스타일로 최고의 감사를 표현하세요.",
+      "whatsNewRaokTitle": "무작위 친절 행동",
+      "whatsNewRaokDesc": "전 세계 익명의 디지털 꽃다발을 보내고 받으며, 필요한 사람들과 따뜻함과 긍정을 나누세요.",
+      "whatsNewClose": "좋아요"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -5120,7 +5877,21 @@ export default {
       "shareText": "당신을 위해 만든 꽃다발이에요!",
       "aiGenerated": "AI 꽃다발 생성 완료",
       "useThis": "이걸로 할게요 →",
-      "aiGeneratedTitle": "AI 꽃다발 생성 완료"
+      "aiGeneratedTitle": "AI 꽃다발 생성 완료",
+      "loginRequiredDesc": "이메일로 꽃다발을 보내려면 로그인해 주세요.",
+      "selectFlowers": "꽃 선택",
+      "selectFlowersDesc": "시작하려면 최소 3개의 꽃을 선택하세요. 꽃 카드를 탭하면 의미와 색상 옵션을 볼 수 있습니다.",
+      "arrangeThem": "배치하기",
+      "arrangeThemDesc": "캔버스에서 꽃을 드래그하세요. 도구 모음을 사용해 크기, 회전, 레이어를 편집하세요.",
+      "personalizeAndSend": "맞춤 설정 후 보내기",
+      "personalizeAndSendDesc": "진심 어린 메시지를 추가하고, 노래를 선택하고, 공유할 고유한 링크를 생성하세요.",
+      "enjoyingApp": "앱이 마음에 드시나요?",
+      "thankYou": "감사합니다!",
+      "openPlayStore": "Play 스토어 열기",
+      "maybeLater": "나중에 하기",
+      "sarahsSelection": "Sarah의 셀렉션",
+      "createAccountAttach": "사진이나 음성 메모를 첨부하려면 계정을 만들거나 로그인하세요",
+      "returnToHome": "홈으로 돌아가기"
     },
     "bouquetView": {
       "loading": "꽃다발을 예쁘게 준비하고 있어요...",
@@ -5187,7 +5958,15 @@ export default {
       "fromLabel": "보내는 사람",
       "shareBouquetTitle": "꽃다발 공유하기",
       "shareBouquetSubtitle": "이 아름다운 꽃다발을 다른 사람에게도 전해보세요",
-      "noLanguagesFound": "지원하는 언어가 없습니다"
+      "noLanguagesFound": "지원하는 언어가 없습니다",
+      "listenOnYouTube": "YouTube에서 열기",
+      "playingFromStart": "처음부터 재생 중",
+      "playingOnYouTube": "YouTube에서 재생 중",
+      "saveCard": "카드 저장",
+      "savedSuccess": "성공적으로 저장되었습니다!",
+      "savedSuccessDesc": "꽃다발이 사진 갤러리에 저장되었습니다.",
+      "switchToAudio": "오디오만",
+      "switchToVideo": "영상 보기"
     },
     "settings": {
       "title": "설정",
@@ -5217,7 +5996,9 @@ export default {
       "cancel": "취소",
       "clearDataDesc": "캐시, 위젯 및 기록 데이터 관리",
       "termsSubtext": "서비스 약관 읽기",
-      "privacySubtext": "데이터 개인정보 보호 방법 알아보기"
+      "privacySubtext": "데이터 개인정보 보호 방법 알아보기",
+      "creditsSubtext": "도구, 리소스 및 특별 감사",
+      "dataManagementDesc": "캐시된 파일, 위젯 및 받은 꽃다발이 차지하는 로컬 저장 공간을 관리하고 확보하세요."
     },
     "share": {
       "subtitle": "소중한 사람에게 꽃다발을 보내보세요",
@@ -5274,7 +6055,10 @@ export default {
       "successMessage": "위젯이 업데이트되었습니다! 아직 홈 화면에 위젯을 추가하지 않았다면 도움말 메뉴의 설명을 확인해주세요.",
       "errorTitle": "오류",
       "errorMessage": "위젯을 업데이트하지 못했습니다.",
-      "from": "보내는 사람: {name}"
+      "from": "보내는 사람: {name}",
+      "clearMessage": "이 위젯을 지우시겠습니까?",
+      "clearTitle": "위젯 지우기",
+      "myWidgets": "내 위젯"
     },
     "privacy": {
       "title": "개인정보 처리방침",
@@ -5462,6 +6246,71 @@ export default {
       "songTheyChose": "나를 위해 선택한 노래",
       "yourMessage": "그들에게 보낸 메시지",
       "done": "완료"
+    },
+    "ageVerification": {
+      "title": "연령 확인",
+      "prompt": "출생 연도를 입력해 주세요. 아동 안전을 보장하고 개인정보 보호 지침을 준수하기 위해서만 요청드립니다."
+    },
+    "credits": {
+      "title": "크레딧",
+      "specialThanks": "특별 감사",
+      "toolsTitle": "도구 및 리소스",
+      "toolsSubtitle": "이 앱은 다음과 같은 훌륭한 도구와 플랫폼 덕분에 만들어질 수 있었습니다:",
+      "lottieFiles": "아름답고 고품질의 애니메이션을 제공해 주셔서.",
+      "storyset": "멋지고 표현력 있는 일러스트를 제공해 주셔서.",
+      "reactNative": "핵심 프레임워크를 제공해 주셔서.",
+      "firebase": "백엔드 서비스를 제공해 주셔서.",
+      "cloudflare": "DNS 및 웹 보안을 제공해 주셔서.",
+      "netlify": "호스팅 및 배포를 제공해 주셔서.",
+      "sarvamAI": "지능형 텍스트 및 생성 기능을 제공해 주셔서."
+    },
+    "games": {
+      "title": "블로썸 가든 게임",
+      "subtitle": "편안하게 아기자기한 꽃 미니게임을 즐기며 새로운 꽃다발 디자인과 아이디어를 잠금 해제하세요.",
+      "sortTitle": "블로썸 소트 퍼즐",
+      "sortDesc": "일치하는 꽃 줄기를 동일한 슬롯에 정렬하세요. 탭하여 선택하고 이동합니다.",
+      "matchTitle": "블로썸 매치",
+      "matchDesc": "인접한 꽃을 바꿔서 3개 이상을 한 줄로 맞추고 연쇄 콤보를 발동시키세요.",
+      "playNow": "지금 플레이"
+    },
+    "golden": {
+      "title": "골든 부케",
+      "subtitle": "인생의 가장 소중한 순간을 담기 위해 디자인된 독점적인 한정판 꽃다발.",
+      "claimTitle": "초대장 받기",
+      "claimDesc": "골든 초대장을 받으셨나요? 아래에 코드를 입력하여 작품을 잠금 해제하세요.",
+      "inputPlaceholder": "추천 코드 입력",
+      "unlock": "잠금 해제",
+      "shareTitle": "마법을 공유하세요",
+      "shareDesc": "고유한 코드로 친구를 초대하세요. 친구가 사용하면 두 분 모두 골든 크레딧을 받습니다.",
+      "signInToGetCode": "코드를 받으려면 로그인하세요",
+      "share": "공유",
+      "friendsJoined": "가입한 친구",
+      "noCredits": "골든 크레딧 없음",
+      "noCreditsDesc": "친구를 초대하거나 코드를 사용하여 크레딧을 얻으세요.",
+      "create": "골든 부케 만들기",
+      "ownCodeError": "본인의 코드는 사용할 수 없습니다.",
+      "alreadyClaimedError": "이미 이 코드를 사용했습니다.",
+      "invalidCodeError": "유효하지 않은 코드입니다.",
+      "claimSuccess": "성공적으로 받았습니다!",
+      "claimSuccessDesc": "골든 크레딧을 획득했습니다.",
+      "failed": "실패",
+      "error": "오류",
+      "connectionError": "서버에 연결할 수 없습니다.",
+      "shareText": "제 초대로 골든 부케를 잠금 해제하세요! 앱을 다운로드하고 제 코드 {code}를 입력하거나 이 링크를 사용하여 자동으로 크레딧을 받으세요: {link}",
+      "credit": "크레딧",
+      "credits": "크레딧"
+    },
+    "raok": {
+      "guidelinesTitle": "무작위 친절 행동",
+      "guidelinesSubtitle": "약간의 따뜻함을 보내 낯선 사람을 놀라게 해보세요! 작동 방식과 따라야 할 가이드라인은 다음과 같습니다.",
+      "rule1Title": "익명으로 기쁨을 나누세요",
+      "rule1Desc": "당신의 꽃다발과 메시지는 AI에 의해 오늘 미소가 필요한 누군가에게 완전히 익명으로 무작위 매칭됩니다.",
+      "rule2Title": "긍정적이고 힘이 되는 말을 하세요",
+      "rule2Desc": "따뜻하고 격려하는 말을 적어주세요. 희망과 친절, 지지를 전하는 댓글을 남기세요.",
+      "rule3Title": "개인정보 금지",
+      "rule3Desc": "본인과 타인의 안전을 위해 이름, 전화번호, 주소, 소셜 계정 또는 링크를 포함하지 마세요.",
+      "understand": "이해했습니다",
+      "soundsGood": "좋아요"
     }
   },
   "cn": {
@@ -5512,7 +6361,8 @@ export default {
       "about": "关于我们",
       "emailsLeft": "本月剩余邮件数",
       "home": "首页",
-      "history": "历史记录"
+      "history": "历史记录",
+      "credits": "鸣谢"
     },
     "common": {
       "cancel": "取消",
@@ -5530,7 +6380,8 @@ export default {
       "companyName": "E Greet",
       "loading": "加载中...",
       "enabled": "已启用",
-      "disabled": "已禁用"
+      "disabled": "已禁用",
+      "clear": "清除"
     },
     "languageScreen": {
       "title": "语言",
@@ -5604,7 +6455,19 @@ export default {
       "addPasswordLogin": "添加密码登录",
       "createPasswordTitle": "创建密码",
       "createPasswordDesc": "创建一个密码，以便通过电子邮件和 Google 账号登录。",
-      "passwordCreated": "密码创建成功！"
+      "passwordCreated": "密码创建成功！",
+      "appearance": "外观",
+      "hapticFeedback": "触觉反馈",
+      "hapticFeedbackDesc": "点击按钮时震动",
+      "language": "语言",
+      "notificationsDesc": "接收花束回复通知",
+      "notificationsEnabled": "启用通知",
+      "sounds": "声音",
+      "theme": "主题",
+      "themeDesc": "选择您喜欢的主题",
+      "touchSound": "触摸音效",
+      "touchSoundDesc": "点击按钮时播放声音",
+      "disconnectEmail": "断开电子邮件登录连接"
     },
     "login": {
       "title": "登录",
@@ -5646,7 +6509,9 @@ export default {
       "sendLink": "发送重置链接",
       "successText": "重置链接已发送！请检查您的收件箱和垃圾邮件文件夹。",
       "backToSignIn": "返回登录",
-      "errorSend": "无法发送重置邮件。请检查地址并重试。"
+      "errorSend": "无法发送重置邮件。请检查地址并重试。",
+      "backToLogin": "返回登录",
+      "rememberPassword": "想起密码了吗？"
     },
     "feedback": {
       "title": "发送反馈",
@@ -5717,6 +6582,8 @@ export default {
       "widget": "小组件",
       "scheduledEmails": "定时邮件",
       "scheduledEmailsDesc": "查看和管理定时送达的花束",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "满怀爱意制作",
       "makeTogether": "一起制作花束",
       "makeTogetherDesc": "实时绘制花朵并写下留言。",
@@ -5725,7 +6592,29 @@ export default {
       "roomCode": "房间代码：",
       "removeRoom": "移除房间？",
       "removeRoomDesc": "从历史记录中移除房间 #{code} 吗？",
-      "remove": "移除"
+      "remove": "移除",
+      "creativeStudio": "创意工作室",
+      "creativeStudioDesc": "花朵键盘、生日壁纸与食谱。",
+      "limitedEdition": "限量版",
+      "goldenBouquet": "黄金花束",
+      "goldenBouquetDesc": "点击解锁或输入推荐码",
+      "createBouquet": "创建花束",
+      "spreadKindness": "传递善意",
+      "spreadKindnessDesc": "发送一份神秘花束，点亮陌生人的一天。",
+      "temporarilyDisabled": "暂时停用",
+      "featureDisabled": "功能已停用",
+      "safetyViolationDesc": "由于违反安全规定，该功能已被暂时停用。",
+      "loginRequired": "需要登录",
+      "loginToSpreadKindness": "您必须登录才能发送随机善意行动。",
+      "cancel": "取消",
+      "login": "登录",
+      "whatsNewTitle": "新功能",
+      "whatsNewSubtitle": "我们新增了一些美好的方式来建立联系、传递快乐。",
+      "whatsNewGoldenTitle": "黄金花束",
+      "whatsNewGoldenDesc": "以我们专为特殊时刻设计的璀璨闪耀高级花束款式，表达您最深的谢意。",
+      "whatsNewRaokTitle": "随机善意行动",
+      "whatsNewRaokDesc": "在全球范围内匿名发送和接收数字花束，与需要的人分享温暖与积极。",
+      "whatsNewClose": "好的"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -5823,7 +6712,7 @@ export default {
       "unsavedDesc": "您有未保存的更改。确定要离开吗？",
       "stay": "留下",
       "leave": "离开",
-      "howToCreate": "如何制作您的花束",
+      "howToCreate": "如何创建花束",
       "availableDesc": "太好了！此名称可用。",
       "dyslexiaFriendly": "阅读障碍友好字体",
       "dyslexiaFriendlyDesc": "使用改善了间距的阅读障碍友好字体",
@@ -5890,7 +6779,21 @@ export default {
       "shareText": "我为你制作了这束美丽的花！",
       "aiGenerated": "AI 花束已生成",
       "useThis": "使用此方案 →",
-      "aiGeneratedTitle": "AI 花束已生成"
+      "aiGeneratedTitle": "AI 花束已生成",
+      "loginRequiredDesc": "请登录以通过电子邮件发送花束。",
+      "selectFlowers": "选择花朵",
+      "selectFlowersDesc": "至少选择 3 种花朵即可开始。点击花朵卡片查看其含义与颜色选项。",
+      "arrangeThem": "排列花朵",
+      "arrangeThemDesc": "在画布上拖动花朵。使用工具栏编辑大小、旋转和图层。",
+      "personalizeAndSend": "个性化并发送",
+      "personalizeAndSendDesc": "添加一段真挚的留言，选择一首歌曲，并生成一个独特的链接进行分享。",
+      "enjoyingApp": "喜欢这个应用吗？",
+      "thankYou": "谢谢！",
+      "openPlayStore": "打开 Play 商店",
+      "maybeLater": "以后再说",
+      "sarahsSelection": "Sarah 的精选",
+      "createAccountAttach": "创建帐户或登录以附加照片或语音留言",
+      "returnToHome": "返回首页"
     },
     "bouquetView": {
       "loading": "正在加载您的花束...",
@@ -5957,7 +6860,15 @@ export default {
       "fromLabel": "来自",
       "shareBouquetTitle": "分享花束",
       "shareBouquetSubtitle": "将这束美丽的花送给其他人",
-      "noLanguagesFound": "未找到语言"
+      "noLanguagesFound": "未找到语言",
+      "listenOnYouTube": "在 YouTube 中打开",
+      "playingFromStart": "正在从头播放",
+      "playingOnYouTube": "正在 YouTube 上播放",
+      "saveCard": "保存卡片",
+      "savedSuccess": "保存成功！",
+      "savedSuccessDesc": "花束已保存到您的照片库。",
+      "switchToAudio": "仅音频",
+      "switchToVideo": "观看视频"
     },
     "settings": {
       "title": "设置",
@@ -5987,7 +6898,9 @@ export default {
       "cancel": "取消",
       "clearDataDesc": "管理缓存、小组件和历史数据",
       "termsSubtext": "阅读我们的服务条款协议",
-      "privacySubtext": "了解我们如何保护您的数据隐私"
+      "privacySubtext": "了解我们如何保护您的数据隐私",
+      "creditsSubtext": "工具、资源与特别感谢",
+      "dataManagementDesc": "管理并释放被缓存文件、小组件和已收到花束占用的本地存储空间。"
     },
     "share": {
       "subtitle": "与特别的人分享您的花束",
@@ -6044,7 +6957,10 @@ export default {
       "successMessage": "小组件已更新！如果您尚未将小组件添加到主屏幕，请按照帮助菜单中的说明进行操作。",
       "errorTitle": "错误",
       "errorMessage": "更新小组件失败。",
-      "from": "来自 {name}"
+      "from": "来自 {name}",
+      "clearMessage": "确定要清除此小组件吗？",
+      "clearTitle": "清除小组件",
+      "myWidgets": "我的小组件"
     },
     "privacy": {
       "title": "隐私政策",
@@ -6232,6 +7148,71 @@ export default {
       "songTheyChose": "他们为您挑选的歌曲",
       "yourMessage": "您给他们的留言",
       "done": "完成"
+    },
+    "ageVerification": {
+      "title": "年龄验证",
+      "prompt": "请输入您的出生年份。我们仅出于保护儿童安全和遵守隐私准则的目的询问此信息。"
+    },
+    "credits": {
+      "title": "鸣谢",
+      "specialThanks": "特别感谢",
+      "toolsTitle": "工具与资源",
+      "toolsSubtitle": "本应用的实现离不开以下出色的工具和平台：",
+      "lottieFiles": "感谢提供精美、高质量的动画。",
+      "storyset": "感谢提供精彩生动的插画。",
+      "reactNative": "感谢提供核心框架。",
+      "firebase": "感谢提供后端服务。",
+      "cloudflare": "感谢提供 DNS 和网络安全服务。",
+      "netlify": "感谢提供托管与部署服务。",
+      "sarvamAI": "感谢提供智能文本与生成功能。"
+    },
+    "games": {
+      "title": "花园小游戏",
+      "subtitle": "放松身心，畅玩我们温馨的花卉迷你游戏，解锁全新花束设计与创意。",
+      "sortTitle": "花朵分类拼图",
+      "sortDesc": "将相配的花茎分类到相同的格子中。点击以选择并移动。",
+      "matchTitle": "花朵消消乐",
+      "matchDesc": "交换相邻的花朵以连成三个或更多，触发连锁组合。",
+      "playNow": "立即游玩"
+    },
+    "golden": {
+      "title": "黄金花束",
+      "subtitle": "专为记录生命中最珍贵时刻而设计的独家限量花艺作品。",
+      "claimTitle": "领取邀请",
+      "claimDesc": "收到了黄金邀请吗？在下方输入您的代码以解锁您的作品。",
+      "inputPlaceholder": "输入推荐码",
+      "unlock": "解锁",
+      "shareTitle": "分享这份魔力",
+      "shareDesc": "用您独特的代码邀请朋友。对方使用后，您和朋友都将获得一份黄金点数。",
+      "signInToGetCode": "登录以获取代码",
+      "share": "分享",
+      "friendsJoined": "已加入的好友",
+      "noCredits": "暂无黄金点数",
+      "noCreditsDesc": "邀请好友或使用代码来赚取点数。",
+      "create": "创建黄金花束",
+      "ownCodeError": "您不能使用自己的代码。",
+      "alreadyClaimedError": "您已经领取过此代码。",
+      "invalidCodeError": "无效代码。",
+      "claimSuccess": "领取成功！",
+      "claimSuccessDesc": "您获得了一份黄金点数。",
+      "failed": "失败",
+      "error": "错误",
+      "connectionError": "无法连接到服务器。",
+      "shareText": "用我的邀请解锁黄金花束！下载应用并输入我的代码 {code}，或使用此链接自动领取您的点数：{link}",
+      "credit": "点数",
+      "credits": "点数"
+    },
+    "raok": {
+      "guidelinesTitle": "随机善意行动",
+      "guidelinesSubtitle": "送出一点温暖，给陌生人一个惊喜！以下是运作方式及需遵循的准则。",
+      "rule1Title": "匿名传递快乐",
+      "rule1Desc": "您的花束和留言将由 AI 完全匿名地随机匹配给今天需要一个微笑的人。",
+      "rule2Title": "保持积极和鼓舞人心",
+      "rule2Desc": "写下温暖、鼓励的话语。留下能激发希望、善意与支持的评论。",
+      "rule3Title": "请勿透露个人信息",
+      "rule3Desc": "为了您和他人的安全，请勿包含姓名、电话号码、地址、社交账号或链接。",
+      "understand": "我明白了",
+      "soundsGood": "听起来不错"
     }
   },
   "ja": {
@@ -6282,7 +7263,8 @@ export default {
       "about": "Digi Bouquetについて",
       "emailsLeft": "今月の残りメール送信回数",
       "home": "ホーム",
-      "history": "履歴"
+      "history": "履歴",
+      "credits": "クレジット"
     },
     "common": {
       "cancel": "キャンセル",
@@ -6300,7 +7282,8 @@ export default {
       "companyName": "E Greet",
       "loading": "読み込み中...",
       "enabled": "有効",
-      "disabled": "無効"
+      "disabled": "無効",
+      "clear": "クリア"
     },
     "languageScreen": {
       "title": "言語",
@@ -6374,7 +7357,19 @@ export default {
       "addPasswordLogin": "パスワードログインを追加",
       "createPasswordTitle": "パスワードを作成",
       "createPasswordDesc": "メールアドレスとGoogleの両方でログインするためのパスワードを作成します。",
-      "passwordCreated": "パスワードを正常に作成しました！"
+      "passwordCreated": "パスワードを正常に作成しました！",
+      "appearance": "外観",
+      "hapticFeedback": "触覚フィードバック",
+      "hapticFeedbackDesc": "ボタンをタップしたときに振動する",
+      "language": "言語",
+      "notificationsDesc": "ブーケへの返信通知を受け取る",
+      "notificationsEnabled": "通知を有効にする",
+      "sounds": "サウンド",
+      "theme": "テーマ",
+      "themeDesc": "お好みのテーマを選択してください",
+      "touchSound": "タッチサウンド",
+      "touchSoundDesc": "ボタンをタップしたときに音を鳴らす",
+      "disconnectEmail": "メールログインの連携を解除"
     },
     "login": {
       "title": "ログイン",
@@ -6416,7 +7411,9 @@ export default {
       "sendLink": "リセットリンクを送信",
       "successText": "リセットリンクを送信しました！受信トレイと迷惑メールフォルダをご確認ください。",
       "backToSignIn": "ログイン画面に戻る",
-      "errorSend": "リセットメールを送信できませんでした。アドレスを確認してもう一度お試しください。"
+      "errorSend": "リセットメールを送信できませんでした。アドレスを確認してもう一度お試しください。",
+      "backToLogin": "ログインに戻る",
+      "rememberPassword": "パスワードを思い出しましたか？"
     },
     "feedback": {
       "title": "フィードバックを送信",
@@ -6487,6 +7484,8 @@ export default {
       "widget": "ウィジェット",
       "scheduledEmails": "送信予約したメール",
       "scheduledEmailsDesc": "予約したブーケの配信を確認・管理します",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "心を込めて",
       "makeTogether": "一緒に花束を作る",
       "makeTogetherDesc": "リアルタイムで花を描いてメッセージを書きます。",
@@ -6495,7 +7494,29 @@ export default {
       "roomCode": "ルームコード：",
       "removeRoom": "ルームを削除しますか？",
       "removeRoomDesc": "履歴からルーム #{code} を削除しますか？",
-      "remove": "削除"
+      "remove": "削除",
+      "creativeStudio": "クリエイティブスタジオ",
+      "creativeStudioDesc": "花のキーボード、誕生日の壁紙、レシピ。",
+      "limitedEdition": "限定版",
+      "goldenBouquet": "ゴールデンブーケ",
+      "goldenBouquetDesc": "タップして解除、または紹介コードを入力",
+      "createBouquet": "ブーケを作成",
+      "spreadKindness": "優しさを広めよう",
+      "spreadKindnessDesc": "見知らぬ誰かの一日を明るくする、ミステリーブーケを送りましょう。",
+      "temporarilyDisabled": "一時的に無効です",
+      "featureDisabled": "機能が無効です",
+      "safetyViolationDesc": "安全上の違反により、この機能は一時的に無効になっています。",
+      "loginRequired": "ログインが必要です",
+      "loginToSpreadKindness": "ランダムな親切な行いを送るにはログインが必要です。",
+      "cancel": "キャンセル",
+      "login": "ログイン",
+      "whatsNewTitle": "新着情報",
+      "whatsNewSubtitle": "つながりと喜びを広めるための、美しい新しい方法を追加しました。",
+      "whatsNewGoldenTitle": "ゴールデンブーケ",
+      "whatsNewGoldenDesc": "特別な瞬間のためにデザインされた、輝きあふれるプレミアムなブーケスタイルで、最高の感謝を伝えましょう。",
+      "whatsNewRaokTitle": "ランダムな親切な行い",
+      "whatsNewRaokDesc": "世界中で匿名のデジタルブーケを送受信し、必要としている人々に温かさとポジティブさを届けましょう。",
+      "whatsNewClose": "いいですね"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -6660,7 +7681,21 @@ export default {
       "shareText": "あなたのために美しいブーケを作りました！",
       "aiGenerated": "AIブーケが作成されました",
       "useThis": "これを使う →",
-      "aiGeneratedTitle": "AIブーケが作成されました"
+      "aiGeneratedTitle": "AIブーケが作成されました",
+      "loginRequiredDesc": "メールでブーケを送るにはサインインしてください。",
+      "selectFlowers": "花を選ぶ",
+      "selectFlowersDesc": "開始するには少なくとも3種類の花を選んでください。花のカードをタップすると、その意味と色のオプションが表示されます。",
+      "arrangeThem": "配置する",
+      "arrangeThemDesc": "キャンバス上で花をドラッグしましょう。ツールバーでサイズ、回転、レイヤーを編集できます。",
+      "personalizeAndSend": "パーソナライズして送信",
+      "personalizeAndSendDesc": "心のこもったメッセージを加え、曲を選び、共有用のユニークなリンクを生成しましょう。",
+      "enjoyingApp": "アプリを楽しんでいますか？",
+      "thankYou": "ありがとうございます！",
+      "openPlayStore": "Playストアを開く",
+      "maybeLater": "また今度",
+      "sarahsSelection": "サラのセレクション",
+      "createAccountAttach": "写真や音声メモを添付するには、アカウントを作成するかサインインしてください",
+      "returnToHome": "ホームに戻る"
     },
     "bouquetView": {
       "loading": "ブーケを読み込んでいます...",
@@ -6727,7 +7762,15 @@ export default {
       "fromLabel": "差出人",
       "shareBouquetTitle": "ブーケをシェア",
       "shareBouquetSubtitle": "この美しいブーケを他の人にもシェアしましょう",
-      "noLanguagesFound": "言語が見つかりません"
+      "noLanguagesFound": "言語が見つかりません",
+      "listenOnYouTube": "YouTubeで開く",
+      "playingFromStart": "最初から再生中",
+      "playingOnYouTube": "YouTubeで再生中",
+      "saveCard": "カードを保存",
+      "savedSuccess": "保存に成功しました！",
+      "savedSuccessDesc": "ブーケが写真ギャラリーに保存されました。",
+      "switchToAudio": "音声のみ",
+      "switchToVideo": "動画を見る"
     },
     "settings": {
       "title": "設定",
@@ -6757,7 +7800,9 @@ export default {
       "cancel": "キャンセル",
       "clearDataDesc": "キャッシュ、ウィジェット、履歴データを管理する",
       "termsSubtext": "利用規約を読む",
-      "privacySubtext": "データプライバシーの保護方法について"
+      "privacySubtext": "データプライバシーの保護方法について",
+      "creditsSubtext": "ツール、リソース、特別な感謝",
+      "dataManagementDesc": "キャッシュされたファイル、ウィジェット、受け取ったブーケが占めるローカルストレージを管理して解放します。"
     },
     "share": {
       "subtitle": "特別な人にブーケをシェアしましょう",
@@ -6814,7 +7859,10 @@ export default {
       "successMessage": "ウィジェットが更新されました！まだホーム画面に追加していない場合は、ヘルプの手順に従って追加してください。",
       "errorTitle": "エラー",
       "errorMessage": "ウィジェットの更新に失敗しました。",
-      "from": "{name}より"
+      "from": "{name}より",
+      "clearMessage": "本当にこのウィジェットをクリアしますか？",
+      "clearTitle": "ウィジェットをクリア",
+      "myWidgets": "マイウィジェット"
     },
     "privacy": {
       "title": "プライバシーポリシー",
@@ -7002,6 +8050,71 @@ export default {
       "songTheyChose": "相手が選んでくれた曲",
       "yourMessage": "相手へのメッセージ",
       "done": "完了"
+    },
+    "ageVerification": {
+      "title": "年齢確認",
+      "prompt": "生まれた年を入力してください。これは、お子様の安全を確保し、プライバシーに関するガイドラインを遵守するためだけにお尋ねしています。"
+    },
+    "credits": {
+      "title": "クレジット",
+      "specialThanks": "特別な感謝",
+      "toolsTitle": "ツールとリソース",
+      "toolsSubtitle": "このアプリは、以下の素晴らしいツールとプラットフォームのおかげで実現しました：",
+      "lottieFiles": "美しく高品質なアニメーションを提供してくれたことに感謝します。",
+      "storyset": "見事で表現力豊かなイラストを提供してくれたことに感謝します。",
+      "reactNative": "コアフレームワークを提供してくれたことに感謝します。",
+      "firebase": "バックエンドサービスを提供してくれたことに感謝します。",
+      "cloudflare": "DNSとウェブセキュリティを提供してくれたことに感謝します。",
+      "netlify": "ホスティングとデプロイを提供してくれたことに感謝します。",
+      "sarvamAI": "インテリジェントなテキストと生成機能を提供してくれたことに感謝します。"
+    },
+    "games": {
+      "title": "ブロッサムガーデンゲーム",
+      "subtitle": "くつろぎながら花のミニゲームを楽しんで、新しいブーケのデザインやアイデアを解除しましょう。",
+      "sortTitle": "ブロッサムソートパズル",
+      "sortDesc": "一致する花の茎を同じスロットに並べ替えましょう。タップして選択・移動します。",
+      "matchTitle": "ブロッサムマッチ",
+      "matchDesc": "隣接する花を入れ替えて3つ以上を揃え、連鎖コンボを発生させましょう。",
+      "playNow": "今すぐプレイ"
+    },
+    "golden": {
+      "title": "ゴールデンブーケ",
+      "subtitle": "人生の最も大切な瞬間を捉えるためにデザインされた、限定の特別なアレンジメント。",
+      "claimTitle": "招待を受け取る",
+      "claimDesc": "ゴールデン招待を受け取りましたか？下にコードを入力して作品を解除してください。",
+      "inputPlaceholder": "紹介コードを入力",
+      "unlock": "解除する",
+      "shareTitle": "魔法をシェアしよう",
+      "shareDesc": "あなただけのコードで友達を招待しましょう。使ってもらうと、お互いにゴールデンクレジットが手に入ります。",
+      "signInToGetCode": "コードを取得するにはサインインしてください",
+      "share": "シェア",
+      "friendsJoined": "参加した友達",
+      "noCredits": "ゴールデンクレジットがありません",
+      "noCreditsDesc": "友達を招待するか、コードを使ってクレジットを獲得しましょう。",
+      "create": "ゴールデンブーケを作成",
+      "ownCodeError": "自分自身のコードは使用できません。",
+      "alreadyClaimedError": "このコードはすでに使用済みです。",
+      "invalidCodeError": "無効なコードです。",
+      "claimSuccess": "受け取りに成功しました！",
+      "claimSuccessDesc": "ゴールデンクレジットを獲得しました。",
+      "failed": "失敗しました",
+      "error": "エラー",
+      "connectionError": "サーバーに接続できませんでした。",
+      "shareText": "私の招待でゴールデンブーケを解除しよう！アプリをダウンロードして私のコード {code} を入力するか、このリンクを使って自動的にクレジットを受け取ってください：{link}",
+      "credit": "クレジット",
+      "credits": "クレジット"
+    },
+    "raok": {
+      "guidelinesTitle": "ランダムな親切な行い",
+      "guidelinesSubtitle": "少しの温かさを送って、見知らぬ誰かを驚かせましょう！仕組みと守るべきガイドラインはこちらです。",
+      "rule1Title": "匿名で喜びを広めよう",
+      "rule1Desc": "あなたのブーケとメッセージは、AIによって今日笑顔を必要としている誰かへ完全に匿名でランダムにマッチングされます。",
+      "rule2Title": "前向きで励みになる内容にしましょう",
+      "rule2Desc": "温かく励みになる言葉を書きましょう。希望や優しさ、支えを感じられるコメントを残してください。",
+      "rule3Title": "個人情報は含めないでください",
+      "rule3Desc": "あなたと相手の安全のため、氏名、電話番号、住所、SNSアカウント、リンクは含めないでください。",
+      "understand": "理解しました",
+      "soundsGood": "いいですね"
     }
   },
   "pt": {
@@ -7052,7 +8165,8 @@ export default {
       "about": "Sobre Nós",
       "emailsLeft": "e-mails restantes este mês",
       "home": "Início",
-      "history": "Histórico"
+      "history": "Histórico",
+      "credits": "Créditos"
     },
     "common": {
       "cancel": "Cancelar",
@@ -7070,7 +8184,8 @@ export default {
       "companyName": "E Greet",
       "loading": "Carregando...",
       "enabled": "Ativado",
-      "disabled": "Desativado"
+      "disabled": "Desativado",
+      "clear": "Limpar"
     },
     "languageScreen": {
       "title": "Idioma",
@@ -7144,7 +8259,19 @@ export default {
       "addPasswordLogin": "Adicionar login com senha",
       "createPasswordTitle": "Criar Senha",
       "createPasswordDesc": "Crie uma senha para entrar com seu e-mail e também com o Google.",
-      "passwordCreated": "Senha criada com sucesso!"
+      "passwordCreated": "Senha criada com sucesso!",
+      "appearance": "APARÊNCIA",
+      "hapticFeedback": "Feedback tátil",
+      "hapticFeedbackDesc": "Vibrar ao tocar nos botões",
+      "language": "Idioma",
+      "notificationsDesc": "Receber notificações de respostas a buquês",
+      "notificationsEnabled": "Ativar notificações",
+      "sounds": "SONS",
+      "theme": "Tema",
+      "themeDesc": "Escolha o seu tema preferido",
+      "touchSound": "Som ao toque",
+      "touchSoundDesc": "Tocar som ao tocar nos botões",
+      "disconnectEmail": "Desconectar login por e-mail"
     },
     "login": {
       "title": "Entrar",
@@ -7186,7 +8313,9 @@ export default {
       "sendLink": "Enviar Link de Redefinição",
       "successText": "Link de redefinição enviado! Verifique sua caixa de entrada e pasta de spam.",
       "backToSignIn": "Voltar para o Login",
-      "errorSend": "Não foi possível enviar o e-mail. Verifique o endereço e tente novamente."
+      "errorSend": "Não foi possível enviar o e-mail. Verifique o endereço e tente novamente.",
+      "backToLogin": "Voltar ao login",
+      "rememberPassword": "Lembrou sua senha?"
     },
     "feedback": {
       "title": "Enviar Feedback",
@@ -7257,6 +8386,8 @@ export default {
       "widget": "WIDGET",
       "scheduledEmails": "E-mails Agendados",
       "scheduledEmailsDesc": "Veja e gerencie as entregas agendadas",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "Feito com amor",
       "makeTogether": "Fazer Buquê Juntos",
       "makeTogetherDesc": "Desenhe flores e escreva mensagens em tempo real.",
@@ -7265,7 +8396,29 @@ export default {
       "roomCode": "Código da sala:",
       "removeRoom": "Remover Sala?",
       "removeRoomDesc": "Remover sala #{code} do histórico?",
-      "remove": "Remover"
+      "remove": "Remover",
+      "creativeStudio": "Estúdio Criativo",
+      "creativeStudioDesc": "Teclado de flores, papel de parede de aniversário e receitas.",
+      "limitedEdition": "EDIÇÃO LIMITADA",
+      "goldenBouquet": "Buquê Dourado",
+      "goldenBouquetDesc": "Toque para desbloquear ou inserir código de indicação",
+      "createBouquet": "Criar Buquê",
+      "spreadKindness": "Espalhar Gentileza",
+      "spreadKindnessDesc": "Envie um buquê misterioso para alegrar o dia de um desconhecido.",
+      "temporarilyDisabled": "Temporariamente desativado",
+      "featureDisabled": "Recurso desativado",
+      "safetyViolationDesc": "Recurso temporariamente desativado devido a violações de segurança.",
+      "loginRequired": "Login necessário",
+      "loginToSpreadKindness": "Você deve estar logado para enviar um Ato Aleatório de Gentileza.",
+      "cancel": "Cancelar",
+      "login": "Entrar",
+      "whatsNewTitle": "Novidades",
+      "whatsNewSubtitle": "Adicionamos novas formas lindas de se conectar e espalhar alegria.",
+      "whatsNewGoldenTitle": "Buquê Dourado",
+      "whatsNewGoldenDesc": "Expresse gratidão máxima com o nosso estilo de buquê premium radiante e brilhante, feito para momentos especiais.",
+      "whatsNewRaokTitle": "Atos Aleatórios de Gentileza",
+      "whatsNewRaokDesc": "Envie e receba buquês digitais anônimos ao redor do mundo, compartilhando calor humano e positividade com quem precisa.",
+      "whatsNewClose": "Parece ótimo"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -7363,7 +8516,7 @@ export default {
       "unsavedDesc": "Você tem alterações não salvas. Tem certeza que deseja sair?",
       "stay": "Ficar",
       "leave": "Sair",
-      "howToCreate": "Como Criar Seu Buquê",
+      "howToCreate": "Como criar um buquê",
       "availableDesc": "Ótimo! Este nome está disponível.",
       "dyslexiaFriendly": "Fonte Amigável para Dislexia",
       "dyslexiaFriendlyDesc": "Usa uma fonte mais fácil de ler, com melhor espaçamento",
@@ -7430,7 +8583,21 @@ export default {
       "shareText": "Eu criei este lindo buquê para você!",
       "aiGenerated": "Buquê Gerado por IA",
       "useThis": "Usar este →",
-      "aiGeneratedTitle": "Buquê Gerado por IA"
+      "aiGeneratedTitle": "Buquê Gerado por IA",
+      "loginRequiredDesc": "Faça login para enviar buquês por e-mail.",
+      "selectFlowers": "Selecione as flores",
+      "selectFlowersDesc": "Escolha pelo menos 3 flores para começar. Toque no cartão de uma flor para ver seu significado e opções de cor.",
+      "arrangeThem": "Organize-as",
+      "arrangeThemDesc": "Arraste as flores pela tela. Use a barra de ferramentas para editar tamanho, rotação e camadas.",
+      "personalizeAndSend": "Personalize e envie",
+      "personalizeAndSendDesc": "Adicione uma mensagem sincera, escolha uma música e gere um link único para compartilhar.",
+      "enjoyingApp": "Está gostando do app?",
+      "thankYou": "Obrigado!",
+      "openPlayStore": "Abrir Play Store",
+      "maybeLater": "Talvez mais tarde",
+      "sarahsSelection": "A Seleção da Sarah",
+      "createAccountAttach": "Crie uma conta ou faça login para anexar uma foto ou nota de voz",
+      "returnToHome": "Voltar ao início"
     },
     "bouquetView": {
       "loading": "Carregando seu buquê...",
@@ -7497,7 +8664,15 @@ export default {
       "fromLabel": "de",
       "shareBouquetTitle": "Compartilhar Buquê",
       "shareBouquetSubtitle": "Envie este lindo buquê para outras pessoas",
-      "noLanguagesFound": "Nenhum idioma encontrado"
+      "noLanguagesFound": "Nenhum idioma encontrado",
+      "listenOnYouTube": "Abrir no YouTube",
+      "playingFromStart": "Reproduzindo desde o início",
+      "playingOnYouTube": "Reproduzindo no YouTube",
+      "saveCard": "Salvar cartão",
+      "savedSuccess": "Salvo com sucesso!",
+      "savedSuccessDesc": "O buquê foi salvo na sua galeria de fotos.",
+      "switchToAudio": "Somente áudio",
+      "switchToVideo": "Assistir vídeo"
     },
     "settings": {
       "title": "Configurações",
@@ -7527,7 +8702,9 @@ export default {
       "cancel": "Cancelar",
       "clearDataDesc": "Gerenciar cache, widget e dados de histórico",
       "termsSubtext": "Leia nosso acordo de termos de serviço",
-      "privacySubtext": "Saiba como protegemos a privacidade dos seus dados"
+      "privacySubtext": "Saiba como protegemos a privacidade dos seus dados",
+      "creditsSubtext": "Ferramentas, recursos e agradecimentos especiais",
+      "dataManagementDesc": "Gerencie e libere o armazenamento local ocupado por arquivos em cache, widgets e buquês recebidos."
     },
     "share": {
       "subtitle": "Compartilhe seu buquê com alguém especial",
@@ -7584,7 +8761,10 @@ export default {
       "successMessage": "Widget atualizado! Se você ainda não adicionou o widget à sua tela inicial, siga as instruções no menu de ajuda.",
       "errorTitle": "Erro",
       "errorMessage": "Falha ao atualizar o widget.",
-      "from": "de {name}"
+      "from": "de {name}",
+      "clearMessage": "Tem certeza de que deseja limpar este widget?",
+      "clearTitle": "Limpar widget",
+      "myWidgets": "Meus widgets"
     },
     "privacy": {
       "title": "Política de Privacidade",
@@ -7772,6 +8952,71 @@ export default {
       "songTheyChose": "Música que escolheram para você",
       "yourMessage": "Sua mensagem para eles",
       "done": "Pronto"
+    },
+    "ageVerification": {
+      "title": "Verificação de Idade",
+      "prompt": "Por favor, insira o seu ano de nascimento. Pedimos isso apenas para garantir a segurança infantil e cumprir as diretrizes de privacidade."
+    },
+    "credits": {
+      "title": "Créditos",
+      "specialThanks": "Agradecimentos especiais",
+      "toolsTitle": "Ferramentas e Recursos",
+      "toolsSubtitle": "Este app foi possível graças às seguintes ferramentas e plataformas incríveis:",
+      "lottieFiles": "por fornecer animações lindas e de alta qualidade.",
+      "storyset": "pelas ilustrações impressionantes e expressivas.",
+      "reactNative": "pelo framework principal.",
+      "firebase": "pelos serviços de backend.",
+      "cloudflare": "pelo DNS e segurança web.",
+      "netlify": "pela hospedagem e implantação.",
+      "sarvamAI": "pelos recursos inteligentes de texto e geração."
+    },
+    "games": {
+      "title": "Jogos do Jardim Florido",
+      "subtitle": "Relaxe e jogue nossos mini-jogos florais aconchegantes para desbloquear novos designs e ideias de buquês.",
+      "sortTitle": "Quebra-cabeça de Ordenar Flores",
+      "sortDesc": "Ordene hastes de flores correspondentes em compartimentos idênticos. Toque para selecionar e mover.",
+      "matchTitle": "Combine Flores",
+      "matchDesc": "Troque flores adjacentes para combinar 3 ou mais em fileira e ativar combos em cascata.",
+      "playNow": "Jogar agora"
+    },
+    "golden": {
+      "title": "Buquê Dourado",
+      "subtitle": "Um arranjo exclusivo de edição limitada, criado para capturar os momentos mais preciosos da vida.",
+      "claimTitle": "Resgatar convite",
+      "claimDesc": "Recebeu um convite dourado? Insira seu código abaixo para desbloquear sua criação.",
+      "inputPlaceholder": "Insira o código de indicação",
+      "unlock": "Desbloquear",
+      "shareTitle": "Compartilhe a magia",
+      "shareDesc": "Convide amigos com o seu código exclusivo. Vocês dois ganham um Crédito Dourado quando ele for usado.",
+      "signInToGetCode": "Faça login para obter o código",
+      "share": "Compartilhar",
+      "friendsJoined": "Amigos que entraram",
+      "noCredits": "Sem Créditos Dourados",
+      "noCreditsDesc": "Convide amigos ou use um código para ganhar créditos.",
+      "create": "Criar Buquê Dourado",
+      "ownCodeError": "Você não pode usar o seu próprio código.",
+      "alreadyClaimedError": "Você já resgatou este código.",
+      "invalidCodeError": "Código inválido.",
+      "claimSuccess": "Resgatado com sucesso!",
+      "claimSuccessDesc": "Você ganhou um Crédito Dourado.",
+      "failed": "Falhou",
+      "error": "Erro",
+      "connectionError": "Não foi possível conectar ao servidor.",
+      "shareText": "Desbloqueie o Buquê Dourado com o meu convite! Baixe o app e insira meu código {code} ou use este link para resgatar automaticamente o seu crédito: {link}",
+      "credit": "Crédito",
+      "credits": "Créditos"
+    },
+    "raok": {
+      "guidelinesTitle": "Ato Aleatório de Gentileza",
+      "guidelinesSubtitle": "Envie um pouco de calor humano e surpreenda um desconhecido! Veja como funciona e as diretrizes a seguir.",
+      "rule1Title": "Espalhe alegria anonimamente",
+      "rule1Desc": "Seu buquê e mensagem serão combinados aleatoriamente pela IA com alguém que precisa de um sorriso hoje, de forma totalmente anônima.",
+      "rule2Title": "Seja positivo e encorajador",
+      "rule2Desc": "Escreva palavras calorosas e encorajadoras. Deixe comentários que inspirem esperança, gentileza e apoio.",
+      "rule3Title": "Nenhuma informação pessoal",
+      "rule3Desc": "Para sua segurança e a de outras pessoas, não inclua nomes, números de telefone, endereços, redes sociais ou links.",
+      "understand": "Eu entendo",
+      "soundsGood": "Parece ótimo"
     }
   },
   "it": {
@@ -7822,7 +9067,8 @@ export default {
       "about": "Chi siamo",
       "emailsLeft": "e-mail rimanenti questo mese",
       "home": "Home",
-      "history": "Cronologia"
+      "history": "Cronologia",
+      "credits": "Crediti"
     },
     "common": {
       "cancel": "Annulla",
@@ -7840,7 +9086,8 @@ export default {
       "companyName": "E Greet",
       "loading": "Caricamento...",
       "enabled": "Attivato",
-      "disabled": "Disattivato"
+      "disabled": "Disattivato",
+      "clear": "Cancella"
     },
     "languageScreen": {
       "title": "Lingua",
@@ -7914,7 +9161,19 @@ export default {
       "addPasswordLogin": "Aggiungi accesso con password",
       "createPasswordTitle": "Crea password",
       "createPasswordDesc": "Crea una password per accedere con la tua e-mail oltre che con Google.",
-      "passwordCreated": "Password creata con successo!"
+      "passwordCreated": "Password creata con successo!",
+      "appearance": "ASPETTO",
+      "hapticFeedback": "Feedback aptico",
+      "hapticFeedbackDesc": "Vibra quando tocchi i pulsanti",
+      "language": "Lingua",
+      "notificationsDesc": "Ricevi notifiche per le risposte ai bouquet",
+      "notificationsEnabled": "Attiva notifiche",
+      "sounds": "SUONI",
+      "theme": "Tema",
+      "themeDesc": "Scegli il tuo tema preferito",
+      "touchSound": "Suono al tocco",
+      "touchSoundDesc": "Riproduci un suono quando tocchi i pulsanti",
+      "disconnectEmail": "Disconnetti accesso e-mail"
     },
     "login": {
       "title": "Accedi",
@@ -7956,7 +9215,9 @@ export default {
       "sendLink": "Invia link di reimpostazione",
       "successText": "Link di reimpostazione inviato! Controlla la tua casella di posta e la cartella spam.",
       "backToSignIn": "Torna all'accesso",
-      "errorSend": "Impossibile inviare l'e-mail di reimpostazione. Controlla l'indirizzo e riprova."
+      "errorSend": "Impossibile inviare l'e-mail di reimpostazione. Controlla l'indirizzo e riprova.",
+      "backToLogin": "Torna al login",
+      "rememberPassword": "Ricordi la tua password?"
     },
     "feedback": {
       "title": "Invia feedback",
@@ -8027,6 +9288,8 @@ export default {
       "widget": "WIDGET",
       "scheduledEmails": "E-mail programmate",
       "scheduledEmailsDesc": "Visualizza e gestisci le consegne programmate",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "Fatto con amore",
       "makeTogether": "Crea Bouquet Insieme",
       "makeTogetherDesc": "Disegna fiori e scrivi messaggi in tempo reale.",
@@ -8035,7 +9298,29 @@ export default {
       "roomCode": "Codice stanza:",
       "removeRoom": "Rimuovere Stanza?",
       "removeRoomDesc": "Rimuovere la stanza #{code} dalla cronologia?",
-      "remove": "Rimuovi"
+      "remove": "Rimuovi",
+      "creativeStudio": "Studio Creativo",
+      "creativeStudioDesc": "Tastiera floreale, sfondo di compleanno e ricette.",
+      "limitedEdition": "EDIZIONE LIMITATA",
+      "goldenBouquet": "Bouquet Dorato",
+      "goldenBouquetDesc": "Tocca per sbloccare o inserisci un codice di invito",
+      "createBouquet": "Crea Bouquet",
+      "spreadKindness": "Diffondi Gentilezza",
+      "spreadKindnessDesc": "Invia un bouquet misterioso per illuminare la giornata di uno sconosciuto.",
+      "temporarilyDisabled": "Temporaneamente disabilitato",
+      "featureDisabled": "Funzione disabilitata",
+      "safetyViolationDesc": "Funzione temporaneamente disabilitata a causa di violazioni delle norme di sicurezza.",
+      "loginRequired": "Accesso richiesto",
+      "loginToSpreadKindness": "Devi aver effettuato l'accesso per inviare un Atto Casuale di Gentilezza.",
+      "cancel": "Annulla",
+      "login": "Accedi",
+      "whatsNewTitle": "Novità",
+      "whatsNewSubtitle": "Abbiamo aggiunto nuovi e bellissimi modi per entrare in contatto e diffondere gioia.",
+      "whatsNewGoldenTitle": "Bouquet Dorato",
+      "whatsNewGoldenDesc": "Esprimi la massima gratitudine con il nostro stile di bouquet premium, splendente e scintillante, pensato per i momenti speciali.",
+      "whatsNewRaokTitle": "Atti Casuali di Gentilezza",
+      "whatsNewRaokDesc": "Invia e ricevi bouquet digitali anonimi in tutto il mondo, condividendo calore e positività con chi ne ha bisogno.",
+      "whatsNewClose": "Va bene"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -8133,7 +9418,7 @@ export default {
       "unsavedDesc": "Hai delle modifiche non salvate. Sei sicuro di voler uscire?",
       "stay": "Resta",
       "leave": "Esci",
-      "howToCreate": "Come creare il tuo bouquet",
+      "howToCreate": "Come creare un bouquet",
       "availableDesc": "Fantastico! Questo nome è disponibile.",
       "dyslexiaFriendly": "Carattere per dislessia",
       "dyslexiaFriendlyDesc": "Usa un carattere ad alta leggibilità con spaziatura migliorata",
@@ -8200,7 +9485,21 @@ export default {
       "shareText": "Ho creato questo bellissimo bouquet per te!",
       "aiGenerated": "Bouquet IA generato",
       "useThis": "Usa questo →",
-      "aiGeneratedTitle": "Bouquet IA generato"
+      "aiGeneratedTitle": "Bouquet IA generato",
+      "loginRequiredDesc": "Accedi per inviare bouquet via e-mail.",
+      "selectFlowers": "Seleziona i fiori",
+      "selectFlowersDesc": "Scegli almeno 3 fiori per iniziare. Tocca la scheda di un fiore per vedere il suo significato e le opzioni di colore.",
+      "arrangeThem": "Disponili",
+      "arrangeThemDesc": "Trascina i fiori sulla tela. Usa la barra degli strumenti per modificare dimensione, rotazione e livelli.",
+      "personalizeAndSend": "Personalizza e invia",
+      "personalizeAndSendDesc": "Aggiungi un messaggio sincero, scegli una canzone e genera un link unico da condividere.",
+      "enjoyingApp": "Ti sta piacendo l'app?",
+      "thankYou": "Grazie!",
+      "openPlayStore": "Apri il Play Store",
+      "maybeLater": "Forse più tardi",
+      "sarahsSelection": "La Selezione di Sarah",
+      "createAccountAttach": "Crea un account o accedi per allegare una foto o una nota vocale",
+      "returnToHome": "Torna alla home"
     },
     "bouquetView": {
       "loading": "Caricamento del tuo bouquet...",
@@ -8267,7 +9566,15 @@ export default {
       "fromLabel": "da",
       "shareBouquetTitle": "Condividi bouquet",
       "shareBouquetSubtitle": "Invia questo splendido bouquet ad altri",
-      "noLanguagesFound": "Nessuna lingua trovata"
+      "noLanguagesFound": "Nessuna lingua trovata",
+      "listenOnYouTube": "Apri su YouTube",
+      "playingFromStart": "Riproduzione dall'inizio",
+      "playingOnYouTube": "In riproduzione su YouTube",
+      "saveCard": "Salva biglietto",
+      "savedSuccess": "Salvato con successo!",
+      "savedSuccessDesc": "Il bouquet è stato salvato nella tua galleria fotografica.",
+      "switchToAudio": "Solo audio",
+      "switchToVideo": "Guarda il video"
     },
     "settings": {
       "title": "Impostazioni",
@@ -8297,7 +9604,9 @@ export default {
       "cancel": "Annulla",
       "clearDataDesc": "Gestisci cache, widget e dati della cronologia",
       "termsSubtext": "Leggi i nostri termini di servizio",
-      "privacySubtext": "Scopri come proteggiamo la privacy dei tuoi dati"
+      "privacySubtext": "Scopri come proteggiamo la privacy dei tuoi dati",
+      "creditsSubtext": "Strumenti, risorse e ringraziamenti speciali",
+      "dataManagementDesc": "Gestisci e libera lo spazio di archiviazione locale occupato da file memorizzati nella cache, widget e bouquet ricevuti."
     },
     "share": {
       "subtitle": "Condividi il tuo bouquet con una persona speciale",
@@ -8354,7 +9663,10 @@ export default {
       "successMessage": "Widget aggiornato! Se non hai ancora aggiunto il widget alla schermata Home, segui le istruzioni nel menu di aiuto.",
       "errorTitle": "Errore",
       "errorMessage": "Impossibile aggiornare il widget.",
-      "from": "da {name}"
+      "from": "da {name}",
+      "clearMessage": "Sei sicuro di voler cancellare questo widget?",
+      "clearTitle": "Cancella widget",
+      "myWidgets": "I miei widget"
     },
     "privacy": {
       "title": "Informativa sulla privacy",
@@ -8542,6 +9854,71 @@ export default {
       "songTheyChose": "Canzone che hanno scelto per te",
       "yourMessage": "Il tuo messaggio per loro",
       "done": "Fatto"
+    },
+    "ageVerification": {
+      "title": "Verifica dell'età",
+      "prompt": "Inserisci il tuo anno di nascita. Lo chiediamo solo per garantire la sicurezza dei minori e rispettare le linee guida sulla privacy."
+    },
+    "credits": {
+      "title": "Crediti",
+      "specialThanks": "Ringraziamenti speciali",
+      "toolsTitle": "Strumenti e Risorse",
+      "toolsSubtitle": "Questa app è stata resa possibile grazie ai seguenti fantastici strumenti e piattaforme:",
+      "lottieFiles": "per aver fornito animazioni belle e di alta qualità.",
+      "storyset": "per le illustrazioni straordinarie ed espressive.",
+      "reactNative": "per il framework principale.",
+      "firebase": "per i servizi di backend.",
+      "cloudflare": "per il DNS e la sicurezza web.",
+      "netlify": "per l'hosting e il deployment.",
+      "sarvamAI": "per le funzionalità intelligenti di testo e generazione."
+    },
+    "games": {
+      "title": "Giochi del Giardino in Fiore",
+      "subtitle": "Rilassati e gioca ai nostri accoglienti mini-giochi floreali per sbloccare nuovi design e idee per i bouquet.",
+      "sortTitle": "Puzzle di Ordinamento Fiori",
+      "sortDesc": "Ordina gli steli di fiori corrispondenti negli slot identici. Tocca per selezionare e spostare.",
+      "matchTitle": "Abbina i Fiori",
+      "matchDesc": "Scambia fiori adiacenti per abbinarne 3 o più in fila e attivare combo a catena.",
+      "playNow": "Gioca ora"
+    },
+    "golden": {
+      "title": "Bouquet Dorato",
+      "subtitle": "Una composizione esclusiva ed in edizione limitata, pensata per catturare i momenti più preziosi della vita.",
+      "claimTitle": "Riscatta l'invito",
+      "claimDesc": "Hai ricevuto un invito dorato? Inserisci il tuo codice qui sotto per sbloccare la tua creazione.",
+      "inputPlaceholder": "Inserisci il codice di invito",
+      "unlock": "Sblocca",
+      "shareTitle": "Condividi la magia",
+      "shareDesc": "Invita gli amici con il tuo codice unico. Entrambi guadagnerete un Credito Dorato quando lo useranno.",
+      "signInToGetCode": "Accedi per ottenere il codice",
+      "share": "Condividi",
+      "friendsJoined": "Amici iscritti",
+      "noCredits": "Nessun Credito Dorato",
+      "noCreditsDesc": "Invita amici o usa un codice per guadagnare crediti.",
+      "create": "Crea Bouquet Dorato",
+      "ownCodeError": "Non puoi usare il tuo stesso codice.",
+      "alreadyClaimedError": "Hai già riscattato questo codice.",
+      "invalidCodeError": "Codice non valido.",
+      "claimSuccess": "Riscattato con successo!",
+      "claimSuccessDesc": "Hai guadagnato un Credito Dorato.",
+      "failed": "Non riuscito",
+      "error": "Errore",
+      "connectionError": "Impossibile connettersi al server.",
+      "shareText": "Sblocca il Bouquet Dorato con il mio invito! Scarica l'app e inserisci il mio codice {code} oppure usa questo link per riscattare automaticamente il tuo credito: {link}",
+      "credit": "Credito",
+      "credits": "Crediti"
+    },
+    "raok": {
+      "guidelinesTitle": "Atto Casuale di Gentilezza",
+      "guidelinesSubtitle": "Invia un po' di calore e sorprendi uno sconosciuto! Ecco come funziona e le linee guida da seguire.",
+      "rule1Title": "Diffondi gioia in modo anonimo",
+      "rule1Desc": "Il tuo bouquet e il tuo messaggio verranno abbinati casualmente dall'IA a qualcuno che oggi ha bisogno di un sorriso, in modo completamente anonimo.",
+      "rule2Title": "Sii positivo e incoraggiante",
+      "rule2Desc": "Scrivi parole calorose e incoraggianti. Lascia commenti che ispirino speranza, gentilezza e sostegno.",
+      "rule3Title": "Niente informazioni personali",
+      "rule3Desc": "Per la tua sicurezza e quella degli altri, non includere nomi, numeri di telefono, indirizzi, account social o link.",
+      "understand": "Ho capito",
+      "soundsGood": "Va bene"
     }
   },
   "ru": {
@@ -8592,7 +9969,8 @@ export default {
       "about": "О нас",
       "emailsLeft": "писем осталось в этом месяце",
       "home": "Главная",
-      "history": "История"
+      "history": "История",
+      "credits": "Авторы"
     },
     "common": {
       "cancel": "Отмена",
@@ -8610,7 +9988,8 @@ export default {
       "companyName": "E Greet",
       "loading": "Загрузка...",
       "enabled": "Включено",
-      "disabled": "Отключено"
+      "disabled": "Отключено",
+      "clear": "Очистить"
     },
     "languageScreen": {
       "title": "Язык",
@@ -8684,7 +10063,19 @@ export default {
       "addPasswordLogin": "Добавить вход по паролю",
       "createPasswordTitle": "Создать пароль",
       "createPasswordDesc": "Создай пароль для входа по email вместе с Google.",
-      "passwordCreated": "Пароль успешно создан!"
+      "passwordCreated": "Пароль успешно создан!",
+      "appearance": "ВНЕШНИЙ ВИД",
+      "hapticFeedback": "Тактильная отдача",
+      "hapticFeedbackDesc": "Вибрация при нажатии кнопок",
+      "language": "Язык",
+      "notificationsDesc": "Получать уведомления об ответах на букеты",
+      "notificationsEnabled": "Включить уведомления",
+      "sounds": "ЗВУКИ",
+      "theme": "Тема",
+      "themeDesc": "Выберите предпочитаемую тему",
+      "touchSound": "Звук касания",
+      "touchSoundDesc": "Воспроизводить звук при нажатии кнопок",
+      "disconnectEmail": "Отключить вход по электронной почте"
     },
     "login": {
       "title": "Войти",
@@ -8726,7 +10117,9 @@ export default {
       "sendLink": "Отправить ссылку",
       "successText": "Ссылка отправлена! Проверь входящие и папку «Спам».",
       "backToSignIn": "Вернуться ко входу",
-      "errorSend": "Не удалось отправить письмо. Проверь адрес и попробуй еще раз."
+      "errorSend": "Не удалось отправить письмо. Проверь адрес и попробуй еще раз.",
+      "backToLogin": "Вернуться к входу",
+      "rememberPassword": "Вспомнили пароль?"
     },
     "feedback": {
       "title": "Отправить отзыв",
@@ -8797,6 +10190,8 @@ export default {
       "widget": "ВИДЖЕТ",
       "scheduledEmails": "Запланированные письма",
       "scheduledEmailsDesc": "Просмотр и управление запланированными доставками",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "Создано с душой",
       "makeTogether": "Создать букет вместе",
       "makeTogetherDesc": "Рисуйте цветы и пишите сообщения в реальном времени.",
@@ -8805,7 +10200,29 @@ export default {
       "roomCode": "Код комнаты:",
       "removeRoom": "Удалить комнату?",
       "removeRoomDesc": "Удалить комнату #{code} из истории?",
-      "remove": "Удалить"
+      "remove": "Удалить",
+      "creativeStudio": "Творческая студия",
+      "creativeStudioDesc": "Клавиатура с цветами, обои ко дню рождения и рецепты.",
+      "limitedEdition": "ОГРАНИЧЕННАЯ СЕРИЯ",
+      "goldenBouquet": "Золотой букет",
+      "goldenBouquetDesc": "Нажмите, чтобы разблокировать или ввести реферальный код",
+      "createBouquet": "Создать букет",
+      "spreadKindness": "Дарите доброту",
+      "spreadKindnessDesc": "Отправьте таинственный букет, чтобы скрасить день незнакомцу.",
+      "temporarilyDisabled": "Временно отключено",
+      "featureDisabled": "Функция отключена",
+      "safetyViolationDesc": "Функция временно отключена из-за нарушений правил безопасности.",
+      "loginRequired": "Требуется вход",
+      "loginToSpreadKindness": "Чтобы отправить случайный акт доброты, необходимо войти в систему.",
+      "cancel": "Отмена",
+      "login": "Войти",
+      "whatsNewTitle": "Что нового",
+      "whatsNewSubtitle": "Мы добавили новые прекрасные способы общаться и дарить радость.",
+      "whatsNewGoldenTitle": "Золотой букет",
+      "whatsNewGoldenDesc": "Выразите высшую благодарность нашим сияющим премиальным стилем букета, созданным для особых моментов.",
+      "whatsNewRaokTitle": "Случайные акты доброты",
+      "whatsNewRaokDesc": "Отправляйте и получайте анонимные цифровые букеты по всему миру, делясь теплом и позитивом с теми, кто в этом нуждается.",
+      "whatsNewClose": "Хорошо"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -8970,7 +10387,21 @@ export default {
       "shareText": "Я создал(а) этот красивый букет специально для тебя!",
       "aiGenerated": "ИИ создал букет",
       "useThis": "Использовать этот →",
-      "aiGeneratedTitle": "ИИ создал букет"
+      "aiGeneratedTitle": "ИИ создал букет",
+      "loginRequiredDesc": "Пожалуйста, войдите в систему, чтобы отправлять букеты по электронной почте.",
+      "selectFlowers": "Выберите цветы",
+      "selectFlowersDesc": "Выберите не менее 3 цветов, чтобы начать. Нажмите на карточку цветка, чтобы увидеть его значение и варианты цвета.",
+      "arrangeThem": "Расположите их",
+      "arrangeThemDesc": "Перетаскивайте цветы по холсту. Используйте панель инструментов для изменения размера, поворота и слоёв.",
+      "personalizeAndSend": "Персонализируйте и отправьте",
+      "personalizeAndSendDesc": "Добавьте душевное сообщение, выберите песню и создайте уникальную ссылку для отправки.",
+      "enjoyingApp": "Нравится приложение?",
+      "thankYou": "Спасибо!",
+      "openPlayStore": "Открыть Play Маркет",
+      "maybeLater": "Может быть позже",
+      "sarahsSelection": "Подборка Сары",
+      "createAccountAttach": "Создайте аккаунт или войдите, чтобы прикрепить фото или голосовое сообщение",
+      "returnToHome": "Вернуться на главную"
     },
     "bouquetView": {
       "loading": "Загружаем твой букет...",
@@ -9037,7 +10468,15 @@ export default {
       "fromLabel": "от",
       "shareBouquetTitle": "Поделиться букетом",
       "shareBouquetSubtitle": "Отправь этот красивый букет другим",
-      "noLanguagesFound": "Языки не найдены"
+      "noLanguagesFound": "Языки не найдены",
+      "listenOnYouTube": "Открыть на YouTube",
+      "playingFromStart": "Воспроизведение с начала",
+      "playingOnYouTube": "Воспроизведение на YouTube",
+      "saveCard": "Сохранить открытку",
+      "savedSuccess": "Успешно сохранено!",
+      "savedSuccessDesc": "Букет сохранён в вашей фотогалерее.",
+      "switchToAudio": "Только аудио",
+      "switchToVideo": "Смотреть видео"
     },
     "settings": {
       "title": "Настройки",
@@ -9067,7 +10506,9 @@ export default {
       "cancel": "Отмена",
       "clearDataDesc": "Управление кешем, виджетами и историей",
       "termsSubtext": "Ознакомьтесь с нашими условиями обслуживания",
-      "privacySubtext": "Узнайте, как мы защищаем конфиденциальность ваших данных"
+      "privacySubtext": "Узнайте, как мы защищаем конфиденциальность ваших данных",
+      "creditsSubtext": "Инструменты, ресурсы и особая благодарность",
+      "dataManagementDesc": "Управляйте и освобождайте локальное хранилище, занятое кэшированными файлами, виджетами и полученными букетами."
     },
     "share": {
       "subtitle": "Поделись своим букетом с кем-то особенным",
@@ -9124,7 +10565,10 @@ export default {
       "successMessage": "Виджет обновлен! Если ты еще не добавил виджет на домашний экран, следуй инструкциям в меню помощи.",
       "errorTitle": "Ошибка",
       "errorMessage": "Не удалось обновить виджет.",
-      "from": "от {name}"
+      "from": "от {name}",
+      "clearMessage": "Вы уверены, что хотите очистить этот виджет?",
+      "clearTitle": "Очистить виджет",
+      "myWidgets": "Мои виджеты"
     },
     "privacy": {
       "title": "Политика конфиденциальности",
@@ -9312,6 +10756,71 @@ export default {
       "songTheyChose": "Песня, которую они выбрали для вас",
       "yourMessage": "Ваше сообщение им",
       "done": "Готово"
+    },
+    "ageVerification": {
+      "title": "Проверка возраста",
+      "prompt": "Пожалуйста, укажите год своего рождения. Мы спрашиваем об этом только для обеспечения безопасности детей и соблюдения правил конфиденциальности."
+    },
+    "credits": {
+      "title": "Авторы",
+      "specialThanks": "Особая благодарность",
+      "toolsTitle": "Инструменты и ресурсы",
+      "toolsSubtitle": "Это приложение стало возможным благодаря следующим замечательным инструментам и платформам:",
+      "lottieFiles": "за красивые, высококачественные анимации.",
+      "storyset": "за потрясающие и выразительные иллюстрации.",
+      "reactNative": "за основной фреймворк.",
+      "firebase": "за бэкенд-сервисы.",
+      "cloudflare": "за DNS и веб-безопасность.",
+      "netlify": "за хостинг и развёртывание.",
+      "sarvamAI": "за интеллектуальные функции текста и генерации."
+    },
+    "games": {
+      "title": "Игры «Цветущий сад»",
+      "subtitle": "Расслабьтесь и играйте в наши уютные мини-игры о цветах, чтобы открыть новые дизайны и идеи букетов.",
+      "sortTitle": "Пазл «Сортировка цветов»",
+      "sortDesc": "Сортируйте одинаковые стебли цветов по идентичным слотам. Нажмите, чтобы выбрать и переместить.",
+      "matchTitle": "Цветочные совпадения",
+      "matchDesc": "Меняйте местами соседние цветы, чтобы собрать 3 и более в ряд и запустить каскадные комбо.",
+      "playNow": "Играть сейчас"
+    },
+    "golden": {
+      "title": "Золотой букет",
+      "subtitle": "Эксклюзивная композиция ограниченного выпуска, созданная, чтобы запечатлеть самые драгоценные моменты жизни.",
+      "claimTitle": "Получить приглашение",
+      "claimDesc": "Получили золотое приглашение? Введите свой код ниже, чтобы разблокировать своё творение.",
+      "inputPlaceholder": "Введите реферальный код",
+      "unlock": "Разблокировать",
+      "shareTitle": "Поделитесь волшебством",
+      "shareDesc": "Пригласите друзей с помощью своего уникального кода. Вы оба получите Золотой кредит, когда они его используют.",
+      "signInToGetCode": "Войдите, чтобы получить код",
+      "share": "Поделиться",
+      "friendsJoined": "Присоединившиеся друзья",
+      "noCredits": "Нет золотых кредитов",
+      "noCreditsDesc": "Приглашайте друзей или используйте код, чтобы заработать кредиты.",
+      "create": "Создать золотой букет",
+      "ownCodeError": "Вы не можете использовать собственный код.",
+      "alreadyClaimedError": "Вы уже использовали этот код.",
+      "invalidCodeError": "Недействительный код.",
+      "claimSuccess": "Успешно получено!",
+      "claimSuccessDesc": "Вы заработали Золотой кредит.",
+      "failed": "Ошибка",
+      "error": "Ошибка",
+      "connectionError": "Не удалось подключиться к серверу.",
+      "shareText": "Разблокируйте Золотой букет по моему приглашению! Скачайте приложение и введите мой код {code} или воспользуйтесь этой ссылкой, чтобы автоматически получить свой кредит: {link}",
+      "credit": "Кредит",
+      "credits": "Кредиты"
+    },
+    "raok": {
+      "guidelinesTitle": "Случайный акт доброты",
+      "guidelinesSubtitle": "Отправьте немного тепла и удивите незнакомца! Вот как это работает и правила, которым нужно следовать.",
+      "rule1Title": "Дарите радость анонимно",
+      "rule1Desc": "Ваш букет и сообщение будут случайным образом подобраны ИИ для того, кому сегодня нужна улыбка, полностью анонимно.",
+      "rule2Title": "Будьте позитивны и вдохновляйте",
+      "rule2Desc": "Пишите тёплые, ободряющие слова. Оставляйте комментарии, вдохновляющие на надежду, доброту и поддержку.",
+      "rule3Title": "Никакой личной информации",
+      "rule3Desc": "Ради вашей безопасности и безопасности других не указывайте имена, номера телефонов, адреса, аккаунты в соцсетях или ссылки.",
+      "understand": "Я понимаю",
+      "soundsGood": "Хорошо"
     }
   },
   "ur": {
@@ -9362,7 +10871,8 @@ export default {
       "about": "ہمارے بارے میں",
       "emailsLeft": "اس ماہ باقی ای میلز",
       "home": "ہوم",
-      "history": "ہسٹری"
+      "history": "ہسٹری",
+      "credits": "کریڈٹس"
     },
     "common": {
       "cancel": "منسوخ کریں",
@@ -9380,7 +10890,8 @@ export default {
       "companyName": "ای گریٹ (E Greet)",
       "loading": "لوڈ ہو رہا ہے...",
       "enabled": "فعال",
-      "disabled": "غیر فعال"
+      "disabled": "غیر فعال",
+      "clear": "صاف کریں"
     },
     "languageScreen": {
       "title": "زبان",
@@ -9454,7 +10965,19 @@ export default {
       "addPasswordLogin": "پاس ورڈ لاگ ان شامل کریں",
       "createPasswordTitle": "پاس ورڈ بنائیں",
       "createPasswordDesc": "اپنی ای میل اور گوگل کے ساتھ لاگ ان کرنے کے لیے ایک پاس ورڈ بنائیں۔",
-      "passwordCreated": "پاس ورڈ کامیابی سے بن گیا!"
+      "passwordCreated": "پاس ورڈ کامیابی سے بن گیا!",
+      "appearance": "ظاہری شکل",
+      "hapticFeedback": "ہیپٹک فیڈبیک",
+      "hapticFeedbackDesc": "بٹن دبانے پر وائبریٹ کریں",
+      "language": "زبان",
+      "notificationsDesc": "گلدستوں کے جوابات کے لیے اطلاعات وصول کریں",
+      "notificationsEnabled": "اطلاعات فعال کریں",
+      "sounds": "آوازیں",
+      "theme": "تھیم",
+      "themeDesc": "اپنی پسندیدہ تھیم منتخب کریں",
+      "touchSound": "ٹچ ساؤنڈ",
+      "touchSoundDesc": "بٹن دبانے پر آواز چلائیں",
+      "disconnectEmail": "ای میل لاگ ان منقطع کریں"
     },
     "login": {
       "title": "سائن ان",
@@ -9496,7 +11019,9 @@ export default {
       "sendLink": "ری سیٹ لنک بھیجیں",
       "successText": "ری سیٹ لنک بھیج دیا گیا! اپنا ان باکس اور سپیم فولڈر چیک کریں۔",
       "backToSignIn": "واپس سائن ان پر جائیں",
-      "errorSend": "ری سیٹ ای میل نہیں بھیجی جا سکی۔ ایڈریس چیک کریں اور دوبارہ کوشش کریں۔"
+      "errorSend": "ری سیٹ ای میل نہیں بھیجی جا سکی۔ ایڈریس چیک کریں اور دوبارہ کوشش کریں۔",
+      "backToLogin": "لاگ ان پر واپس جائیں",
+      "rememberPassword": "کیا آپ کو اپنا پاس ورڈ یاد ہے؟"
     },
     "feedback": {
       "title": "رائے بھیجیں",
@@ -9567,6 +11092,8 @@ export default {
       "widget": "وجٹ",
       "scheduledEmails": "شیڈول شدہ ای میلز",
       "scheduledEmailsDesc": "شیڈول شدہ گلدستوں کی ترسیل دیکھیں اور ان کا نظم کریں",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "محبت سے بنایا گیا",
       "makeTogether": "ایک ساتھ گلدستہ بنائیں",
       "makeTogetherDesc": "ریئل ٹائم میں پھول بنائیں اور پیغامات لکھیں۔",
@@ -9575,7 +11102,29 @@ export default {
       "roomCode": "روم کوڈ:",
       "removeRoom": "روم ہٹائیں؟",
       "removeRoomDesc": "کیا روم #{code} کو تاریخ سے ہٹانا ہے؟",
-      "remove": "ہٹائیں"
+      "remove": "ہٹائیں",
+      "creativeStudio": "تخلیقی اسٹوڈیو",
+      "creativeStudioDesc": "پھولوں کی کی بورڈ، سالگرہ کا وال پیپر اور ترکیبیں۔",
+      "limitedEdition": "محدود ایڈیشن",
+      "goldenBouquet": "گولڈن گلدستہ",
+      "goldenBouquetDesc": "کھولنے یا ریفرل کوڈ درج کرنے کے لیے ٹیپ کریں",
+      "createBouquet": "گلدستہ بنائیں",
+      "spreadKindness": "مہربانی پھیلائیں",
+      "spreadKindnessDesc": "کسی اجنبی کا دن روشن کرنے کے لیے ایک پراسرار گلدستہ بھیجیں۔",
+      "temporarilyDisabled": "عارضی طور پر غیر فعال",
+      "featureDisabled": "خصوصیت غیر فعال",
+      "safetyViolationDesc": "حفاظتی خلاف ورزیوں کی وجہ سے خصوصیت عارضی طور پر غیر فعال ہے۔",
+      "loginRequired": "لاگ ان درکار ہے",
+      "loginToSpreadKindness": "بے ترتیب مہربانی کا عمل بھیجنے کے لیے آپ کا لاگ ان ہونا ضروری ہے۔",
+      "cancel": "منسوخ کریں",
+      "login": "لاگ ان کریں",
+      "whatsNewTitle": "نیا کیا ہے",
+      "whatsNewSubtitle": "ہم نے جڑنے اور خوشیاں پھیلانے کے کچھ خوبصورت نئے طریقے شامل کیے ہیں۔",
+      "whatsNewGoldenTitle": "گولڈن گلدستہ",
+      "whatsNewGoldenDesc": "خاص لمحات کے لیے تیار کردہ ہمارے تابناک، چمکدار پریمیم گلدستہ اسٹائل کے ساتھ انتہائی شکرگزاری کا اظہار کریں۔",
+      "whatsNewRaokTitle": "بے ترتیب مہربانی کے اعمال",
+      "whatsNewRaokDesc": "عالمی سطح پر گمنام ڈیجیٹل گلدستے بھیجیں اور وصول کریں، ضرورت مندوں کے ساتھ گرمجوشی اور مثبتیت بانٹیں۔",
+      "whatsNewClose": "ٹھیک لگتا ہے"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -9673,7 +11222,7 @@ export default {
       "unsavedDesc": "آپ کی تبدیلیاں محفوظ نہیں ہیں۔ کیا آپ واقعی جانا چاہتے ہیں؟",
       "stay": "رکیں",
       "leave": "چھوڑیں",
-      "howToCreate": "اپنا گلدستہ کیسے بنائیں",
+      "howToCreate": "گلدستہ کیسے بنائیں",
       "availableDesc": "زبردست! یہ نام دستیاب ہے۔",
       "dyslexiaFriendly": "ڈسلیکسیا دوست فونٹ",
       "dyslexiaFriendlyDesc": "بہتر اسپیسنگ کے ساتھ ڈسلیکسیا کے لیے آسان فونٹ استعمال کرتا ہے",
@@ -9740,7 +11289,21 @@ export default {
       "shareText": "میں نے یہ خوبصورت گلدستہ خاص آپ کے لیے بنایا ہے!",
       "aiGenerated": "AI گلدستہ بن گیا",
       "useThis": "اسے استعمال کریں →",
-      "aiGeneratedTitle": "AI گلدستہ تیار ہے"
+      "aiGeneratedTitle": "AI گلدستہ تیار ہے",
+      "loginRequiredDesc": "ای میل کے ذریعے گلدستے بھیجنے کے لیے براہ کرم سائن ان کریں۔",
+      "selectFlowers": "پھول منتخب کریں",
+      "selectFlowersDesc": "شروع کرنے کے لیے کم از کم 3 پھول منتخب کریں۔ اس کے معنی اور رنگ کے اختیارات دیکھنے کے لیے پھول کارڈ پر ٹیپ کریں۔",
+      "arrangeThem": "انہیں ترتیب دیں",
+      "arrangeThemDesc": "پھولوں کو کینوس پر گھسیٹیں۔ سائز، گردش اور تہوں میں ترمیم کے لیے ٹول بار استعمال کریں۔",
+      "personalizeAndSend": "ذاتی بنائیں اور بھیجیں",
+      "personalizeAndSendDesc": "ایک دلی پیغام شامل کریں، ایک گانا منتخب کریں، اور شیئر کرنے کے لیے ایک منفرد لنک تیار کریں۔",
+      "enjoyingApp": "ایپ سے لطف اندوز ہو رہے ہیں؟",
+      "thankYou": "شکریہ!",
+      "openPlayStore": "پلے اسٹور کھولیں",
+      "maybeLater": "شاید بعد میں",
+      "sarahsSelection": "سارہ کا انتخاب",
+      "createAccountAttach": "تصویر یا وائس نوٹ منسلک کرنے کے لیے اکاؤنٹ بنائیں یا سائن ان کریں",
+      "returnToHome": "ہوم پر واپس جائیں"
     },
     "bouquetView": {
       "loading": "آپ کا گلدستہ لوڈ ہو رہا ہے...",
@@ -9807,7 +11370,15 @@ export default {
       "fromLabel": "کی طرف سے",
       "shareBouquetTitle": "گلدستہ شیئر کریں",
       "shareBouquetSubtitle": "یہ خوبصورت گلدستہ دوسروں کو بھیجیں",
-      "noLanguagesFound": "کوئی زبان نہیں ملی"
+      "noLanguagesFound": "کوئی زبان نہیں ملی",
+      "listenOnYouTube": "یوٹیوب پر کھولیں",
+      "playingFromStart": "شروع سے چل رہا ہے",
+      "playingOnYouTube": "یوٹیوب پر چل رہا ہے",
+      "saveCard": "کارڈ محفوظ کریں",
+      "savedSuccess": "کامیابی سے محفوظ ہو گیا!",
+      "savedSuccessDesc": "گلدستہ آپ کی فوٹو گیلری میں محفوظ کر دیا گیا ہے۔",
+      "switchToAudio": "صرف آڈیو",
+      "switchToVideo": "ویڈیو دیکھیں"
     },
     "settings": {
       "title": "سیٹنگز",
@@ -9837,7 +11408,9 @@ export default {
       "cancel": "منسوخ کریں",
       "clearDataDesc": "کیش، وجٹ اور ہسٹری کا ڈیٹا مینیج کریں",
       "termsSubtext": "ہماری سروس کی شرائط کا معاہدہ پڑھیں",
-      "privacySubtext": "جانیں کہ ہم آپ کے ڈیٹا کی رازداری کی حفاظت کیسے کرتے ہیں"
+      "privacySubtext": "جانیں کہ ہم آپ کے ڈیٹا کی رازداری کی حفاظت کیسے کرتے ہیں",
+      "creditsSubtext": "اوزار، وسائل اور خصوصی شکریہ",
+      "dataManagementDesc": "کیش شدہ فائلوں، ویجٹس اور موصولہ گلدستوں کے زیر قبضہ مقامی اسٹوریج کا نظم کریں اور خالی کریں۔"
     },
     "share": {
       "subtitle": "اپنے گلدستے کو کسی خاص کے ساتھ شیئر کریں",
@@ -9894,7 +11467,10 @@ export default {
       "successMessage": "وجٹ اپ ڈیٹ ہو گیا! اگر آپ نے ابھی تک وجٹ کو ہوم اسکرین پر شامل نہیں کیا ہے، تو ہیلپ مینو میں دی گئی ہدایات پر عمل کریں۔",
       "errorTitle": "ایرر",
       "errorMessage": "وجٹ اپ ڈیٹ کرنے میں ناکامی۔",
-      "from": "{name} کی طرف سے"
+      "from": "{name} کی طرف سے",
+      "clearMessage": "کیا آپ واقعی اس ویجٹ کو صاف کرنا چاہتے ہیں؟",
+      "clearTitle": "ویجٹ صاف کریں",
+      "myWidgets": "میرے ویجٹس"
     },
     "privacy": {
       "title": "پرائیویسی پالیسی",
@@ -10082,6 +11658,71 @@ export default {
       "songTheyChose": "گانا جو انہوں نے آپ کے لیے چنا",
       "yourMessage": "ان کے لیے آپ کا پیغام",
       "done": "ہو گیا"
+    },
+    "ageVerification": {
+      "title": "عمر کی تصدیق",
+      "prompt": "براہ کرم اپنی پیدائش کا سال درج کریں۔ ہم یہ صرف بچوں کی حفاظت کو یقینی بنانے اور رازداری کے رہنما اصولوں کی تعمیل کے لیے پوچھتے ہیں۔"
+    },
+    "credits": {
+      "title": "کریڈٹس",
+      "specialThanks": "خصوصی شکریہ",
+      "toolsTitle": "اوزار اور وسائل",
+      "toolsSubtitle": "یہ ایپ درج ذیل شاندار اوزاروں اور پلیٹ فارمز کی بدولت ممکن ہوئی:",
+      "lottieFiles": "خوبصورت، اعلیٰ معیار کی اینیمیشنز فراہم کرنے کے لیے۔",
+      "storyset": "شاندار اور جامع مصوری فراہم کرنے کے لیے۔",
+      "reactNative": "بنیادی فریم ورک کے لیے۔",
+      "firebase": "بیک اینڈ سروسز کے لیے۔",
+      "cloudflare": "DNS اور ویب سیکیورٹی کے لیے۔",
+      "netlify": "ہوسٹنگ اور ڈپلائے منٹ کے لیے۔",
+      "sarvamAI": "ذہین متن اور جنریشن خصوصیات کے لیے۔"
+    },
+    "games": {
+      "title": "بلاسم گارڈن گیمز",
+      "subtitle": "نئے گلدستہ ڈیزائن اور خیالات کھولنے کے لیے سکون سے ہمارے آرام دہ پھولوں کے منی گیمز کھیلیں۔",
+      "sortTitle": "بلاسم سارٹ پزل",
+      "sortDesc": "ملتے جلتے پھولوں کے تنوں کو یکساں خانوں میں ترتیب دیں۔ منتخب کرنے اور حرکت دینے کے لیے ٹیپ کریں۔",
+      "matchTitle": "بلاسم میچ",
+      "matchDesc": "3 یا اس سے زیادہ کو ایک قطار میں ملانے اور سلسلہ وار کومبوز شروع کرنے کے لیے ملحقہ پھولوں کو تبدیل کریں۔",
+      "playNow": "ابھی کھیلیں"
+    },
+    "golden": {
+      "title": "گولڈن گلدستہ",
+      "subtitle": "زندگی کے قیمتی ترین لمحات کو محفوظ کرنے کے لیے تیار کردہ ایک خصوصی، محدود ایڈیشن سجاوٹ۔",
+      "claimTitle": "دعوت نامہ حاصل کریں",
+      "claimDesc": "کیا آپ کو گولڈن دعوت نامہ ملا؟ اپنی تخلیق کھولنے کے لیے نیچے اپنا کوڈ درج کریں۔",
+      "inputPlaceholder": "ریفرل کوڈ درج کریں",
+      "unlock": "کھولیں",
+      "shareTitle": "جادو شیئر کریں",
+      "shareDesc": "اپنے منفرد کوڈ کے ساتھ دوستوں کو مدعو کریں۔ جب وہ اسے استعمال کریں گے تو آپ دونوں کو گولڈن کریڈٹ ملے گا۔",
+      "signInToGetCode": "کوڈ حاصل کرنے کے لیے سائن ان کریں",
+      "share": "شیئر کریں",
+      "friendsJoined": "شامل ہونے والے دوست",
+      "noCredits": "کوئی گولڈن کریڈٹ نہیں",
+      "noCreditsDesc": "کریڈٹ کمانے کے لیے دوستوں کو مدعو کریں یا کوڈ استعمال کریں۔",
+      "create": "گولڈن گلدستہ بنائیں",
+      "ownCodeError": "آپ اپنا کوڈ استعمال نہیں کر سکتے۔",
+      "alreadyClaimedError": "آپ پہلے ہی یہ کوڈ استعمال کر چکے ہیں۔",
+      "invalidCodeError": "غلط کوڈ۔",
+      "claimSuccess": "کامیابی سے حاصل کر لیا گیا!",
+      "claimSuccessDesc": "آپ نے ایک گولڈن کریڈٹ حاصل کیا۔",
+      "failed": "ناکام",
+      "error": "خرابی",
+      "connectionError": "سرور سے رابطہ نہیں ہو سکا۔",
+      "shareText": "میری دعوت سے گولڈن گلدستہ کھولیں! ایپ ڈاؤن لوڈ کریں اور میرا کوڈ {code} درج کریں یا اس لنک کا استعمال کرتے ہوئے خودکار طور پر اپنا کریڈٹ حاصل کریں: {link}",
+      "credit": "کریڈٹ",
+      "credits": "کریڈٹس"
+    },
+    "raok": {
+      "guidelinesTitle": "بے ترتیب مہربانی کا عمل",
+      "guidelinesSubtitle": "تھوڑی گرمجوشی بھیجیں اور کسی اجنبی کو حیران کریں! یہ کیسے کام کرتا ہے اور عمل کرنے کے لیے رہنما اصول یہ ہیں۔",
+      "rule1Title": "گمنام طور پر خوشی پھیلائیں",
+      "rule1Desc": "آپ کا گلدستہ اور پیغام AI کے ذریعے مکمل طور پر گمنام طور پر کسی ایسے شخص سے بے ترتیب طور پر ملایا جائے گا جسے آج مسکراہٹ کی ضرورت ہے۔",
+      "rule2Title": "مثبت اور حوصلہ افزا رہیں",
+      "rule2Desc": "گرمجوشی بھرے، حوصلہ افزا الفاظ لکھیں۔ ایسے تبصرے چھوڑیں جو امید، مہربانی اور حمایت کو متاثر کریں۔",
+      "rule3Title": "کوئی ذاتی معلومات نہیں",
+      "rule3Desc": "اپنی اور دوسروں کی حفاظت کے لیے، نام، فون نمبر، پتے، سوشل ہینڈلز یا لنکس شامل نہ کریں۔",
+      "understand": "میں سمجھ گیا/گئی",
+      "soundsGood": "ٹھیک لگتا ہے"
     }
   },
   "id": {
@@ -10132,7 +11773,8 @@ export default {
       "about": "Tentang Kami",
       "emailsLeft": "email tersisa bulan ini",
       "home": "Beranda",
-      "history": "Riwayat"
+      "history": "Riwayat",
+      "credits": "Kredit"
     },
     "common": {
       "cancel": "Batal",
@@ -10150,7 +11792,8 @@ export default {
       "companyName": "E Greet",
       "loading": "Memuat...",
       "enabled": "Diaktifkan",
-      "disabled": "Dinonaktifkan"
+      "disabled": "Dinonaktifkan",
+      "clear": "Hapus"
     },
     "languageScreen": {
       "title": "Bahasa",
@@ -10224,7 +11867,19 @@ export default {
       "addPasswordLogin": "Tambahkan kata sandi masuk",
       "createPasswordTitle": "Buat Kata Sandi",
       "createPasswordDesc": "Buat kata sandi untuk masuk dengan email dan juga Google.",
-      "passwordCreated": "Kata sandi berhasil dibuat!"
+      "passwordCreated": "Kata sandi berhasil dibuat!",
+      "appearance": "TAMPILAN",
+      "hapticFeedback": "Umpan Balik Haptik",
+      "hapticFeedbackDesc": "Bergetar saat menekan tombol",
+      "language": "Bahasa",
+      "notificationsDesc": "Terima notifikasi untuk balasan buket",
+      "notificationsEnabled": "Aktifkan Notifikasi",
+      "sounds": "SUARA",
+      "theme": "Tema",
+      "themeDesc": "Pilih tema yang Anda sukai",
+      "touchSound": "Suara Sentuhan",
+      "touchSoundDesc": "Mainkan suara saat menekan tombol",
+      "disconnectEmail": "Putuskan Masuk dengan Email"
     },
     "login": {
       "title": "Masuk",
@@ -10266,7 +11921,9 @@ export default {
       "sendLink": "Kirim Tautan",
       "successText": "Tautan berhasil dikirim! Periksa kotak masuk dan folder spam Anda.",
       "backToSignIn": "Kembali untuk Masuk",
-      "errorSend": "Tidak dapat mengirim email. Periksa alamat dan coba lagi."
+      "errorSend": "Tidak dapat mengirim email. Periksa alamat dan coba lagi.",
+      "backToLogin": "Kembali ke Masuk",
+      "rememberPassword": "Ingat kata sandi Anda?"
     },
     "feedback": {
       "title": "Kirim Umpan Balik",
@@ -10337,6 +11994,8 @@ export default {
       "widget": "WIDGET",
       "scheduledEmails": "Email Terjadwal",
       "scheduledEmailsDesc": "Lihat & kelola pengiriman buket terjadwal",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "Dibuat dengan cinta",
       "makeTogether": "Buat Buket Bersama",
       "makeTogetherDesc": "Gambar bunga & tulis pesan secara langsung.",
@@ -10345,7 +12004,29 @@ export default {
       "roomCode": "Kode ruang:",
       "removeRoom": "Hapus Ruang?",
       "removeRoomDesc": "Hapus ruang #{code} dari riwayat?",
-      "remove": "Hapus"
+      "remove": "Hapus",
+      "creativeStudio": "Studio Kreatif",
+      "creativeStudioDesc": "Papan Ketik Bunga, Wallpaper Ulang Tahun & Resep.",
+      "limitedEdition": "EDISI TERBATAS",
+      "goldenBouquet": "Buket Emas",
+      "goldenBouquetDesc": "Ketuk untuk membuka atau masukkan kode referral",
+      "createBouquet": "Buat Buket",
+      "spreadKindness": "Sebarkan Kebaikan",
+      "spreadKindnessDesc": "Kirim buket misteri untuk mencerahkan hari orang asing.",
+      "temporarilyDisabled": "Sementara dinonaktifkan",
+      "featureDisabled": "Fitur Dinonaktifkan",
+      "safetyViolationDesc": "Fitur untuk sementara dinonaktifkan karena pelanggaran keamanan.",
+      "loginRequired": "Login Diperlukan",
+      "loginToSpreadKindness": "Anda harus masuk untuk mengirim Aksi Kebaikan Acak.",
+      "cancel": "Batal",
+      "login": "Masuk",
+      "whatsNewTitle": "Yang Baru",
+      "whatsNewSubtitle": "Kami telah menambahkan beberapa cara baru yang indah untuk terhubung dan menyebarkan kebahagiaan.",
+      "whatsNewGoldenTitle": "Buket Emas",
+      "whatsNewGoldenDesc": "Ungkapkan rasa syukur tertinggi dengan gaya buket premium kami yang berkilau dan bersinar, dirancang untuk momen-momen istimewa.",
+      "whatsNewRaokTitle": "Aksi Kebaikan Acak",
+      "whatsNewRaokDesc": "Kirim dan terima buket digital anonim secara global, berbagi kehangatan dan hal positif dengan mereka yang membutuhkannya.",
+      "whatsNewClose": "Kedengarannya bagus"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -10443,7 +12124,7 @@ export default {
       "unsavedDesc": "Anda memiliki perubahan yang belum disimpan. Yakin ingin keluar?",
       "stay": "Tetap",
       "leave": "Keluar",
-      "howToCreate": "Cara Membuat Buket Anda",
+      "howToCreate": "Cara membuat buket",
       "availableDesc": "Bagus! Nama ini tersedia.",
       "dyslexiaFriendly": "Font Ramah Disleksia",
       "dyslexiaFriendlyDesc": "Menggunakan font ramah disleksia dengan spasi yang lebih baik",
@@ -10510,7 +12191,21 @@ export default {
       "shareText": "Saya membuat buket indah ini untukmu!",
       "aiGenerated": "Buket AI Dibuat",
       "useThis": "Gunakan ini →",
-      "aiGeneratedTitle": "Buket AI Dibuat"
+      "aiGeneratedTitle": "Buket AI Dibuat",
+      "loginRequiredDesc": "Silakan masuk untuk mengirim buket melalui email.",
+      "selectFlowers": "Pilih Bunga",
+      "selectFlowersDesc": "Pilih setidaknya 3 bunga untuk memulai. Ketuk kartu bunga untuk melihat maknanya dan pilihan warnanya.",
+      "arrangeThem": "Susun Bunga",
+      "arrangeThemDesc": "Seret bunga di sekitar kanvas. Gunakan toolbar untuk mengedit ukuran, rotasi, dan lapisan.",
+      "personalizeAndSend": "Personalisasi & Kirim",
+      "personalizeAndSendDesc": "Tambahkan pesan yang tulus, pilih lagu, dan buat tautan unik untuk dibagikan kepada mereka.",
+      "enjoyingApp": "Menikmati aplikasinya?",
+      "thankYou": "Terima Kasih!",
+      "openPlayStore": "Buka Play Store",
+      "maybeLater": "Mungkin Nanti",
+      "sarahsSelection": "Pilihan Sarah",
+      "createAccountAttach": "Buat akun atau masuk untuk melampirkan foto atau catatan suara",
+      "returnToHome": "Kembali ke Beranda"
     },
     "bouquetView": {
       "loading": "Memuat buket Anda...",
@@ -10577,7 +12272,15 @@ export default {
       "fromLabel": "dari",
       "shareBouquetTitle": "Bagikan Buket",
       "shareBouquetSubtitle": "Kirim buket indah ini kepada orang lain",
-      "noLanguagesFound": "Tidak ada bahasa yang ditemukan"
+      "noLanguagesFound": "Tidak ada bahasa yang ditemukan",
+      "listenOnYouTube": "Buka di YouTube",
+      "playingFromStart": "Memutar dari awal",
+      "playingOnYouTube": "Memutar di YouTube",
+      "saveCard": "Simpan Kartu",
+      "savedSuccess": "Berhasil Disimpan!",
+      "savedSuccessDesc": "Buket telah disimpan ke galeri foto Anda.",
+      "switchToAudio": "Hanya Audio",
+      "switchToVideo": "Tonton Video"
     },
     "settings": {
       "title": "Pengaturan",
@@ -10607,7 +12310,9 @@ export default {
       "cancel": "Batal",
       "clearDataDesc": "Kelola data cache, widget, dan riwayat",
       "termsSubtext": "Baca perjanjian persyaratan layanan kami",
-      "privacySubtext": "Pelajari cara kami melindungi privasi data Anda"
+      "privacySubtext": "Pelajari cara kami melindungi privasi data Anda",
+      "creditsSubtext": "Alat, sumber daya, dan terima kasih spesial",
+      "dataManagementDesc": "Kelola dan bebaskan penyimpanan lokal yang digunakan oleh file cache, widget, dan buket yang diterima."
     },
     "share": {
       "subtitle": "Bagikan buket Anda dengan seseorang yang istimewa",
@@ -10664,7 +12369,10 @@ export default {
       "successMessage": "Widget diperbarui! Jika Anda belum menambahkan widget ke layar utama, ikuti petunjuk di menu bantuan.",
       "errorTitle": "Kesalahan",
       "errorMessage": "Gagal memperbarui widget.",
-      "from": "dari {name}"
+      "from": "dari {name}",
+      "clearMessage": "Apakah Anda yakin ingin menghapus widget ini?",
+      "clearTitle": "Hapus Widget",
+      "myWidgets": "Widget Saya"
     },
     "privacy": {
       "title": "Kebijakan Privasi",
@@ -10852,6 +12560,71 @@ export default {
       "songTheyChose": "Lagu yang mereka pilih untuk Anda",
       "yourMessage": "Pesan Anda untuk mereka",
       "done": "Selesai"
+    },
+    "ageVerification": {
+      "title": "Verifikasi Usia",
+      "prompt": "Silakan masukkan tahun kelahiran Anda. Kami hanya menanyakan ini untuk memastikan keamanan anak dan mematuhi pedoman privasi."
+    },
+    "credits": {
+      "title": "Kredit",
+      "specialThanks": "Terima Kasih Spesial",
+      "toolsTitle": "Alat & Sumber Daya",
+      "toolsSubtitle": "Aplikasi ini dapat terwujud berkat alat dan platform luar biasa berikut ini:",
+      "lottieFiles": "karena menyediakan animasi yang indah dan berkualitas tinggi.",
+      "storyset": "atas ilustrasi yang menakjubkan dan ekspresif.",
+      "reactNative": "atas kerangka kerja utama.",
+      "firebase": "atas layanan backend.",
+      "cloudflare": "atas DNS dan keamanan web.",
+      "netlify": "atas hosting dan penerapan.",
+      "sarvamAI": "atas fitur teks dan generasi cerdas."
+    },
+    "games": {
+      "title": "Permainan Taman Bunga",
+      "subtitle": "Bersantailah dan mainkan mini game bunga kami yang nyaman untuk membuka desain dan ide buket baru.",
+      "sortTitle": "Puzzle Sortir Bunga",
+      "sortDesc": "Urutkan tangkai bunga yang cocok ke slot yang identik. Ketuk untuk memilih dan memindahkan.",
+      "matchTitle": "Cocokkan Bunga",
+      "matchDesc": "Tukar bunga yang berdekatan untuk mencocokkan 3 atau lebih dalam satu baris dan memicu kombo berantai.",
+      "playNow": "Main Sekarang"
+    },
+    "golden": {
+      "title": "Buket Emas",
+      "subtitle": "Rangkaian eksklusif edisi terbatas yang dirancang untuk mengabadikan momen paling berharga dalam hidup.",
+      "claimTitle": "Klaim Undangan",
+      "claimDesc": "Menerima undangan emas? Masukkan kode Anda di bawah untuk membuka kreasi Anda.",
+      "inputPlaceholder": "Masukkan kode referral",
+      "unlock": "Buka",
+      "shareTitle": "Bagikan Keajaiban",
+      "shareDesc": "Undang teman dengan kode unik Anda. Anda berdua akan mendapatkan Kredit Emas saat mereka menggunakannya.",
+      "signInToGetCode": "Masuk untuk mendapatkan kode",
+      "share": "Bagikan",
+      "friendsJoined": "Teman yang Bergabung",
+      "noCredits": "Tidak Ada Kredit Emas",
+      "noCreditsDesc": "Undang teman atau gunakan kode untuk mendapatkan kredit.",
+      "create": "Buat Buket Emas",
+      "ownCodeError": "Anda tidak dapat menggunakan kode Anda sendiri.",
+      "alreadyClaimedError": "Anda sudah mengklaim kode ini.",
+      "invalidCodeError": "Kode tidak valid.",
+      "claimSuccess": "Berhasil Diklaim!",
+      "claimSuccessDesc": "Anda mendapatkan Kredit Emas.",
+      "failed": "Gagal",
+      "error": "Kesalahan",
+      "connectionError": "Tidak dapat terhubung ke server.",
+      "shareText": "Buka Buket Emas dengan undangan saya! Unduh aplikasinya dan masukkan kode saya {code} atau gunakan tautan ini untuk otomatis mengklaim kredit Anda: {link}",
+      "credit": "Kredit",
+      "credits": "Kredit"
+    },
+    "raok": {
+      "guidelinesTitle": "Aksi Kebaikan Acak",
+      "guidelinesSubtitle": "Kirim sedikit kehangatan dan kejutkan orang asing! Berikut cara kerjanya & pedoman yang harus diikuti.",
+      "rule1Title": "Sebarkan Kebahagiaan Secara Anonim",
+      "rule1Desc": "Buket dan pesan Anda akan dicocokkan secara acak oleh AI kepada seseorang yang membutuhkan senyuman hari ini, sepenuhnya secara anonim.",
+      "rule2Title": "Bersikaplah Positif & Membangkitkan Semangat",
+      "rule2Desc": "Tulis kata-kata yang hangat dan menyemangati. Tinggalkan komentar yang menginspirasi harapan, kebaikan, dan dukungan.",
+      "rule3Title": "Tanpa Informasi Pribadi",
+      "rule3Desc": "Demi keamanan Anda dan orang lain, jangan sertakan nama, nomor telepon, alamat, akun media sosial, atau tautan.",
+      "understand": "Saya mengerti",
+      "soundsGood": "Kedengarannya bagus"
     }
   },
   "tr": {
@@ -10902,7 +12675,8 @@ export default {
       "about": "Hakkımızda",
       "emailsLeft": "bu ay kalan e-posta hakkı",
       "home": "Ana Sayfa",
-      "history": "Geçmiş"
+      "history": "Geçmiş",
+      "credits": "Emeği Geçenler"
     },
     "common": {
       "cancel": "İptal",
@@ -10920,7 +12694,8 @@ export default {
       "companyName": "E Greet",
       "loading": "Yükleniyor...",
       "enabled": "Etkin",
-      "disabled": "Devre Dışı"
+      "disabled": "Devre Dışı",
+      "clear": "Temizle"
     },
     "languageScreen": {
       "title": "Dil",
@@ -10994,7 +12769,19 @@ export default {
       "addPasswordLogin": "Şifreyle girişi ekle",
       "createPasswordTitle": "Şifre Oluştur",
       "createPasswordDesc": "Google'ın yanı sıra e-postanla da giriş yapmak için bir şifre oluştur.",
-      "passwordCreated": "Şifre başarıyla oluşturuldu!"
+      "passwordCreated": "Şifre başarıyla oluşturuldu!",
+      "appearance": "GÖRÜNÜM",
+      "hapticFeedback": "Dokunsal Geri Bildirim",
+      "hapticFeedbackDesc": "Düğmelere dokunurken titret",
+      "language": "Dil",
+      "notificationsDesc": "Buket yanıtları için bildirim al",
+      "notificationsEnabled": "Bildirimleri Etkinleştir",
+      "sounds": "SESLER",
+      "theme": "Tema",
+      "themeDesc": "Tercih ettiğin temayı seç",
+      "touchSound": "Dokunma Sesi",
+      "touchSoundDesc": "Düğmelere dokunurken ses çal",
+      "disconnectEmail": "E-posta Girişinin Bağlantısını Kes"
     },
     "login": {
       "title": "Giriş Yap",
@@ -11036,7 +12823,9 @@ export default {
       "sendLink": "Sıfırlama Bağlantısı Gönder",
       "successText": "Sıfırlama bağlantısı gönderildi! Gelen kutunu ve spam klasörünü kontrol et.",
       "backToSignIn": "Giriş Ekranına Dön",
-      "errorSend": "Sıfırlama e-postası gönderilemedi. Adresi kontrol edip tekrar dene."
+      "errorSend": "Sıfırlama e-postası gönderilemedi. Adresi kontrol edip tekrar dene.",
+      "backToLogin": "Girişe Dön",
+      "rememberPassword": "Şifreni hatırladın mı?"
     },
     "feedback": {
       "title": "Geri Bildirim Gönder",
@@ -11107,6 +12896,8 @@ export default {
       "widget": "WIDGET",
       "scheduledEmails": "Planlanmış E-postalar",
       "scheduledEmailsDesc": "Planlanan buket teslimatlarını görüntüle ve yönet",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "Sevgiyle hazırlandı",
       "makeTogether": "Birlikte Buket Yap",
       "makeTogetherDesc": "Gerçek zamanlı olarak çiçek çizin ve mesaj yazın.",
@@ -11115,7 +12906,29 @@ export default {
       "roomCode": "Oda kodu:",
       "removeRoom": "Odayı Kaldır?",
       "removeRoomDesc": "#{code} numaralı odayı geçmişten kaldır?",
-      "remove": "Kaldır"
+      "remove": "Kaldır",
+      "creativeStudio": "Yaratıcı Stüdyo",
+      "creativeStudioDesc": "Çiçek Klavyesi, Doğum Günü Duvar Kağıdı ve Tarifler.",
+      "limitedEdition": "SINIRLI SAYIDA",
+      "goldenBouquet": "Altın Buket",
+      "goldenBouquetDesc": "Kilidi açmak veya referans kodu girmek için dokunun",
+      "createBouquet": "Buket Oluştur",
+      "spreadKindness": "İyiliği Yay",
+      "spreadKindnessDesc": "Bir yabancının gününü aydınlatmak için gizemli bir buket gönder.",
+      "temporarilyDisabled": "Geçici olarak devre dışı",
+      "featureDisabled": "Özellik Devre Dışı",
+      "safetyViolationDesc": "Güvenlik ihlalleri nedeniyle özellik geçici olarak devre dışı bırakıldı.",
+      "loginRequired": "Giriş Gerekli",
+      "loginToSpreadKindness": "Rastgele Bir İyilik Eylemi göndermek için giriş yapmış olmanız gerekir.",
+      "cancel": "İptal",
+      "login": "Giriş Yap",
+      "whatsNewTitle": "Yenilikler",
+      "whatsNewSubtitle": "Bağlantı kurmanın ve neşe yaymanın güzel yeni yollarını ekledik.",
+      "whatsNewGoldenTitle": "Altın Buket",
+      "whatsNewGoldenDesc": "Özel anlar için tasarlanmış, ışıltılı ve parlak premium buket tarzımızla en büyük minnettarlığınızı ifade edin.",
+      "whatsNewRaokTitle": "Rastgele İyilik Eylemleri",
+      "whatsNewRaokDesc": "Dünya çapında anonim dijital buketler gönderin ve alın, ihtiyacı olanlarla sıcaklık ve pozitiflik paylaşın.",
+      "whatsNewClose": "Kulağa hoş geliyor"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -11213,7 +13026,7 @@ export default {
       "unsavedDesc": "Kaydedilmemiş değişikliklerin var. Ayrılmak istediğinden emin misin?",
       "stay": "Kal",
       "leave": "Ayrıl",
-      "howToCreate": "Buketini Nasıl Oluşturursun",
+      "howToCreate": "Buket nasıl oluşturulur",
       "availableDesc": "Harika! Bu isim kullanılabilir.",
       "dyslexiaFriendly": "Disleksi Dostu Yazı Tipi",
       "dyslexiaFriendlyDesc": "Geliştirilmiş boşluklara sahip disleksi dostu bir yazı tipi kullanır",
@@ -11280,7 +13093,21 @@ export default {
       "shareText": "Senin için bu harika buketi hazırladım!",
       "aiGenerated": "Yapay Zeka Buketi Oluşturuldu",
       "useThis": "Bunu kullan →",
-      "aiGeneratedTitle": "Yapay Zeka Buketi Oluşturuldu"
+      "aiGeneratedTitle": "Yapay Zeka Buketi Oluşturuldu",
+      "loginRequiredDesc": "Buketleri e-posta ile göndermek için lütfen giriş yapın.",
+      "selectFlowers": "Çiçekleri Seçin",
+      "selectFlowersDesc": "Başlamak için en az 3 çiçek seçin. Anlamını ve renk seçeneklerini görmek için bir çiçek kartına dokunun.",
+      "arrangeThem": "Düzenleyin",
+      "arrangeThemDesc": "Çiçekleri tuval üzerinde sürükleyin. Boyut, döndürme ve katmanları düzenlemek için araç çubuğunu kullanın.",
+      "personalizeAndSend": "Kişiselleştirin ve Gönderin",
+      "personalizeAndSendDesc": "İçten bir mesaj ekleyin, bir şarkı seçin ve paylaşmak için benzersiz bir bağlantı oluşturun.",
+      "enjoyingApp": "Uygulamadan keyif alıyor musunuz?",
+      "thankYou": "Teşekkürler!",
+      "openPlayStore": "Play Store'u Aç",
+      "maybeLater": "Belki Daha Sonra",
+      "sarahsSelection": "Sarah'nın Seçimi",
+      "createAccountAttach": "Bir fotoğraf veya sesli not eklemek için hesap oluşturun veya giriş yapın",
+      "returnToHome": "Ana Sayfaya Dön"
     },
     "bouquetView": {
       "loading": "Buketiniz yükleniyor...",
@@ -11347,7 +13174,15 @@ export default {
       "fromLabel": "Gönderen",
       "shareBouquetTitle": "Buketi Paylaş",
       "shareBouquetSubtitle": "Bu harika buketi başkalarına gönder",
-      "noLanguagesFound": "Dil bulunamadı"
+      "noLanguagesFound": "Dil bulunamadı",
+      "listenOnYouTube": "YouTube'da Aç",
+      "playingFromStart": "Baştan oynatılıyor",
+      "playingOnYouTube": "YouTube'da oynatılıyor",
+      "saveCard": "Kartı Kaydet",
+      "savedSuccess": "Başarıyla Kaydedildi!",
+      "savedSuccessDesc": "Buket fotoğraf galerinize kaydedildi.",
+      "switchToAudio": "Yalnızca Ses",
+      "switchToVideo": "Videoyu İzle"
     },
     "settings": {
       "title": "Ayarlar",
@@ -11377,7 +13212,9 @@ export default {
       "cancel": "İptal",
       "clearDataDesc": "Önbellek, araç takımı ve geçmiş verilerini yönet",
       "termsSubtext": "Hizmet şartları sözleşmemizi okuyun",
-      "privacySubtext": "Veri gizliliğinizi nasıl koruduğumuzu öğrenin"
+      "privacySubtext": "Veri gizliliğinizi nasıl koruduğumuzu öğrenin",
+      "creditsSubtext": "Araçlar, kaynaklar ve özel teşekkürler",
+      "dataManagementDesc": "Önbelleğe alınmış dosyaların, widget'ların ve alınan buketlerin kapladığı yerel depolama alanını yönetin ve boşaltın."
     },
     "share": {
       "subtitle": "Buketini özel biriyle paylaş",
@@ -11434,7 +13271,10 @@ export default {
       "successMessage": "Widget güncellendi! Eğer widget'ı henüz ana ekranına eklemediysen, yardım menüsündeki talimatları izle.",
       "errorTitle": "Hata",
       "errorMessage": "Widget güncellenemedi.",
-      "from": "{name}'den"
+      "from": "{name}'den",
+      "clearMessage": "Bu widget'ı temizlemek istediğinizden emin misiniz?",
+      "clearTitle": "Widget'ı Temizle",
+      "myWidgets": "Widget'larım"
     },
     "privacy": {
       "title": "Gizlilik Politikası",
@@ -11622,6 +13462,71 @@ export default {
       "songTheyChose": "Sizin için seçtiği şarkı",
       "yourMessage": "Ona mesajınız",
       "done": "Bitti"
+    },
+    "ageVerification": {
+      "title": "Yaş Doğrulama",
+      "prompt": "Lütfen doğum yılınızı girin. Bunu yalnızca çocuk güvenliğini sağlamak ve gizlilik yönergelerine uymak için soruyoruz."
+    },
+    "credits": {
+      "title": "Emeği Geçenler",
+      "specialThanks": "Özel Teşekkürler",
+      "toolsTitle": "Araçlar ve Kaynaklar",
+      "toolsSubtitle": "Bu uygulama aşağıdaki harika araçlar ve platformlar sayesinde mümkün oldu:",
+      "lottieFiles": "güzel, yüksek kaliteli animasyonlar sağladığı için.",
+      "storyset": "çarpıcı ve etkileyici illüstrasyonlar için.",
+      "reactNative": "temel çerçeve için.",
+      "firebase": "arka uç hizmetleri için.",
+      "cloudflare": "DNS ve web güvenliği için.",
+      "netlify": "barındırma ve dağıtım için.",
+      "sarvamAI": "akıllı metin ve üretim özellikleri için."
+    },
+    "games": {
+      "title": "Çiçek Bahçesi Oyunları",
+      "subtitle": "Yeni buket tasarımları ve fikirleri açmak için rahatlayın ve şirin çiçek mini oyunlarımızı oynayın.",
+      "sortTitle": "Çiçek Sıralama Bulmacası",
+      "sortDesc": "Eşleşen çiçek saplarını aynı yuvalara sıralayın. Seçmek ve taşımak için dokunun.",
+      "matchTitle": "Çiçek Eşleştirme",
+      "matchDesc": "3 veya daha fazlasını bir sırada eşleştirmek ve zincirleme kombolar tetiklemek için bitişik çiçekleri değiştirin.",
+      "playNow": "Şimdi Oyna"
+    },
+    "golden": {
+      "title": "Altın Buket",
+      "subtitle": "Hayatın en değerli anlarını yakalamak için tasarlanmış özel, sınırlı sayıda bir düzenleme.",
+      "claimTitle": "Daveti Al",
+      "claimDesc": "Altın davetiye mi aldınız? Kreasyonunuzun kilidini açmak için aşağıya kodunuzu girin.",
+      "inputPlaceholder": "Referans kodunu girin",
+      "unlock": "Kilidi Aç",
+      "shareTitle": "Büyüyü Paylaş",
+      "shareDesc": "Benzersiz kodunuzla arkadaşlarınızı davet edin. Kullandıklarında ikiniz de bir Altın Kredi kazanırsınız.",
+      "signInToGetCode": "Kodu almak için giriş yapın",
+      "share": "Paylaş",
+      "friendsJoined": "Katılan Arkadaşlar",
+      "noCredits": "Altın Kredi Yok",
+      "noCreditsDesc": "Kredi kazanmak için arkadaşlarınızı davet edin veya bir kod kullanın.",
+      "create": "Altın Buket Oluştur",
+      "ownCodeError": "Kendi kodunuzu kullanamazsınız.",
+      "alreadyClaimedError": "Bu kodu zaten kullandınız.",
+      "invalidCodeError": "Geçersiz kod.",
+      "claimSuccess": "Başarıyla Alındı!",
+      "claimSuccessDesc": "Bir Altın Kredi kazandınız.",
+      "failed": "Başarısız",
+      "error": "Hata",
+      "connectionError": "Sunucuya bağlanılamadı.",
+      "shareText": "Davetimle Altın Buket'in kilidini açın! Uygulamayı indirin ve {code} kodumu girin ya da kredinizi otomatik olarak almak için bu bağlantıyı kullanın: {link}",
+      "credit": "Kredi",
+      "credits": "Krediler"
+    },
+    "raok": {
+      "guidelinesTitle": "Rastgele İyilik Eylemi",
+      "guidelinesSubtitle": "Biraz sıcaklık gönderin ve bir yabancıyı şaşırtın! İşte nasıl çalıştığı ve uyulması gereken kurallar.",
+      "rule1Title": "Neşeyi Anonim Olarak Yayın",
+      "rule1Desc": "Buketiniz ve mesajınız, bugün bir gülümsemeye ihtiyacı olan biriyle yapay zeka tarafından tamamen anonim şekilde rastgele eşleştirilecektir.",
+      "rule2Title": "Pozitif ve Cesaretlendirici Olun",
+      "rule2Desc": "Sıcak, teşvik edici sözler yazın. Umut, iyilik ve destek veren yorumlar bırakın.",
+      "rule3Title": "Kişisel Bilgi Yok",
+      "rule3Desc": "Kendi güvenliğiniz ve başkalarının güvenliği için isim, telefon numarası, adres, sosyal medya hesapları veya bağlantı eklemeyin.",
+      "understand": "Anladım",
+      "soundsGood": "Kulağa hoş geliyor"
     }
   },
   "nl": {
@@ -11672,7 +13577,8 @@ export default {
       "about": "Over ons",
       "emailsLeft": "e-mails over deze maand",
       "home": "Home",
-      "history": "Geschiedenis"
+      "history": "Geschiedenis",
+      "credits": "Credits"
     },
     "common": {
       "cancel": "Annuleren",
@@ -11690,7 +13596,8 @@ export default {
       "companyName": "E Greet",
       "loading": "Laden...",
       "enabled": "Ingeschakeld",
-      "disabled": "Uitgeschakeld"
+      "disabled": "Uitgeschakeld",
+      "clear": "Wissen"
     },
     "languageScreen": {
       "title": "Taal",
@@ -11764,7 +13671,19 @@ export default {
       "addPasswordLogin": "Inloggen met wachtwoord toevoegen",
       "createPasswordTitle": "Wachtwoord aanmaken",
       "createPasswordDesc": "Maak een wachtwoord aan om in te loggen met zowel je e-mailadres als Google.",
-      "passwordCreated": "Wachtwoord succesvol aangemaakt!"
+      "passwordCreated": "Wachtwoord succesvol aangemaakt!",
+      "appearance": "WEERGAVE",
+      "hapticFeedback": "Haptische feedback",
+      "hapticFeedbackDesc": "Trillen bij het aantikken van knoppen",
+      "language": "Taal",
+      "notificationsDesc": "Meldingen ontvangen voor reacties op boeketten",
+      "notificationsEnabled": "Meldingen inschakelen",
+      "sounds": "GELUIDEN",
+      "theme": "Thema",
+      "themeDesc": "Kies je gewenste thema",
+      "touchSound": "Aanraakgeluid",
+      "touchSoundDesc": "Geluid afspelen bij het aantikken van knoppen",
+      "disconnectEmail": "E-mailinlog loskoppelen"
     },
     "login": {
       "title": "Inloggen",
@@ -11806,7 +13725,9 @@ export default {
       "sendLink": "Resetlink versturen",
       "successText": "Resetlink verstuurd! Controleer je inbox en spamfolder.",
       "backToSignIn": "Terug naar inloggen",
-      "errorSend": "Kon reset-e-mail niet versturen. Controleer het e-mailadres en probeer het opnieuw."
+      "errorSend": "Kon reset-e-mail niet versturen. Controleer het e-mailadres en probeer het opnieuw.",
+      "backToLogin": "Terug naar inloggen",
+      "rememberPassword": "Weet je je wachtwoord weer?"
     },
     "feedback": {
       "title": "Feedback sturen",
@@ -11877,6 +13798,8 @@ export default {
       "widget": "WIDGET",
       "scheduledEmails": "Ingeplande e-mails",
       "scheduledEmailsDesc": "Bekijk en beheer ingeplande boeketbezorgingen",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "Met liefde gemaakt",
       "makeTogether": "Samen Boeket Maken",
       "makeTogetherDesc": "Teken bloemen & schrijf berichten in realtime.",
@@ -11885,7 +13808,29 @@ export default {
       "roomCode": "Kamercode:",
       "removeRoom": "Kamer verwijderen?",
       "removeRoomDesc": "Kamer #{code} uit de geschiedenis verwijderen?",
-      "remove": "Verwijderen"
+      "remove": "Verwijderen",
+      "creativeStudio": "Creatieve Studio",
+      "creativeStudioDesc": "Bloemenklavier, verjaardagsachtergrond & recepten.",
+      "limitedEdition": "GELIMITEERDE EDITIE",
+      "goldenBouquet": "Gouden Boeket",
+      "goldenBouquetDesc": "Tik om te ontgrendelen of voer een verwijzingscode in",
+      "createBouquet": "Boeket maken",
+      "spreadKindness": "Verspreid Vriendelijkheid",
+      "spreadKindnessDesc": "Stuur een mysterieus boeket om de dag van een vreemde op te fleuren.",
+      "temporarilyDisabled": "Tijdelijk uitgeschakeld",
+      "featureDisabled": "Functie uitgeschakeld",
+      "safetyViolationDesc": "Functie tijdelijk uitgeschakeld vanwege veiligheidsschendingen.",
+      "loginRequired": "Inloggen vereist",
+      "loginToSpreadKindness": "Je moet ingelogd zijn om een Willekeurige Daad van Vriendelijkheid te versturen.",
+      "cancel": "Annuleren",
+      "login": "Inloggen",
+      "whatsNewTitle": "Wat is er nieuw",
+      "whatsNewSubtitle": "We hebben enkele prachtige nieuwe manieren toegevoegd om te verbinden en vreugde te verspreiden.",
+      "whatsNewGoldenTitle": "Gouden Boeket",
+      "whatsNewGoldenDesc": "Uit je ultieme dankbaarheid met onze stralende, glinsterende premium boeketstijl, ontworpen voor speciale momenten.",
+      "whatsNewRaokTitle": "Willekeurige Daden van Vriendelijkheid",
+      "whatsNewRaokDesc": "Verstuur en ontvang anonieme digitale boeketten wereldwijd, en deel warmte en positiviteit met wie het nodig heeft.",
+      "whatsNewClose": "Klinkt goed"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -12050,7 +13995,21 @@ export default {
       "shareText": "Ik heb dit prachtige boeket speciaal voor jou gemaakt!",
       "aiGenerated": "AI-boeket gegenereerd",
       "useThis": "Gebruik dit →",
-      "aiGeneratedTitle": "AI-boeket gegenereerd"
+      "aiGeneratedTitle": "AI-boeket gegenereerd",
+      "loginRequiredDesc": "Log in om boeketten via e-mail te versturen.",
+      "selectFlowers": "Selecteer bloemen",
+      "selectFlowersDesc": "Kies minstens 3 bloemen om te beginnen. Tik op een bloemenkaart om de betekenis en kleuropties te zien.",
+      "arrangeThem": "Rangschik ze",
+      "arrangeThemDesc": "Sleep bloemen over het canvas. Gebruik de werkbalk om grootte, rotatie en lagen te bewerken.",
+      "personalizeAndSend": "Personaliseer en verstuur",
+      "personalizeAndSendDesc": "Voeg een hartverwarmend bericht toe, kies een liedje en genereer een unieke link om te delen.",
+      "enjoyingApp": "Vind je de app leuk?",
+      "thankYou": "Dank je wel!",
+      "openPlayStore": "Play Store openen",
+      "maybeLater": "Misschien later",
+      "sarahsSelection": "Sarahs selectie",
+      "createAccountAttach": "Maak een account aan of log in om een foto of spraakbericht toe te voegen",
+      "returnToHome": "Terug naar home"
     },
     "bouquetView": {
       "loading": "Je boeket wordt geladen...",
@@ -12117,7 +14076,15 @@ export default {
       "fromLabel": "van",
       "shareBouquetTitle": "Boeket delen",
       "shareBouquetSubtitle": "Stuur dit prachtige boeket naar anderen",
-      "noLanguagesFound": "Geen talen gevonden"
+      "noLanguagesFound": "Geen talen gevonden",
+      "listenOnYouTube": "Openen in YouTube",
+      "playingFromStart": "Wordt vanaf het begin afgespeeld",
+      "playingOnYouTube": "Wordt afgespeeld op YouTube",
+      "saveCard": "Kaart opslaan",
+      "savedSuccess": "Succesvol opgeslagen!",
+      "savedSuccessDesc": "Het boeket is opgeslagen in je fotogalerij.",
+      "switchToAudio": "Alleen audio",
+      "switchToVideo": "Video bekijken"
     },
     "settings": {
       "title": "Instellingen",
@@ -12147,7 +14114,9 @@ export default {
       "cancel": "Annuleren",
       "clearDataDesc": "Beheer cache-, widget- en geschiedenisgegevens",
       "termsSubtext": "Lees onze servicevoorwaarden",
-      "privacySubtext": "Lees hoe wij uw gegevens beschermen"
+      "privacySubtext": "Lees hoe wij uw gegevens beschermen",
+      "creditsSubtext": "Tools, bronnen en speciale dank",
+      "dataManagementDesc": "Beheer en maak lokale opslag vrij die wordt ingenomen door gecachte bestanden, widgets en ontvangen boeketten."
     },
     "share": {
       "subtitle": "Deel je boeket met een bijzonder iemand",
@@ -12204,7 +14173,10 @@ export default {
       "successMessage": "Widget bijgewerkt! Als je de widget nog niet op je beginscherm hebt staan, volg dan de instructies in het helpmenu.",
       "errorTitle": "Fout",
       "errorMessage": "Kon widget niet bijwerken.",
-      "from": "van {name}"
+      "from": "van {name}",
+      "clearMessage": "Weet je zeker dat je deze widget wilt wissen?",
+      "clearTitle": "Widget wissen",
+      "myWidgets": "Mijn widgets"
     },
     "privacy": {
       "title": "Privacybeleid",
@@ -12392,6 +14364,71 @@ export default {
       "songTheyChose": "Het nummer dat ze voor je kozen",
       "yourMessage": "Jouw bericht voor hen",
       "done": "Klaar"
+    },
+    "ageVerification": {
+      "title": "Leeftijdsverificatie",
+      "prompt": "Voer je geboortejaar in. We vragen dit alleen om de veiligheid van kinderen te waarborgen en te voldoen aan de privacyrichtlijnen."
+    },
+    "credits": {
+      "title": "Credits",
+      "specialThanks": "Speciale dank",
+      "toolsTitle": "Tools & Bronnen",
+      "toolsSubtitle": "Deze app is mogelijk gemaakt dankzij de volgende geweldige tools en platforms:",
+      "lottieFiles": "voor het leveren van prachtige, hoogwaardige animaties.",
+      "storyset": "voor de prachtige en expressieve illustraties.",
+      "reactNative": "voor het kernframework.",
+      "firebase": "voor backend-diensten.",
+      "cloudflare": "voor DNS en webbeveiliging.",
+      "netlify": "voor hosting en implementatie.",
+      "sarvamAI": "voor slimme tekst- en generatiefuncties."
+    },
+    "games": {
+      "title": "Bloementuin Spellen",
+      "subtitle": "Ontspan en speel onze gezellige bloemenminigames om nieuwe boeketontwerpen en ideeën te ontgrendelen.",
+      "sortTitle": "Bloemsorteerpuzzel",
+      "sortDesc": "Sorteer bijpassende bloemstelen in identieke vakjes. Tik om te selecteren en te verplaatsen.",
+      "matchTitle": "Bloemen Matchen",
+      "matchDesc": "Wissel aangrenzende bloemen om 3 of meer op een rij te combineren en kettingcombo's te activeren.",
+      "playNow": "Nu spelen"
+    },
+    "golden": {
+      "title": "Gouden Boeket",
+      "subtitle": "Een exclusieve, gelimiteerde arrangement, ontworpen om de kostbaarste momenten van het leven vast te leggen.",
+      "claimTitle": "Uitnodiging claimen",
+      "claimDesc": "Een gouden uitnodiging ontvangen? Voer hieronder je code in om je creatie te ontgrendelen.",
+      "inputPlaceholder": "Verwijzingscode invoeren",
+      "unlock": "Ontgrendelen",
+      "shareTitle": "Deel de magie",
+      "shareDesc": "Nodig vrienden uit met jouw unieke code. Jullie verdienen allebei een Gouden Tegoed wanneer ze deze gebruiken.",
+      "signInToGetCode": "Log in om de code te krijgen",
+      "share": "Delen",
+      "friendsJoined": "Vrienden die zich hebben aangesloten",
+      "noCredits": "Geen Gouden Tegoed",
+      "noCreditsDesc": "Nodig vrienden uit of gebruik een code om tegoed te verdienen.",
+      "create": "Gouden Boeket maken",
+      "ownCodeError": "Je kunt je eigen code niet gebruiken.",
+      "alreadyClaimedError": "Je hebt deze code al geclaimd.",
+      "invalidCodeError": "Ongeldige code.",
+      "claimSuccess": "Succesvol geclaimd!",
+      "claimSuccessDesc": "Je hebt een Gouden Tegoed verdiend.",
+      "failed": "Mislukt",
+      "error": "Fout",
+      "connectionError": "Kan geen verbinding maken met de server.",
+      "shareText": "Ontgrendel het Gouden Boeket met mijn uitnodiging! Download de app en voer mijn code {code} in of gebruik deze link om automatisch je tegoed te claimen: {link}",
+      "credit": "Tegoed",
+      "credits": "Tegoeden"
+    },
+    "raok": {
+      "guidelinesTitle": "Willekeurige Daad van Vriendelijkheid",
+      "guidelinesSubtitle": "Stuur wat warmte en verras een vreemde! Zo werkt het & richtlijnen om te volgen.",
+      "rule1Title": "Verspreid vreugde anoniem",
+      "rule1Desc": "Je boeket en bericht worden willekeurig door AI gekoppeld aan iemand die vandaag een glimlach nodig heeft, volledig anoniem.",
+      "rule2Title": "Wees positief en bemoedigend",
+      "rule2Desc": "Schrijf warme, bemoedigende woorden. Laat opmerkingen achter die hoop, vriendelijkheid en steun inspireren.",
+      "rule3Title": "Geen persoonlijke informatie",
+      "rule3Desc": "Voor jouw veiligheid en die van anderen: voeg geen namen, telefoonnummers, adressen, social media-handles of links toe.",
+      "understand": "Ik begrijp het",
+      "soundsGood": "Klinkt goed"
     }
   },
   "pl": {
@@ -12442,7 +14479,8 @@ export default {
       "about": "O nas",
       "emailsLeft": "pozostało e-maili w tym miesiącu",
       "home": "Strona główna",
-      "history": "Historia"
+      "history": "Historia",
+      "credits": "Podziękowania"
     },
     "common": {
       "cancel": "Anuluj",
@@ -12460,7 +14498,8 @@ export default {
       "companyName": "E Greet",
       "loading": "Ładowanie...",
       "enabled": "Włączone",
-      "disabled": "Wyłączone"
+      "disabled": "Wyłączone",
+      "clear": "Wyczyść"
     },
     "languageScreen": {
       "title": "Język",
@@ -12534,7 +14573,19 @@ export default {
       "addPasswordLogin": "Dodaj logowanie hasłem",
       "createPasswordTitle": "Utwórz hasło",
       "createPasswordDesc": "Utwórz hasło, aby logować się e-mailem oraz przez Google.",
-      "passwordCreated": "Hasło zostało pomyślnie utworzone!"
+      "passwordCreated": "Hasło zostało pomyślnie utworzone!",
+      "appearance": "WYGLĄD",
+      "hapticFeedback": "Wibracje dotykowe",
+      "hapticFeedbackDesc": "Wibrowanie przy dotykaniu przycisków",
+      "language": "Język",
+      "notificationsDesc": "Otrzymuj powiadomienia o odpowiedziach na bukiety",
+      "notificationsEnabled": "Włącz powiadomienia",
+      "sounds": "DŹWIĘKI",
+      "theme": "Motyw",
+      "themeDesc": "Wybierz preferowany motyw",
+      "touchSound": "Dźwięk dotyku",
+      "touchSoundDesc": "Odtwarzaj dźwięk przy dotykaniu przycisków",
+      "disconnectEmail": "Odłącz logowanie e-mailem"
     },
     "login": {
       "title": "Zaloguj się",
@@ -12576,7 +14627,9 @@ export default {
       "sendLink": "Wyślij link resetujący",
       "successText": "Link wysłany! Sprawdź skrzynkę odbiorczą i folder spam.",
       "backToSignIn": "Wróć do logowania",
-      "errorSend": "Nie udało się wysłać e-maila. Sprawdź adres i spróbuj ponownie."
+      "errorSend": "Nie udało się wysłać e-maila. Sprawdź adres i spróbuj ponownie.",
+      "backToLogin": "Powrót do logowania",
+      "rememberPassword": "Pamiętasz swoje hasło?"
     },
     "feedback": {
       "title": "Prześlij opinię",
@@ -12647,6 +14700,8 @@ export default {
       "widget": "WIDŻET",
       "scheduledEmails": "Zaplanowane e-maile",
       "scheduledEmailsDesc": "Przeglądaj i zarządzaj zaplanowanymi dostawami bukietów",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "Stworzone z sercem",
       "makeTogether": "Zróbcie Bukiet Razem",
       "makeTogetherDesc": "Rysujcie kwiaty i piszcie wiadomości w czasie rzeczywistym.",
@@ -12655,7 +14710,29 @@ export default {
       "roomCode": "Kod pokoju:",
       "removeRoom": "Usunąć pokój?",
       "removeRoomDesc": "Usunąć pokój #{code} z historii?",
-      "remove": "Usuń"
+      "remove": "Usuń",
+      "creativeStudio": "Studio Kreatywne",
+      "creativeStudioDesc": "Klawiatura z kwiatami, tapeta urodzinowa i przepisy.",
+      "limitedEdition": "EDYCJA LIMITOWANA",
+      "goldenBouquet": "Złoty Bukiet",
+      "goldenBouquetDesc": "Dotknij, aby odblokować lub wprowadzić kod polecający",
+      "createBouquet": "Stwórz Bukiet",
+      "spreadKindness": "Szerz Dobroć",
+      "spreadKindnessDesc": "Wyślij tajemniczy bukiet, aby umilić dzień nieznajomemu.",
+      "temporarilyDisabled": "Tymczasowo wyłączone",
+      "featureDisabled": "Funkcja wyłączona",
+      "safetyViolationDesc": "Funkcja tymczasowo wyłączona z powodu naruszeń zasad bezpieczeństwa.",
+      "loginRequired": "Wymagane logowanie",
+      "loginToSpreadKindness": "Musisz być zalogowany, aby wysłać Losowy Akt Dobroci.",
+      "cancel": "Anuluj",
+      "login": "Zaloguj się",
+      "whatsNewTitle": "Co nowego",
+      "whatsNewSubtitle": "Dodaliśmy piękne nowe sposoby na nawiązywanie kontaktów i szerzenie radości.",
+      "whatsNewGoldenTitle": "Złoty Bukiet",
+      "whatsNewGoldenDesc": "Wyraź najwyższą wdzięczność dzięki naszemu promiennemu, lśniącemu premium stylowi bukietu, zaprojektowanemu na wyjątkowe chwile.",
+      "whatsNewRaokTitle": "Losowe Akty Dobroci",
+      "whatsNewRaokDesc": "Wysyłaj i otrzymuj anonimowe cyfrowe bukiety na całym świecie, dzieląc się ciepłem i pozytywną energią z potrzebującymi.",
+      "whatsNewClose": "Brzmi dobrze"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -12753,7 +14830,7 @@ export default {
       "unsavedDesc": "Masz niezapisane zmiany. Czy na pewno chcesz wyjść?",
       "stay": "Zostań",
       "leave": "Wyjdź",
-      "howToCreate": "Jak stworzyć swój bukiet",
+      "howToCreate": "Jak stworzyć bukiet",
       "availableDesc": "Świetnie! Ta nazwa jest dostępna.",
       "dyslexiaFriendly": "Czcionka dla dyslektyków",
       "dyslexiaFriendlyDesc": "Używa czcionki przyjaznej dla dyslektyków z lepszymi odstępami",
@@ -12820,7 +14897,21 @@ export default {
       "shareText": "Stworzyłem ten piękny bukiet specjalnie dla Ciebie!",
       "aiGenerated": "Bukiet AI został wygenerowany",
       "useThis": "Użyj tego →",
-      "aiGeneratedTitle": "Wygenerowano bukiet AI"
+      "aiGeneratedTitle": "Wygenerowano bukiet AI",
+      "loginRequiredDesc": "Zaloguj się, aby wysyłać bukiety pocztą e-mail.",
+      "selectFlowers": "Wybierz kwiaty",
+      "selectFlowersDesc": "Wybierz co najmniej 3 kwiaty, aby zacząć. Dotknij karty kwiatu, aby zobaczyć jego znaczenie i opcje kolorów.",
+      "arrangeThem": "Ułóż je",
+      "arrangeThemDesc": "Przeciągaj kwiaty po płótnie. Użyj paska narzędzi, aby edytować rozmiar, obrót i warstwy.",
+      "personalizeAndSend": "Spersonalizuj i wyślij",
+      "personalizeAndSendDesc": "Dodaj serdeczną wiadomość, wybierz piosenkę i wygeneruj unikalny link do udostępnienia.",
+      "enjoyingApp": "Podoba Ci się aplikacja?",
+      "thankYou": "Dziękujemy!",
+      "openPlayStore": "Otwórz Sklep Play",
+      "maybeLater": "Może później",
+      "sarahsSelection": "Wybór Sarah",
+      "createAccountAttach": "Utwórz konto lub zaloguj się, aby dołączyć zdjęcie lub notatkę głosową",
+      "returnToHome": "Wróć do strony głównej"
     },
     "bouquetView": {
       "loading": "Ładowanie Twojego bukietu...",
@@ -12887,7 +14978,15 @@ export default {
       "fromLabel": "od",
       "shareBouquetTitle": "Udostępnij bukiet",
       "shareBouquetSubtitle": "Wyślij ten piękny bukiet innym",
-      "noLanguagesFound": "Nie znaleziono języków"
+      "noLanguagesFound": "Nie znaleziono języków",
+      "listenOnYouTube": "Otwórz w YouTube",
+      "playingFromStart": "Odtwarzanie od początku",
+      "playingOnYouTube": "Odtwarzanie w YouTube",
+      "saveCard": "Zapisz kartkę",
+      "savedSuccess": "Zapisano pomyślnie!",
+      "savedSuccessDesc": "Bukiet został zapisany w Twojej galerii zdjęć.",
+      "switchToAudio": "Tylko dźwięk",
+      "switchToVideo": "Obejrzyj wideo"
     },
     "settings": {
       "title": "Ustawienia",
@@ -12917,7 +15016,9 @@ export default {
       "cancel": "Anuluj",
       "clearDataDesc": "Zarządzaj pamięcią podręczną, widżetami i danymi historii",
       "termsSubtext": "Przeczytaj nasze warunki korzystania z usług",
-      "privacySubtext": "Dowiedz się, jak chronimy Twoje dane"
+      "privacySubtext": "Dowiedz się, jak chronimy Twoje dane",
+      "creditsSubtext": "Narzędzia, zasoby i specjalne podziękowania",
+      "dataManagementDesc": "Zarządzaj i zwalniaj lokalną pamięć zajmowaną przez pliki w pamięci podręcznej, widżety i otrzymane bukiety."
     },
     "share": {
       "subtitle": "Podziel się swoim bukietem z kimś wyjątkowym",
@@ -12974,7 +15075,10 @@ export default {
       "successMessage": "Widżet zaktualizowany! Jeśli jeszcze nie dodałeś widżetu do ekranu głównego, postępuj zgodnie z instrukcjami w menu pomocy.",
       "errorTitle": "Błąd",
       "errorMessage": "Nie udało się zaktualizować widżetu.",
-      "from": "od {name}"
+      "from": "od {name}",
+      "clearMessage": "Czy na pewno chcesz wyczyścić ten widżet?",
+      "clearTitle": "Wyczyść widżet",
+      "myWidgets": "Moje widżety"
     },
     "privacy": {
       "title": "Polityka prywatności",
@@ -13162,6 +15266,71 @@ export default {
       "songTheyChose": "Piosenka, którą dla Ciebie wybrali",
       "yourMessage": "Twoja wiadomość dla nich",
       "done": "Gotowe"
+    },
+    "ageVerification": {
+      "title": "Weryfikacja wieku",
+      "prompt": "Podaj rok urodzenia. Pytamy o to wyłącznie w celu zapewnienia bezpieczeństwa dzieci i zgodności z zasadami prywatności."
+    },
+    "credits": {
+      "title": "Podziękowania",
+      "specialThanks": "Specjalne podziękowania",
+      "toolsTitle": "Narzędzia i zasoby",
+      "toolsSubtitle": "Ta aplikacja powstała dzięki następującym niesamowitym narzędziom i platformom:",
+      "lottieFiles": "za dostarczanie pięknych animacji wysokiej jakości.",
+      "storyset": "za oszałamiające i ekspresyjne ilustracje.",
+      "reactNative": "za podstawowy framework.",
+      "firebase": "za usługi backendowe.",
+      "cloudflare": "za DNS i bezpieczeństwo w sieci.",
+      "netlify": "za hosting i wdrażanie.",
+      "sarvamAI": "za inteligentne funkcje tekstowe i generujące."
+    },
+    "games": {
+      "title": "Gry Kwitnącego Ogrodu",
+      "subtitle": "Zrelaksuj się i zagraj w nasze przytulne mini-gry z kwiatami, aby odblokować nowe projekty i pomysły na bukiety.",
+      "sortTitle": "Puzzle sortowania kwiatów",
+      "sortDesc": "Posortuj pasujące łodygi kwiatów do identycznych miejsc. Dotknij, aby wybrać i przenieść.",
+      "matchTitle": "Dopasuj Kwiaty",
+      "matchDesc": "Zamieniaj sąsiadujące kwiaty, aby dopasować 3 lub więcej w rzędzie i uruchomić kaskadowe kombinacje.",
+      "playNow": "Zagraj teraz"
+    },
+    "golden": {
+      "title": "Złoty Bukiet",
+      "subtitle": "Ekskluzywna, limitowana kompozycja zaprojektowana, by uchwycić najcenniejsze chwile życia.",
+      "claimTitle": "Odbierz zaproszenie",
+      "claimDesc": "Otrzymałeś złote zaproszenie? Wpisz swój kod poniżej, aby odblokować swoje dzieło.",
+      "inputPlaceholder": "Wprowadź kod polecający",
+      "unlock": "Odblokuj",
+      "shareTitle": "Podziel się magią",
+      "shareDesc": "Zaproś znajomych swoim unikalnym kodem. Oboje otrzymacie Złoty Kredyt, gdy z niego skorzystają.",
+      "signInToGetCode": "Zaloguj się, aby uzyskać kod",
+      "share": "Udostępnij",
+      "friendsJoined": "Dołączeni znajomi",
+      "noCredits": "Brak Złotych Kredytów",
+      "noCreditsDesc": "Zaproś znajomych lub użyj kodu, aby zdobyć kredyty.",
+      "create": "Stwórz Złoty Bukiet",
+      "ownCodeError": "Nie możesz użyć własnego kodu.",
+      "alreadyClaimedError": "Już odebrałeś ten kod.",
+      "invalidCodeError": "Nieprawidłowy kod.",
+      "claimSuccess": "Odebrano pomyślnie!",
+      "claimSuccessDesc": "Zdobyłeś Złoty Kredyt.",
+      "failed": "Niepowodzenie",
+      "error": "Błąd",
+      "connectionError": "Nie można połączyć się z serwerem.",
+      "shareText": "Odblokuj Złoty Bukiet dzięki mojemu zaproszeniu! Pobierz aplikację i wpisz mój kod {code} lub użyj tego linku, aby automatycznie odebrać swój kredyt: {link}",
+      "credit": "Kredyt",
+      "credits": "Kredyty"
+    },
+    "raok": {
+      "guidelinesTitle": "Losowy Akt Dobroci",
+      "guidelinesSubtitle": "Wyślij odrobinę ciepła i zaskocz nieznajomego! Oto jak to działa i wytyczne, których należy przestrzegać.",
+      "rule1Title": "Szerz radość anonimowo",
+      "rule1Desc": "Twój bukiet i wiadomość zostaną losowo dopasowane przez sztuczną inteligencję do osoby, która potrzebuje dziś uśmiechu, całkowicie anonimowo.",
+      "rule2Title": "Bądź pozytywny i budujący",
+      "rule2Desc": "Pisz ciepłe, dodające otuchy słowa. Zostawiaj komentarze, które inspirują nadzieję, dobroć i wsparcie.",
+      "rule3Title": "Żadnych danych osobowych",
+      "rule3Desc": "Dla własnego bezpieczeństwa i bezpieczeństwa innych nie podawaj imion, numerów telefonów, adresów, kont w mediach społecznościowych ani linków.",
+      "understand": "Rozumiem",
+      "soundsGood": "Brzmi dobrze"
     }
   },
   "ta": {
@@ -13212,7 +15381,8 @@ export default {
       "about": "எங்களை பற்றி",
       "emailsLeft": "இந்த மாதம் மீதமுள்ள மின்னஞ்சல்கள்",
       "home": "முகப்பு",
-      "history": "வரலாறு"
+      "history": "வரலாறு",
+      "credits": "நன்றிக் குறிப்புகள்"
     },
     "common": {
       "cancel": "ரத்துசெய்",
@@ -13230,7 +15400,8 @@ export default {
       "companyName": "E Greet",
       "loading": "ஏற்றுகிறது...",
       "enabled": "இயக்கப்பட்டது",
-      "disabled": "முடக்கப்பட்டது"
+      "disabled": "முடக்கப்பட்டது",
+      "clear": "அழி"
     },
     "languageScreen": {
       "title": "மொழி",
@@ -13304,7 +15475,19 @@ export default {
       "addPasswordLogin": "கடவுச்சொல் உள்நுழைவைச் சேர்",
       "createPasswordTitle": "கடவுச்சொல்லை உருவாக்கு",
       "createPasswordDesc": "கூகுள் மற்றும் மின்னஞ்சல் மூலம் உள்நுழைய கடவுச்சொல்லை உருவாக்கவும்.",
-      "passwordCreated": "கடவுச்சொல் வெற்றிகரமாக உருவாக்கப்பட்டது!"
+      "passwordCreated": "கடவுச்சொல் வெற்றிகரமாக உருவாக்கப்பட்டது!",
+      "appearance": "தோற்றம்",
+      "hapticFeedback": "ஹாப்டிக் பீட்பேக்",
+      "hapticFeedbackDesc": "பொத்தான்களை தட்டும்போது அதிர்வு",
+      "language": "மொழி",
+      "notificationsDesc": "பூங்கொத்து பதில்களுக்கான அறிவிப்புகளைப் பெறவும்",
+      "notificationsEnabled": "அறிவிப்புகளை இயக்கு",
+      "sounds": "ஒலிகள்",
+      "theme": "தீம்",
+      "themeDesc": "உங்களுக்குப் பிடித்த தீமை தேர்ந்தெடுக்கவும்",
+      "touchSound": "தொடு ஒலி",
+      "touchSoundDesc": "பொத்தான்களை தட்டும்போது ஒலியை இயக்கு",
+      "disconnectEmail": "மின்னஞ்சல் உள்நுழைவை துண்டி"
     },
     "login": {
       "title": "உள்நுழையவும்",
@@ -13346,7 +15529,9 @@ export default {
       "sendLink": "இணைப்பை அனுப்பு",
       "successText": "இணைப்பு அனுப்பப்பட்டது! உங்கள் இன்பாக்ஸ் மற்றும் ஸ்பேம் ஃபோல்டரை சரிபார்க்கவும்.",
       "backToSignIn": "உள்நுழைவுக்குத் திரும்பு",
-      "errorSend": "மின்னஞ்சலை அனுப்ப முடியவில்லை. முகவரியைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்."
+      "errorSend": "மின்னஞ்சலை அனுப்ப முடியவில்லை. முகவரியைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.",
+      "backToLogin": "உள்நுழைவுக்குத் திரும்பு",
+      "rememberPassword": "உங்கள் கடவுச்சொல் நினைவிருக்கிறதா?"
     },
     "feedback": {
       "title": "கருத்து அனுப்பு",
@@ -13417,6 +15602,8 @@ export default {
       "widget": "விட்ஜெட் (WIDGET)",
       "scheduledEmails": "திட்டமிடப்பட்ட மின்னஞ்சல்கள்",
       "scheduledEmailsDesc": "திட்டமிடப்பட்ட பூங்கொத்து விநியோகங்களை காணவும் & நிர்வகிக்கவும்",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "அன்புடன் உருவாக்கப்பட்டது",
       "makeTogether": "ஒன்றாக பூங்கொத்து உருவாக்குங்கள்",
       "makeTogetherDesc": "நிகழ்நேரத்தில் பூக்களை வரைந்து செய்திகளை எழுதுங்கள்.",
@@ -13425,7 +15612,29 @@ export default {
       "roomCode": "அறையின் குறியீடு:",
       "removeRoom": "அறையை அகற்றவா?",
       "removeRoomDesc": "வரலாற்றிலிருந்து அறை #{code} ஐ அகற்றவா?",
-      "remove": "அகற்று"
+      "remove": "அகற்று",
+      "creativeStudio": "படைப்பாற்றல் ஸ்டுடியோ",
+      "creativeStudioDesc": "மலர் விசைப்பலகை, பிறந்தநாள் வால்பேப்பர் & சமையல் குறிப்புகள்.",
+      "limitedEdition": "வரையறுக்கப்பட்ட பதிப்பு",
+      "goldenBouquet": "தங்க பூங்கொத்து",
+      "goldenBouquetDesc": "திறக்க அல்லது பரிந்துரை குறியீட்டை உள்ளிட தட்டவும்",
+      "createBouquet": "பூங்கொத்தை உருவாக்கு",
+      "spreadKindness": "கருணையைப் பரப்பு",
+      "spreadKindnessDesc": "ஒரு அந்நியரின் நாளை மகிழ்ச்சியாக்க ஒரு மர்மமான பூங்கொத்தை அனுப்பவும்.",
+      "temporarilyDisabled": "தற்காலிகமாக முடக்கப்பட்டுள்ளது",
+      "featureDisabled": "அம்சம் முடக்கப்பட்டுள்ளது",
+      "safetyViolationDesc": "பாதுகாப்பு மீறல்கள் காரணமாக அம்சம் தற்காலிகமாக முடக்கப்பட்டுள்ளது.",
+      "loginRequired": "உள்நுழைவு தேவை",
+      "loginToSpreadKindness": "ஒரு சீரற்ற கருணைச் செயலை அனுப்ப நீங்கள் உள்நுழைந்திருக்க வேண்டும்.",
+      "cancel": "ரத்து செய்",
+      "login": "உள்நுழை",
+      "whatsNewTitle": "புதியவை என்ன",
+      "whatsNewSubtitle": "இணைவதற்கும் மகிழ்ச்சியைப் பரப்புவதற்கும் சில அழகான புதிய வழிகளைச் சேர்த்துள்ளோம்.",
+      "whatsNewGoldenTitle": "தங்க பூங்கொத்து",
+      "whatsNewGoldenDesc": "சிறப்பு தருணங்களுக்காக வடிவமைக்கப்பட்ட எங்கள் பிரகாசமான, மின்னும் பிரீமியம் பூங்கொத்து பாணியுடன் இறுதி நன்றியுணர்வை வெளிப்படுத்துங்கள்.",
+      "whatsNewRaokTitle": "சீரற்ற கருணை செயல்கள்",
+      "whatsNewRaokDesc": "உலகளாவிய அளவில் அநாமதேய டிஜிட்டல் பூங்கொத்துக்களை அனுப்பி பெறுங்கள், தேவைப்படுபவர்களுடன் அரவணைப்பையும் நேர்மறையையும் பகிர்ந்துகொள்ளுங்கள்.",
+      "whatsNewClose": "நன்றாக இருக்கிறது"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -13523,7 +15732,7 @@ export default {
       "unsavedDesc": "உங்களிடம் சேமிக்கப்படாத மாற்றங்கள் உள்ளன. நிச்சயமாக வெளியேற விரும்புகிறீர்களா?",
       "stay": "தங்கு",
       "leave": "வெளியேறு",
-      "howToCreate": "உங்கள் பூங்கொத்தை எப்படி உருவாக்குவது",
+      "howToCreate": "பூங்கொத்தை எப்படி உருவாக்குவது",
       "availableDesc": "அருமை! இந்தப் பெயர் கிடைக்கிறது.",
       "dyslexiaFriendly": "டிஸ்லெக்ஸியாவுக்கு ஏற்ற எழுத்துரு",
       "dyslexiaFriendlyDesc": "மேம்பட்ட இடைவெளியுடன் டிஸ்லெக்ஸியாவுக்கு ஏற்ற எழுத்துருவைப் பயன்படுத்துகிறது",
@@ -13590,7 +15799,21 @@ export default {
       "shareText": "இந்த அழகான பூங்கொத்தை உங்களுக்காக நான் உருவாக்கினேன்!",
       "aiGenerated": "AI பூங்கொத்து உருவாக்கப்பட்டது",
       "useThis": "இதைப் பயன்படுத்து →",
-      "aiGeneratedTitle": "AI பூங்கொத்து உருவாக்கப்பட்டது"
+      "aiGeneratedTitle": "AI பூங்கொத்து உருவாக்கப்பட்டது",
+      "loginRequiredDesc": "மின்னஞ்சல் வழியாக பூங்கொத்துக்களை அனுப்ப தயவுசெய்து உள்நுழையவும்.",
+      "selectFlowers": "மலர்களைத் தேர்ந்தெடு",
+      "selectFlowersDesc": "தொடங்க குறைந்தது 3 மலர்களைத் தேர்ந்தெடுக்கவும். அதன் அர்த்தத்தையும் நிற விருப்பங்களையும் பார்க்க ஒரு மலர் அட்டையைத் தட்டவும்.",
+      "arrangeThem": "அவற்றை வரிசைப்படுத்து",
+      "arrangeThemDesc": "கேன்வாஸில் மலர்களை இழுக்கவும். அளவு, சுழற்சி மற்றும் லேயர்களை திருத்த கருவிப் பட்டியைப் பயன்படுத்தவும்.",
+      "personalizeAndSend": "தனிப்பயனாக்கி அனுப்பு",
+      "personalizeAndSendDesc": "இதயப்பூர்வமான செய்தியைச் சேர்த்து, ஒரு பாடலைத் தேர்ந்தெடுத்து, பகிர ஒரு தனித்துவமான இணைப்பை உருவாக்கவும்.",
+      "enjoyingApp": "ஆப்பை ரசிக்கிறீர்களா?",
+      "thankYou": "நன்றி!",
+      "openPlayStore": "Play ஸ்டோரை திற",
+      "maybeLater": "பிறகு பார்க்கலாம்",
+      "sarahsSelection": "சாராவின் தேர்வு",
+      "createAccountAttach": "ஒரு புகைப்படம் அல்லது குரல் குறிப்பை இணைக்க கணக்கை உருவாக்கவும் அல்லது உள்நுழையவும்",
+      "returnToHome": "முகப்புக்குத் திரும்பு"
     },
     "bouquetView": {
       "loading": "உங்கள் பூங்கொத்து ஏற்றப்படுகிறது...",
@@ -13657,7 +15880,15 @@ export default {
       "fromLabel": "அனுப்புநர்",
       "shareBouquetTitle": "பூங்கொத்தைப் பகிர்",
       "shareBouquetSubtitle": "இந்த அழகான பூங்கொத்தை மற்றவர்களுக்கு அனுப்புங்கள்",
-      "noLanguagesFound": "மொழிகள் எதுவும் கிடைக்கவில்லை"
+      "noLanguagesFound": "மொழிகள் எதுவும் கிடைக்கவில்லை",
+      "listenOnYouTube": "YouTube-இல் திற",
+      "playingFromStart": "தொடக்கத்திலிருந்து இயங்குகிறது",
+      "playingOnYouTube": "YouTube-இல் இயங்குகிறது",
+      "saveCard": "அட்டையை சேமி",
+      "savedSuccess": "வெற்றிகரமாக சேமிக்கப்பட்டது!",
+      "savedSuccessDesc": "பூங்கொத்து உங்கள் புகைப்பட தொகுப்பில் சேமிக்கப்பட்டுள்ளது.",
+      "switchToAudio": "ஆடியோ மட்டும்",
+      "switchToVideo": "வீடியோவைப் பார்"
     },
     "settings": {
       "title": "அமைப்புகள்",
@@ -13687,7 +15918,9 @@ export default {
       "cancel": "ரத்துசெய்",
       "clearDataDesc": "கேச், விட்ஜெட் மற்றும் வரலாற்றுத் தரவை நிர்வகிக்கவும்",
       "termsSubtext": "எங்கள் சேவை விதிமுறைகள் ஒப்பந்தத்தைப் படியுங்கள்",
-      "privacySubtext": "உங்கள் தரவு தனியுரிமையை நாங்கள் எவ்வாறு பாதுகாக்கிறோம் என்பதை அறிக"
+      "privacySubtext": "உங்கள் தரவு தனியுரிமையை நாங்கள் எவ்வாறு பாதுகாக்கிறோம் என்பதை அறிக",
+      "creditsSubtext": "கருவிகள், வளங்கள் மற்றும் சிறப்பு நன்றிகள்",
+      "dataManagementDesc": "தற்காலிக கோப்புகள், விட்ஜெட்கள் மற்றும் பெறப்பட்ட பூங்கொத்துக்கள் ஆக்கிரமித்துள்ள உள்ளக சேமிப்பை நிர்வகித்து விடுவிக்கவும்."
     },
     "share": {
       "subtitle": "உங்களுக்குப் பிடித்த ஒருவருடன் உங்கள் பூங்கொத்தைப் பகிருங்கள்",
@@ -13744,7 +15977,10 @@ export default {
       "successMessage": "விட்ஜெட் புதுப்பிக்கப்பட்டது! உங்கள் முகப்புத் திரையில் இன்னும் விட்ஜெட்டை சேர்க்கவில்லை என்றால், உதவி மெனுவில் உள்ள வழிமுறைகளைப் பின்பற்றவும்.",
       "errorTitle": "பிழை",
       "errorMessage": "விட்ஜெட்டைப் புதுப்பிக்க முடியவில்லை.",
-      "from": "அனுப்புநர் {name}"
+      "from": "அனுப்புநர் {name}",
+      "clearMessage": "இந்த விட்ஜெட்டை அழிக்க விரும்புகிறீர்களா?",
+      "clearTitle": "விட்ஜெட்டை அழி",
+      "myWidgets": "எனது விட்ஜெட்கள்"
     },
     "privacy": {
       "title": "தனியுரிமைக் கொள்கை",
@@ -13932,6 +16168,71 @@ export default {
       "songTheyChose": "அவர்கள் உங்களுக்காகத் தேர்ந்தெடுத்த பாடல்",
       "yourMessage": "அவர்களுக்கான உங்கள் செய்தி",
       "done": "முடிந்தது"
+    },
+    "ageVerification": {
+      "title": "வயது சரிபார்ப்பு",
+      "prompt": "தயவுசெய்து உங்கள் பிறந்த ஆண்டை உள்ளிடவும். குழந்தை பாதுகாப்பை உறுதி செய்யவும், தனியுரிமை வழிகாட்டுதல்களை பின்பற்றவும் மட்டுமே இதை நாங்கள் கேட்கிறோம்."
+    },
+    "credits": {
+      "title": "நன்றிக் குறிப்புகள்",
+      "specialThanks": "சிறப்பு நன்றிகள்",
+      "toolsTitle": "கருவிகள் & வளங்கள்",
+      "toolsSubtitle": "பின்வரும் அற்புதமான கருவிகள் மற்றும் தளங்களின் காரணமாக இந்த ஆப் சாத்தியமானது:",
+      "lottieFiles": "அழகான, உயர்தர அனிமேஷன்களை வழங்கியதற்காக.",
+      "storyset": "அற்புதமான மற்றும் வெளிப்படையான படங்களுக்காக.",
+      "reactNative": "முக்கிய கட்டமைப்பிற்காக.",
+      "firebase": "பின்தள சேவைகளுக்காக.",
+      "cloudflare": "DNS மற்றும் இணைய பாதுகாப்பிற்காக.",
+      "netlify": "ஹோஸ்டிங் மற்றும் டெப்ளாய்மென்ட்டிற்காக.",
+      "sarvamAI": "அறிவார்ந்த உரை மற்றும் உருவாக்க அம்சங்களுக்காக."
+    },
+    "games": {
+      "title": "பூந்தோட்ட விளையாட்டுகள்",
+      "subtitle": "புதிய பூங்கொத்து வடிவமைப்புகள் மற்றும் யோசனைகளை திறக்க எங்கள் இதமான மலர் மினி விளையாட்டுகளை ஓய்வெடுத்து விளையாடுங்கள்.",
+      "sortTitle": "பூ வரிசைப்படுத்தல் புதிர்",
+      "sortDesc": "பொருந்தும் பூ தண்டுகளை ஒரே மாதிரியான இடங்களில் வரிசைப்படுத்தவும். தேர்ந்தெடுக்கவும் நகர்த்தவும் தட்டவும்.",
+      "matchTitle": "பூ பொருத்தம்",
+      "matchDesc": "3 அல்லது அதற்கு மேற்பட்டவற்றை ஒரு வரிசையில் பொருத்த அருகிலுள்ள மலர்களை மாற்றி, சங்கிலி காம்போக்களை தூண்டவும்.",
+      "playNow": "இப்போது விளையாடு"
+    },
+    "golden": {
+      "title": "தங்க பூங்கொத்து",
+      "subtitle": "வாழ்க்கையின் மிக மதிப்புமிக்க தருணங்களைப் பிடிக்க வடிவமைக்கப்பட்ட ஒரு பிரத்யேக, வரையறுக்கப்பட்ட பதிப்பு அமைப்பு.",
+      "claimTitle": "அழைப்பைப் பெறவும்",
+      "claimDesc": "ஒரு தங்க அழைப்பைப் பெற்றீர்களா? உங்கள் படைப்பைத் திறக்க கீழே உங்கள் குறியீட்டை உள்ளிடவும்.",
+      "inputPlaceholder": "பரிந்துரை குறியீட்டை உள்ளிடவும்",
+      "unlock": "திற",
+      "shareTitle": "மந்திரத்தைப் பகிரவும்",
+      "shareDesc": "உங்கள் தனித்துவமான குறியீட்டுடன் நண்பர்களை அழைக்கவும். அவர்கள் அதை பயன்படுத்தும்போது இருவரும் ஒரு தங்க கிரெடிட் பெறுவீர்கள்.",
+      "signInToGetCode": "குறியீட்டைப் பெற உள்நுழையவும்",
+      "share": "பகிர்",
+      "friendsJoined": "இணைந்த நண்பர்கள்",
+      "noCredits": "தங்க கிரெடிட்கள் இல்லை",
+      "noCreditsDesc": "கிரெடிட்களைப் பெற நண்பர்களை அழைக்கவும் அல்லது ஒரு குறியீட்டைப் பயன்படுத்தவும்.",
+      "create": "தங்க பூங்கொத்தை உருவாக்கு",
+      "ownCodeError": "உங்கள் சொந்த குறியீட்டை நீங்கள் பயன்படுத்த முடியாது.",
+      "alreadyClaimedError": "இந்த குறியீட்டை நீங்கள் ஏற்கனவே பெற்றுவிட்டீர்கள்.",
+      "invalidCodeError": "செல்லுபடியாகாத குறியீடு.",
+      "claimSuccess": "வெற்றிகரமாக பெறப்பட்டது!",
+      "claimSuccessDesc": "நீங்கள் ஒரு தங்க கிரெடிட்டைப் பெற்றுள்ளீர்கள்.",
+      "failed": "தோல்வி",
+      "error": "பிழை",
+      "connectionError": "சர்வருடன் இணைக்க முடியவில்லை.",
+      "shareText": "எனது அழைப்புடன் தங்க பூங்கொத்தைத் திறக்கவும்! ஆப்பை பதிவிறக்கம் செய்து எனது குறியீடு {code} ஐ உள்ளிடவும் அல்லது இந்த இணைப்பைப் பயன்படுத்தி தானாகவே உங்கள் கிரெடிட்டைப் பெறவும்: {link}",
+      "credit": "கிரெடிட்",
+      "credits": "கிரெடிட்கள்"
+    },
+    "raok": {
+      "guidelinesTitle": "சீரற்ற கருணைச் செயல்",
+      "guidelinesSubtitle": "கொஞ்சம் அரவணைப்பை அனுப்பி ஒரு அந்நியரை ஆச்சரியப்படுத்துங்கள்! இது எப்படி செயல்படுகிறது & பின்பற்ற வேண்டிய வழிகாட்டுதல்கள் இதோ.",
+      "rule1Title": "அநாமதேயமாக மகிழ்ச்சியைப் பரப்பு",
+      "rule1Desc": "உங்கள் பூங்கொத்து மற்றும் செய்தி AI ஆல் இன்று ஒரு புன்னகை தேவைப்படும் ஒருவருடன் முழுமையாக அநாமதேயமாக சீரற்ற முறையில் பொருத்தப்படும்.",
+      "rule2Title": "நேர்மறையாகவும் ஊக்கமளிக்கவும் இருங்கள்",
+      "rule2Desc": "அன்பான, ஊக்கமளிக்கும் வார்த்தைகளை எழுதுங்கள். நம்பிக்கை, கருணை மற்றும் ஆதரவை ஊக்குவிக்கும் கருத்துக்களை விடுங்கள்.",
+      "rule3Title": "தனிப்பட்ட தகவல் இல்லை",
+      "rule3Desc": "உங்கள் பாதுகாப்பிற்காகவும் மற்றவர்களின் பாதுகாப்பிற்காகவும், பெயர்கள், தொலைபேசி எண்கள், முகவரிகள், சமூக ஊடக ஹேண்டில்கள் அல்லது இணைப்புகளை சேர்க்க வேண்டாம்.",
+      "understand": "எனக்குப் புரிகிறது",
+      "soundsGood": "நன்றாக இருக்கிறது"
     }
   },
   "sv": {
@@ -13982,7 +16283,8 @@ export default {
       "about": "Om oss",
       "emailsLeft": "mejl kvar denna månad",
       "home": "Hem",
-      "history": "Historik"
+      "history": "Historik",
+      "credits": "Medverkande"
     },
     "common": {
       "cancel": "Avbryt",
@@ -14000,7 +16302,8 @@ export default {
       "companyName": "E Greet",
       "loading": "Laddar...",
       "enabled": "Aktiverad",
-      "disabled": "Inaktiverad"
+      "disabled": "Inaktiverad",
+      "clear": "Rensa"
     },
     "languageScreen": {
       "title": "Språk",
@@ -14074,7 +16377,19 @@ export default {
       "addPasswordLogin": "Lägg till inloggning med lösenord",
       "createPasswordTitle": "Skapa lösenord",
       "createPasswordDesc": "Skapa ett lösenord för att logga in med din mejl samt Google.",
-      "passwordCreated": "Lösenordet har skapats!"
+      "passwordCreated": "Lösenordet har skapats!",
+      "appearance": "UTSEENDE",
+      "hapticFeedback": "Haptisk feedback",
+      "hapticFeedbackDesc": "Vibrera vid knapptryck",
+      "language": "Språk",
+      "notificationsDesc": "Få aviseringar för svar på buketter",
+      "notificationsEnabled": "Aktivera aviseringar",
+      "sounds": "LJUD",
+      "theme": "Tema",
+      "themeDesc": "Välj ditt önskade tema",
+      "touchSound": "Beröringsljud",
+      "touchSoundDesc": "Spela upp ljud vid knapptryck",
+      "disconnectEmail": "Koppla från e-postinloggning"
     },
     "login": {
       "title": "Logga in",
@@ -14116,7 +16431,9 @@ export default {
       "sendLink": "Skicka återställningslänk",
       "successText": "Återställningslänk skickad! Kolla din inkorg och skräppost.",
       "backToSignIn": "Tillbaka till inloggning",
-      "errorSend": "Kunde inte skicka återställningsmejlet. Kontrollera adressen och försök igen."
+      "errorSend": "Kunde inte skicka återställningsmejlet. Kontrollera adressen och försök igen.",
+      "backToLogin": "Tillbaka till inloggning",
+      "rememberPassword": "Kommer du ihåg ditt lösenord?"
     },
     "feedback": {
       "title": "Skicka feedback",
@@ -14187,6 +16504,8 @@ export default {
       "widget": "WIDGET",
       "scheduledEmails": "Schemalagda mejl",
       "scheduledEmailsDesc": "Visa och hantera schemalagda buketter",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "Skapad med omtanke",
       "makeTogether": "Gör bukett tillsammans",
       "makeTogetherDesc": "Rita blommor och skriv meddelanden i realtid.",
@@ -14195,7 +16514,29 @@ export default {
       "roomCode": "Rumskod:",
       "removeRoom": "Ta bort rum?",
       "removeRoomDesc": "Ta bort rum #{code} från historiken?",
-      "remove": "Ta bort"
+      "remove": "Ta bort",
+      "creativeStudio": "Kreativ Studio",
+      "creativeStudioDesc": "Blomtangentbord, födelsedagsbakgrund och recept.",
+      "limitedEdition": "BEGRÄNSAD UPPLAGA",
+      "goldenBouquet": "Gyllene bukett",
+      "goldenBouquetDesc": "Tryck för att låsa upp eller ange referenskod",
+      "createBouquet": "Skapa bukett",
+      "spreadKindness": "Sprid vänlighet",
+      "spreadKindnessDesc": "Skicka en mystisk bukett för att lysa upp en främlings dag.",
+      "temporarilyDisabled": "Tillfälligt inaktiverad",
+      "featureDisabled": "Funktion inaktiverad",
+      "safetyViolationDesc": "Funktionen är tillfälligt inaktiverad på grund av säkerhetsöverträdelser.",
+      "loginRequired": "Inloggning krävs",
+      "loginToSpreadKindness": "Du måste vara inloggad för att skicka en Slumpmässig Vänlighetshandling.",
+      "cancel": "Avbryt",
+      "login": "Logga in",
+      "whatsNewTitle": "Nyheter",
+      "whatsNewSubtitle": "Vi har lagt till några vackra nya sätt att skapa kontakt och sprida glädje.",
+      "whatsNewGoldenTitle": "Gyllene bukett",
+      "whatsNewGoldenDesc": "Uttryck den yttersta tacksamheten med vår strålande, glittrande premiumbukettstil skapad för speciella stunder.",
+      "whatsNewRaokTitle": "Slumpmässiga vänlighetshandlingar",
+      "whatsNewRaokDesc": "Skicka och ta emot anonyma digitala buketter globalt och dela värme och positivitet med dem som behöver det.",
+      "whatsNewClose": "Låter bra"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -14293,7 +16634,7 @@ export default {
       "unsavedDesc": "Du har osparade ändringar. Är du säker på att du vill lämna sidan?",
       "stay": "Stanna",
       "leave": "Lämna",
-      "howToCreate": "Så här skapar du din bukett",
+      "howToCreate": "Så skapar du en bukett",
       "availableDesc": "Härligt! Det här namnet är tillgängligt.",
       "dyslexiaFriendly": "Dyslexivänligt typsnitt",
       "dyslexiaFriendlyDesc": "Använder ett dyslexivänligt typsnitt med bättre avstånd",
@@ -14360,7 +16701,21 @@ export default {
       "shareText": "Jag skapade den här vackra buketten till dig!",
       "aiGenerated": "AI-bukett skapad",
       "useThis": "Använd denna →",
-      "aiGeneratedTitle": "AI-bukett skapad"
+      "aiGeneratedTitle": "AI-bukett skapad",
+      "loginRequiredDesc": "Logga in för att skicka buketter via e-post.",
+      "selectFlowers": "Välj blommor",
+      "selectFlowersDesc": "Välj minst 3 blommor för att börja. Tryck på ett blomkort för att se dess betydelse och färgalternativ.",
+      "arrangeThem": "Arrangera dem",
+      "arrangeThemDesc": "Dra blommorna runt på duken. Använd verktygsfältet för att redigera storlek, rotation och lager.",
+      "personalizeAndSend": "Anpassa och skicka",
+      "personalizeAndSendDesc": "Lägg till ett hjärtligt meddelande, välj en låt och skapa en unik länk att dela.",
+      "enjoyingApp": "Trivs du med appen?",
+      "thankYou": "Tack!",
+      "openPlayStore": "Öppna Play Store",
+      "maybeLater": "Kanske senare",
+      "sarahsSelection": "Sarahs urval",
+      "createAccountAttach": "Skapa ett konto eller logga in för att bifoga ett foto eller röstmeddelande",
+      "returnToHome": "Tillbaka till start"
     },
     "bouquetView": {
       "loading": "Laddar din bukett...",
@@ -14427,7 +16782,15 @@ export default {
       "fromLabel": "från",
       "shareBouquetTitle": "Dela bukett",
       "shareBouquetSubtitle": "Skicka denna vackra bukett till andra",
-      "noLanguagesFound": "Hittade inga språk"
+      "noLanguagesFound": "Hittade inga språk",
+      "listenOnYouTube": "Öppna i YouTube",
+      "playingFromStart": "Spelas upp från början",
+      "playingOnYouTube": "Spelas upp på YouTube",
+      "saveCard": "Spara kort",
+      "savedSuccess": "Sparat!",
+      "savedSuccessDesc": "Buketten har sparats i ditt fotogalleri.",
+      "switchToAudio": "Endast ljud",
+      "switchToVideo": "Titta på video"
     },
     "settings": {
       "title": "Inställningar",
@@ -14457,7 +16820,9 @@ export default {
       "cancel": "Avbryt",
       "clearDataDesc": "Hantera cache, widget och historikdata",
       "termsSubtext": "Läs våra användarvillkor",
-      "privacySubtext": "Läs om hur vi skyddar din dataintegritet"
+      "privacySubtext": "Läs om hur vi skyddar din dataintegritet",
+      "creditsSubtext": "Verktyg, resurser och ett särskilt tack",
+      "dataManagementDesc": "Hantera och frigör lokalt lagringsutrymme som upptas av cachade filer, widgetar och mottagna buketter."
     },
     "share": {
       "subtitle": "Dela din bukett med någon speciell",
@@ -14514,7 +16879,10 @@ export default {
       "successMessage": "Widgeten är uppdaterad! Om du inte lagt till den på hemskärmen än, följ instruktionerna i hjälpmenyn.",
       "errorTitle": "Fel",
       "errorMessage": "Kunde inte uppdatera widgeten.",
-      "from": "från {name}"
+      "from": "från {name}",
+      "clearMessage": "Är du säker på att du vill rensa denna widget?",
+      "clearTitle": "Rensa widget",
+      "myWidgets": "Mina widgetar"
     },
     "privacy": {
       "title": "Integritetspolicy",
@@ -14702,6 +17070,71 @@ export default {
       "songTheyChose": "Låt de valde åt dig",
       "yourMessage": "Ditt meddelande till dem",
       "done": "Klar"
+    },
+    "ageVerification": {
+      "title": "Åldersverifiering",
+      "prompt": "Ange ditt födelseår. Vi frågar bara om detta för att säkerställa barns säkerhet och följa integritetsriktlinjerna."
+    },
+    "credits": {
+      "title": "Medverkande",
+      "specialThanks": "Ett särskilt tack",
+      "toolsTitle": "Verktyg & Resurser",
+      "toolsSubtitle": "Den här appen blev möjlig tack vare följande fantastiska verktyg och plattformar:",
+      "lottieFiles": "för att tillhandahålla vackra animationer av hög kvalitet.",
+      "storyset": "för de fantastiska och uttrycksfulla illustrationerna.",
+      "reactNative": "för grundramverket.",
+      "firebase": "för backend-tjänster.",
+      "cloudflare": "för DNS och webbsäkerhet.",
+      "netlify": "för hosting och driftsättning.",
+      "sarvamAI": "för smarta text- och genereringsfunktioner."
+    },
+    "games": {
+      "title": "Blossom Garden-spel",
+      "subtitle": "Koppla av och spela våra mysiga blommiga minispel för att låsa upp nya buketdesigner och idéer.",
+      "sortTitle": "Blossom Sort-pussel",
+      "sortDesc": "Sortera matchande blomstjälkar i identiska platser. Tryck för att välja och flytta.",
+      "matchTitle": "Blossom Match",
+      "matchDesc": "Byt intilliggande blommor för att matcha 3 eller fler i rad och utlösa kaskaderande kombinationer.",
+      "playNow": "Spela nu"
+    },
+    "golden": {
+      "title": "Gyllene bukett",
+      "subtitle": "Ett exklusivt arrangemang i begränsad upplaga, designat för att fånga livets mest värdefulla ögonblick.",
+      "claimTitle": "Lös in inbjudan",
+      "claimDesc": "Fick du en gyllene inbjudan? Ange din kod nedan för att låsa upp din skapelse.",
+      "inputPlaceholder": "Ange referenskod",
+      "unlock": "Lås upp",
+      "shareTitle": "Dela magin",
+      "shareDesc": "Bjud in vänner med din unika kod. Ni får båda en Gyllene Kredit när de använder den.",
+      "signInToGetCode": "Logga in för att få koden",
+      "share": "Dela",
+      "friendsJoined": "Vänner som gått med",
+      "noCredits": "Inga gyllene krediter",
+      "noCreditsDesc": "Bjud in vänner eller använd en kod för att tjäna krediter.",
+      "create": "Skapa gyllene bukett",
+      "ownCodeError": "Du kan inte använda din egen kod.",
+      "alreadyClaimedError": "Du har redan löst in denna kod.",
+      "invalidCodeError": "Ogiltig kod.",
+      "claimSuccess": "Inlöst!",
+      "claimSuccessDesc": "Du fick en Gyllene Kredit.",
+      "failed": "Misslyckades",
+      "error": "Fel",
+      "connectionError": "Kunde inte ansluta till servern.",
+      "shareText": "Lås upp den Gyllene buketten med min inbjudan! Ladda ner appen och ange min kod {code} eller använd denna länk för att automatiskt lösa in din kredit: {link}",
+      "credit": "Kredit",
+      "credits": "Krediter"
+    },
+    "raok": {
+      "guidelinesTitle": "Slumpmässig vänlighetshandling",
+      "guidelinesSubtitle": "Skicka lite värme och överraska en främling! Så här fungerar det & riktlinjer att följa.",
+      "rule1Title": "Sprid glädje anonymt",
+      "rule1Desc": "Din bukett och ditt meddelande matchas slumpmässigt av AI med någon som behöver ett leende idag, helt anonymt.",
+      "rule2Title": "Var positiv och uppmuntrande",
+      "rule2Desc": "Skriv varma, uppmuntrande ord. Lämna kommentarer som inspirerar hopp, vänlighet och stöd.",
+      "rule3Title": "Ingen personlig information",
+      "rule3Desc": "För din och andras säkerhet, inkludera inte namn, telefonnummer, adresser, sociala medier-handtag eller länkar.",
+      "understand": "Jag förstår",
+      "soundsGood": "Låter bra"
     }
   },
   "bn": {
@@ -14752,7 +17185,8 @@ export default {
       "about": "আমাদের সম্পর্কে",
       "emailsLeft": "এই মাসে ইমেইল বাকি আছে",
       "home": "হোম",
-      "history": "হিস্ট্রি"
+      "history": "হিস্ট্রি",
+      "credits": "কৃতজ্ঞতা স্বীকার"
     },
     "common": {
       "cancel": "বাতিল করুন",
@@ -14770,7 +17204,8 @@ export default {
       "companyName": "ই-গ্রিট (E Greet)",
       "loading": "লোড হচ্ছে...",
       "enabled": "সক্রিয়",
-      "disabled": "নিষ্ক্রিয়"
+      "disabled": "নিষ্ক্রিয়",
+      "clear": "মুছুন"
     },
     "languageScreen": {
       "title": "ভাষা",
@@ -14844,7 +17279,19 @@ export default {
       "addPasswordLogin": "পাসওয়ার্ড লগইন যোগ করুন",
       "createPasswordTitle": "পাসওয়ার্ড তৈরি করুন",
       "createPasswordDesc": "গুগল-এর পাশাপাশি আপনার ইমেইল দিয়ে লগইন করতে একটি পাসওয়ার্ড তৈরি করুন।",
-      "passwordCreated": "পাসওয়ার্ড সফলভাবে তৈরি হয়েছে!"
+      "passwordCreated": "পাসওয়ার্ড সফলভাবে তৈরি হয়েছে!",
+      "appearance": "চেহারা",
+      "hapticFeedback": "হ্যাপটিক ফিডব্যাক",
+      "hapticFeedbackDesc": "বাটনে ট্যাপ করলে কম্পন হবে",
+      "language": "ভাষা",
+      "notificationsDesc": "তোড়ার উত্তরের জন্য বিজ্ঞপ্তি পান",
+      "notificationsEnabled": "বিজ্ঞপ্তি সক্রিয় করুন",
+      "sounds": "শব্দ",
+      "theme": "থিম",
+      "themeDesc": "আপনার পছন্দের থিম বেছে নিন",
+      "touchSound": "টাচ সাউন্ড",
+      "touchSoundDesc": "বাটনে ট্যাপ করলে শব্দ বাজবে",
+      "disconnectEmail": "ইমেইল লগইন সংযোগ বিচ্ছিন্ন করুন"
     },
     "login": {
       "title": "সাইন ইন",
@@ -14886,7 +17333,9 @@ export default {
       "sendLink": "রিসেট লিংক পাঠান",
       "successText": "রিসেট লিংক পাঠানো হয়েছে! আপনার ইনবক্স এবং স্প্যাম ফোল্ডার চেক করুন।",
       "backToSignIn": "সাইন ইন পেজে ফিরে যান",
-      "errorSend": "রিসেট ইমেইল পাঠানো যায়নি। ঠিকানাটি চেক করে আবার চেষ্টা করুন।"
+      "errorSend": "রিসেট ইমেইল পাঠানো যায়নি। ঠিকানাটি চেক করে আবার চেষ্টা করুন।",
+      "backToLogin": "লগইনে ফিরে যান",
+      "rememberPassword": "আপনার পাসওয়ার্ড মনে আছে?"
     },
     "feedback": {
       "title": "মতামত জানান",
@@ -14957,6 +17406,8 @@ export default {
       "widget": "উইজেট",
       "scheduledEmails": "শিডিউল করা ইমেইল",
       "scheduledEmailsDesc": "শিডিউল করা তোড়া ডেলিভারি দেখুন এবং ম্যানেজ করুন",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "ভালোবাসা দিয়ে তৈরি",
       "makeTogether": "একসাথে ফুলের তোড়া তৈরি করুন",
       "makeTogetherDesc": "রিয়েল-টাইমে ফুল আঁকুন এবং বার্তা লিখুন।",
@@ -14965,7 +17416,29 @@ export default {
       "roomCode": "রুম কোড:",
       "removeRoom": "রুম সরিয়ে ফেলবেন?",
       "removeRoomDesc": "ইতিহাস থেকে রুম #{code} সরিয়ে ফেলবেন?",
-      "remove": "সরান"
+      "remove": "সরান",
+      "creativeStudio": "ক্রিয়েটিভ স্টুডিও",
+      "creativeStudioDesc": "ফুলের কীবোর্ড, জন্মদিনের ওয়ালপেপার ও রেসিপি।",
+      "limitedEdition": "সীমিত সংস্করণ",
+      "goldenBouquet": "গোল্ডেন তোড়া",
+      "goldenBouquetDesc": "আনলক করতে বা রেফারেল কোড লিখতে ট্যাপ করুন",
+      "createBouquet": "তোড়া তৈরি করুন",
+      "spreadKindness": "দয়া ছড়িয়ে দিন",
+      "spreadKindnessDesc": "একজন অপরিচিত ব্যক্তির দিন উজ্জ্বল করতে একটি রহস্যময় তোড়া পাঠান।",
+      "temporarilyDisabled": "সাময়িকভাবে নিষ্ক্রিয়",
+      "featureDisabled": "বৈশিষ্ট্য নিষ্ক্রিয়",
+      "safetyViolationDesc": "নিরাপত্তা লঙ্ঘনের কারণে বৈশিষ্ট্যটি সাময়িকভাবে নিষ্ক্রিয় করা হয়েছে।",
+      "loginRequired": "লগইন প্রয়োজন",
+      "loginToSpreadKindness": "একটি এলোমেলো দয়ার কাজ পাঠাতে আপনাকে অবশ্যই লগ ইন করতে হবে।",
+      "cancel": "বাতিল",
+      "login": "লগ ইন",
+      "whatsNewTitle": "নতুন কী আছে",
+      "whatsNewSubtitle": "আমরা সংযোগ স্থাপন এবং আনন্দ ছড়িয়ে দেওয়ার কিছু সুন্দর নতুন উপায় যুক্ত করেছি।",
+      "whatsNewGoldenTitle": "গোল্ডেন তোড়া",
+      "whatsNewGoldenDesc": "বিশেষ মুহূর্তের জন্য ডিজাইন করা আমাদের উজ্জ্বল, ঝলমলে প্রিমিয়াম তোড়া শৈলী দিয়ে চরম কৃতজ্ঞতা প্রকাশ করুন।",
+      "whatsNewRaokTitle": "এলোমেলো দয়ার কাজ",
+      "whatsNewRaokDesc": "বিশ্বব্যাপী নামহীন ডিজিটাল তোড়া পাঠান এবং গ্রহণ করুন, যাদের প্রয়োজন তাদের সাথে উষ্ণতা এবং ইতিবাচকতা ভাগ করুন।",
+      "whatsNewClose": "ভালো লাগছে"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -15063,7 +17536,7 @@ export default {
       "unsavedDesc": "আপনার কিছু অসংরক্ষিত পরিবর্তন আছে। আপনি কি নিশ্চিত যে আপনি বের হয়ে যেতে চান?",
       "stay": "থাকুন",
       "leave": "বের হয়ে যান",
-      "howToCreate": "কীভাবে আপনার তোড়া তৈরি করবেন",
+      "howToCreate": "কীভাবে একটি তোড়া তৈরি করবেন",
       "availableDesc": "চমৎকার! এই নামটি পাওয়া যাবে।",
       "dyslexiaFriendly": "ডিসলেক্সিয়া-বান্ধব ফন্ট",
       "dyslexiaFriendlyDesc": "উন্নত স্পেসিং সহ ডিসলেক্সিয়া-বান্ধব ফন্ট ব্যবহার করে",
@@ -15130,7 +17603,21 @@ export default {
       "shareText": "আমি এই সুন্দর তোড়াটি আপনার জন্য তৈরি করেছি!",
       "aiGenerated": "AI তোড়া তৈরি হয়েছে",
       "useThis": "এটি ব্যবহার করুন →",
-      "aiGeneratedTitle": "AI তোড়া তৈরি হয়েছে"
+      "aiGeneratedTitle": "AI তোড়া তৈরি হয়েছে",
+      "loginRequiredDesc": "ইমেইলের মাধ্যমে তোড়া পাঠাতে অনুগ্রহ করে সাইন ইন করুন।",
+      "selectFlowers": "ফুল নির্বাচন করুন",
+      "selectFlowersDesc": "শুরু করতে অন্তত ৩টি ফুল বেছে নিন। এর অর্থ এবং রঙের বিকল্পগুলো দেখতে একটি ফুলের কার্ডে ট্যাপ করুন।",
+      "arrangeThem": "সাজান",
+      "arrangeThemDesc": "ক্যানভাসের চারপাশে ফুলগুলো টেনে আনুন। আকার, ঘূর্ণন এবং স্তর সম্পাদনা করতে টুলবার ব্যবহার করুন।",
+      "personalizeAndSend": "ব্যক্তিগতকৃত করুন এবং পাঠান",
+      "personalizeAndSendDesc": "একটি হৃদয়স্পর্শী বার্তা যোগ করুন, একটি গান বাছাই করুন, এবং শেয়ার করার জন্য একটি অনন্য লিঙ্ক তৈরি করুন।",
+      "enjoyingApp": "অ্যাপটি উপভোগ করছেন?",
+      "thankYou": "ধন্যবাদ!",
+      "openPlayStore": "প্লে স্টোর খুলুন",
+      "maybeLater": "হয়তো পরে",
+      "sarahsSelection": "সারার নির্বাচন",
+      "createAccountAttach": "একটি ছবি বা ভয়েস নোট সংযুক্ত করতে একটি অ্যাকাউন্ট তৈরি করুন বা সাইন ইন করুন",
+      "returnToHome": "হোমে ফিরে যান"
     },
     "bouquetView": {
       "loading": "আপনার তোড়া লোড হচ্ছে...",
@@ -15197,7 +17684,15 @@ export default {
       "fromLabel": "প্রেরক",
       "shareBouquetTitle": "তোড়া শেয়ার করুন",
       "shareBouquetSubtitle": "এই সুন্দর তোড়াটি অন্যদের পাঠান",
-      "noLanguagesFound": "কোনো ভাষা পাওয়া যায়নি"
+      "noLanguagesFound": "কোনো ভাষা পাওয়া যায়নি",
+      "listenOnYouTube": "ইউটিউবে খুলুন",
+      "playingFromStart": "শুরু থেকে চলছে",
+      "playingOnYouTube": "ইউটিউবে চলছে",
+      "saveCard": "কার্ড সংরক্ষণ করুন",
+      "savedSuccess": "সফলভাবে সংরক্ষিত হয়েছে!",
+      "savedSuccessDesc": "তোড়াটি আপনার ফটো গ্যালারিতে সংরক্ষণ করা হয়েছে।",
+      "switchToAudio": "শুধু অডিও",
+      "switchToVideo": "ভিডিও দেখুন"
     },
     "settings": {
       "title": "সেটিংস",
@@ -15227,7 +17722,9 @@ export default {
       "cancel": "বাতিল করুন",
       "clearDataDesc": "ক্যাশে, উইজেট এবং ইতিহাস ডেটা পরিচালনা করুন",
       "termsSubtext": "আমাদের পরিষেবার শর্তাবলী চুক্তি পড়ুন",
-      "privacySubtext": "কীভাবে আমরা আপনার ডেটার গোপনীয়তা রক্ষা করি তা জানুন"
+      "privacySubtext": "কীভাবে আমরা আপনার ডেটার গোপনীয়তা রক্ষা করি তা জানুন",
+      "creditsSubtext": "সরঞ্জাম, সম্পদ এবং বিশেষ ধন্যবাদ",
+      "dataManagementDesc": "ক্যাশে করা ফাইল, উইজেট এবং প্রাপ্ত তোড়া দ্বারা দখলকৃত স্থানীয় স্টোরেজ পরিচালনা করুন এবং খালি করুন।"
     },
     "share": {
       "subtitle": "আপনার তোড়াটি বিশেষ কারো সাথে শেয়ার করুন",
@@ -15284,7 +17781,10 @@ export default {
       "successMessage": "উইজেট আপডেট হয়েছে! যদি আপনি এখনও হোম স্ক্রিনে উইজেট যোগ না করে থাকেন, তাহলে হেল্প মেনুর নির্দেশিকাগুলো অনুসরণ করুন।",
       "errorTitle": "ত্রুটি",
       "errorMessage": "উইজেট আপডেট করা ব্যর্থ হয়েছে।",
-      "from": "{name} এর পক্ষ থেকে"
+      "from": "{name} এর পক্ষ থেকে",
+      "clearMessage": "আপনি কি নিশ্চিতভাবে এই উইজেটটি মুছে ফেলতে চান?",
+      "clearTitle": "উইজেট মুছুন",
+      "myWidgets": "আমার উইজেট"
     },
     "privacy": {
       "title": "গোপনীয়তা নীতি",
@@ -15472,6 +17972,71 @@ export default {
       "songTheyChose": "তারা আপনার জন্য যে গানটি বেছে নিয়েছেন",
       "yourMessage": "তাদের জন্য আপনার বার্তা",
       "done": "হয়ে গেছে"
+    },
+    "ageVerification": {
+      "title": "বয়স যাচাইকরণ",
+      "prompt": "অনুগ্রহ করে আপনার জন্মসাল লিখুন। শিশু সুরক্ষা নিশ্চিত করতে এবং গোপনীয়তা নির্দেশিকা মেনে চলার জন্যই আমরা কেবল এটি জিজ্ঞাসা করছি।"
+    },
+    "credits": {
+      "title": "কৃতজ্ঞতা স্বীকার",
+      "specialThanks": "বিশেষ ধন্যবাদ",
+      "toolsTitle": "সরঞ্জাম ও সম্পদ",
+      "toolsSubtitle": "নিম্নলিখিত চমৎকার সরঞ্জাম ও প্ল্যাটফর্মগুলোর জন্য এই অ্যাপটি সম্ভব হয়েছে:",
+      "lottieFiles": "সুন্দর, উচ্চমানের অ্যানিমেশন প্রদানের জন্য।",
+      "storyset": "চমৎকার এবং অভিব্যক্তিপূর্ণ চিত্রকর্মের জন্য।",
+      "reactNative": "মূল ফ্রেমওয়ার্কের জন্য।",
+      "firebase": "ব্যাকএন্ড পরিষেবার জন্য।",
+      "cloudflare": "DNS ও ওয়েব নিরাপত্তার জন্য।",
+      "netlify": "হোস্টিং ও ডিপ্লয়মেন্টের জন্য।",
+      "sarvamAI": "বুদ্ধিমান টেক্সট ও জেনারেশন ফিচারের জন্য।"
+    },
+    "games": {
+      "title": "ব্লসম গার্ডেন গেমস",
+      "subtitle": "নতুন তোড়ার ডিজাইন এবং আইডিয়া আনলক করতে আমাদের আরামদায়ক ফুলের মিনি-গেমগুলো খেলে বিশ্রাম নিন।",
+      "sortTitle": "ব্লসম সর্ট পাজল",
+      "sortDesc": "মিলে যাওয়া ফুলের কাণ্ডগুলো একই স্লটে সাজান। নির্বাচন করতে এবং সরাতে ট্যাপ করুন।",
+      "matchTitle": "ব্লসম ম্যাচ",
+      "matchDesc": "৩টি বা তার বেশি একসারিতে মেলাতে এবং ক্যাসকেডিং কম্বো চালু করতে পাশাপাশি ফুল অদলবদল করুন।",
+      "playNow": "এখনই খেলুন"
+    },
+    "golden": {
+      "title": "গোল্ডেন তোড়া",
+      "subtitle": "জীবনের সবচেয়ে মূল্যবান মুহূর্তগুলো ধারণ করার জন্য ডিজাইন করা একটি একচেটিয়া, সীমিত সংস্করণের সাজসজ্জা।",
+      "claimTitle": "আমন্ত্রণ দাবি করুন",
+      "claimDesc": "একটি গোল্ডেন আমন্ত্রণ পেয়েছেন? আপনার সৃষ্টি আনলক করতে নিচে আপনার কোড লিখুন।",
+      "inputPlaceholder": "রেফারেল কোড লিখুন",
+      "unlock": "আনলক করুন",
+      "shareTitle": "জাদু শেয়ার করুন",
+      "shareDesc": "আপনার অনন্য কোড দিয়ে বন্ধুদের আমন্ত্রণ জানান। তারা এটি ব্যবহার করলে আপনারা উভয়ই একটি গোল্ডেন ক্রেডিট পাবেন।",
+      "signInToGetCode": "কোড পেতে সাইন ইন করুন",
+      "share": "শেয়ার করুন",
+      "friendsJoined": "যোগ দেওয়া বন্ধুরা",
+      "noCredits": "কোনো গোল্ডেন ক্রেডিট নেই",
+      "noCreditsDesc": "ক্রেডিট অর্জন করতে বন্ধুদের আমন্ত্রণ জানান বা একটি কোড ব্যবহার করুন।",
+      "create": "গোল্ডেন তোড়া তৈরি করুন",
+      "ownCodeError": "আপনি নিজের কোড ব্যবহার করতে পারবেন না।",
+      "alreadyClaimedError": "আপনি ইতিমধ্যে এই কোডটি দাবি করেছেন।",
+      "invalidCodeError": "অবৈধ কোড।",
+      "claimSuccess": "সফলভাবে দাবি করা হয়েছে!",
+      "claimSuccessDesc": "আপনি একটি গোল্ডেন ক্রেডিট অর্জন করেছেন।",
+      "failed": "ব্যর্থ হয়েছে",
+      "error": "ত্রুটি",
+      "connectionError": "সার্ভারের সাথে সংযোগ করা যায়নি।",
+      "shareText": "আমার আমন্ত্রণ দিয়ে গোল্ডেন তোড়া আনলক করুন! অ্যাপটি ডাউনলোড করুন এবং আমার কোড {code} লিখুন অথবা স্বয়ংক্রিয়ভাবে আপনার ক্রেডিট দাবি করতে এই লিঙ্কটি ব্যবহার করুন: {link}",
+      "credit": "ক্রেডিট",
+      "credits": "ক্রেডিট"
+    },
+    "raok": {
+      "guidelinesTitle": "এলোমেলো দয়ার কাজ",
+      "guidelinesSubtitle": "কিছুটা উষ্ণতা পাঠান এবং একজন অপরিচিত ব্যক্তিকে অবাক করুন! এটি কীভাবে কাজ করে এবং অনুসরণ করার নির্দেশিকা এখানে দেওয়া হলো।",
+      "rule1Title": "নামহীনভাবে আনন্দ ছড়ান",
+      "rule1Desc": "আপনার তোড়া এবং বার্তা AI দ্বারা সম্পূর্ণ নামহীনভাবে এলোমেলোভাবে এমন কারো সাথে মেলানো হবে যার আজ একটি হাসির প্রয়োজন।",
+      "rule2Title": "ইতিবাচক এবং উৎসাহব্যঞ্জক হন",
+      "rule2Desc": "উষ্ণ, উৎসাহব্যঞ্জক কথা লিখুন। এমন মন্তব্য রেখে যান যা আশা, দয়া এবং সমর্থনকে অনুপ্রাণিত করে।",
+      "rule3Title": "কোনো ব্যক্তিগত তথ্য নয়",
+      "rule3Desc": "আপনার এবং অন্যদের নিরাপত্তার জন্য, নাম, ফোন নম্বর, ঠিকানা, সোশ্যাল হ্যান্ডেল বা লিঙ্ক অন্তর্ভুক্ত করবেন না।",
+      "understand": "আমি বুঝেছি",
+      "soundsGood": "ভালো লাগছে"
     }
   },
   "te": {
@@ -15522,7 +18087,8 @@ export default {
       "about": "మా గురించి",
       "emailsLeft": "ఈ నెలలో మిగిలి ఉన్న ఈమెయిల్స్",
       "home": "హోమ్",
-      "history": "హిస్టరీ"
+      "history": "హిస్టరీ",
+      "credits": "క్రెడిట్స్"
     },
     "common": {
       "cancel": "రద్దు చేయండి",
@@ -15540,7 +18106,8 @@ export default {
       "companyName": "ఇ గ్రీట్ (E Greet)",
       "loading": "లోడ్ అవుతోంది...",
       "enabled": "ప్రారంభించబడింది",
-      "disabled": "నిలిపివేయబడింది"
+      "disabled": "నిలిపివేయబడింది",
+      "clear": "క్లియర్ చేయండి"
     },
     "languageScreen": {
       "title": "భాష",
@@ -15614,7 +18181,19 @@ export default {
       "addPasswordLogin": "పాస్‌వర్డ్ లాగిన్ జోడించండి",
       "createPasswordTitle": "పాస్‌వర్డ్ సృష్టించండి",
       "createPasswordDesc": "గూగుల్‌తో పాటు మీ ఈమెయిల్‌తో కూడా లాగిన్ అవ్వడానికి పాస్‌వర్డ్‌ను సృష్టించండి.",
-      "passwordCreated": "పాస్‌వర్డ్ విజయవంతంగా సృష్టించబడింది!"
+      "passwordCreated": "పాస్‌వర్డ్ విజయవంతంగా సృష్టించబడింది!",
+      "appearance": "రూపాన్ని",
+      "hapticFeedback": "హాప్టిక్ ఫీడ్‌బ్యాక్",
+      "hapticFeedbackDesc": "బటన్లు నొక్కినప్పుడు వైబ్రేట్ చేయండి",
+      "language": "భాష",
+      "notificationsDesc": "బొకే ప్రత్యుత్తరాల కోసం నోటిఫికేషన్‌లను స్వీకరించండి",
+      "notificationsEnabled": "నోటిఫికేషన్‌లను ప్రారంభించండి",
+      "sounds": "శబ్దాలు",
+      "theme": "థీమ్",
+      "themeDesc": "మీకు నచ్చిన థీమ్‌ను ఎంచుకోండి",
+      "touchSound": "టచ్ సౌండ్",
+      "touchSoundDesc": "బటన్లు నొక్కినప్పుడు శబ్దం ప్లే చేయండి",
+      "disconnectEmail": "ఇమెయిల్ లాగిన్‌ను డిస్‌కనెక్ట్ చేయండి"
     },
     "login": {
       "title": "సైన్ ఇన్",
@@ -15656,7 +18235,9 @@ export default {
       "sendLink": "రీసెట్ లింక్ పంపండి",
       "successText": "రీసెట్ లింక్ పంపబడింది! మీ ఇన్‌బాక్స్ మరియు స్పామ్ ఫోల్డర్‌ను చెక్ చేయండి.",
       "backToSignIn": "తిరిగి సైన్ ఇన్‌కి వెళ్లండి",
-      "errorSend": "రీసెట్ ఈమెయిల్ పంపడం సాధ్యం కాలేదు. అడ్రస్‌ను సరిచూసుకుని మళ్ళీ ప్రయత్నించండి."
+      "errorSend": "రీసెట్ ఈమెయిల్ పంపడం సాధ్యం కాలేదు. అడ్రస్‌ను సరిచూసుకుని మళ్ళీ ప్రయత్నించండి.",
+      "backToLogin": "లాగిన్‌కు తిరిగి వెళ్ళండి",
+      "rememberPassword": "మీ పాస్‌వర్డ్ గుర్తుందా?"
     },
     "feedback": {
       "title": "ఫీడ్‌బ్యాక్ పంపండి",
@@ -15727,6 +18308,8 @@ export default {
       "widget": "విడ్జెట్",
       "scheduledEmails": "షెడ్యూల్ చేయబడిన ఈమెయిల్స్",
       "scheduledEmailsDesc": "షెడ్యూల్ చేయబడిన పూల గుత్తుల డెలివరీలను చూడండి & నిర్వహించండి",
+      "inviteFriends": "Invite Friends",
+      "inviteFriendsDesc": "Share the app with your friends!",
       "madeWithLove": "ప్రేమతో తయారు చేయబడింది",
       "makeTogether": "కలిసి బొకేని తయారు చేయండి",
       "makeTogetherDesc": "రియల్-టైమ్‌లో పువ్వులు గీయండి & సందేశాలు రాయండి.",
@@ -15735,7 +18318,29 @@ export default {
       "roomCode": "గది కోడ్:",
       "removeRoom": "గదిని తీసివేయాలా?",
       "removeRoomDesc": "చరిత్ర నుండి గది #{code}ని తీసివేయాలా?",
-      "remove": "తీసివేయి"
+      "remove": "తీసివేయి",
+      "creativeStudio": "క్రియేటివ్ స్టూడియో",
+      "creativeStudioDesc": "పూల కీబోర్డ్, పుట్టినరోజు వాల్‌పేపర్ & వంటకాలు.",
+      "limitedEdition": "పరిమిత ఎడిషన్",
+      "goldenBouquet": "గోల్డెన్ బొకే",
+      "goldenBouquetDesc": "అన్‌లాక్ చేయడానికి లేదా రెఫరల్ కోడ్‌ను నమోదు చేయడానికి ట్యాప్ చేయండి",
+      "createBouquet": "బొకేను సృష్టించండి",
+      "spreadKindness": "దయను వ్యాప్తి చేయండి",
+      "spreadKindnessDesc": "అపరిచితుడి రోజును ప్రకాశవంతం చేయడానికి ఒక రహస్యమైన బొకేను పంపండి.",
+      "temporarilyDisabled": "తాత్కాలికంగా నిలిపివేయబడింది",
+      "featureDisabled": "ఫీచర్ నిలిపివేయబడింది",
+      "safetyViolationDesc": "భద్రతా ఉల్లంఘనల కారణంగా ఫీచర్ తాత్కాలికంగా నిలిపివేయబడింది.",
+      "loginRequired": "లాగిన్ అవసరం",
+      "loginToSpreadKindness": "యాదృచ్ఛిక దయ చర్యను పంపడానికి మీరు లాగిన్ అయి ఉండాలి.",
+      "cancel": "రద్దు చేయండి",
+      "login": "లాగిన్",
+      "whatsNewTitle": "కొత్తగా ఏమి ఉంది",
+      "whatsNewSubtitle": "కనెక్ట్ కావడానికి మరియు ఆనందాన్ని వ్యాప్తి చేయడానికి మేము కొన్ని అందమైన కొత్త మార్గాలను జోడించాము.",
+      "whatsNewGoldenTitle": "గోల్డెన్ బొకే",
+      "whatsNewGoldenDesc": "ప్రత్యేక క్షణాల కోసం రూపొందించిన మా ప్రకాశవంతమైన, మెరిసే ప్రీమియం బొకే శైలితో అత్యున్నత కృతజ్ఞతను వ్యక్తం చేయండి.",
+      "whatsNewRaokTitle": "యాదృచ్ఛిక దయ చర్యలు",
+      "whatsNewRaokDesc": "ప్రపంచవ్యాప్తంగా అనామక డిజిటల్ బొకేలను పంపండి మరియు స్వీకరించండి, అవసరమైన వారితో వెచ్చదనం మరియు సానుకూలతను పంచుకోండి.",
+      "whatsNewClose": "బాగుంది"
     },
     "createBouquet": {
       "aiLoadingMessages": [
@@ -15833,7 +18438,7 @@ export default {
       "unsavedDesc": "మీరు సేవ్ చేయని మార్పులు ఉన్నాయి. మీరు ఖచ్చితంగా వెళ్లిపోవాలనుకుంటున్నారా?",
       "stay": "ఉండండి",
       "leave": "వెళ్లిపోండి",
-      "howToCreate": "పూల గుత్తిని ఎలా సృష్టించాలి",
+      "howToCreate": "బొకేను ఎలా సృష్టించాలి",
       "availableDesc": "అద్భుతం! ఈ పేరు అందుబాటులో ఉంది.",
       "dyslexiaFriendly": "డిస్లెక్సియా-ఫ్రెండ్లీ ఫాంట్",
       "dyslexiaFriendlyDesc": "మెరుగైన అక్షరాల ఖాళీలతో డిస్లెక్సియా-ఫ్రెండ్లీ ఫాంట్‌ను ఉపయోగిస్తుంది",
@@ -15900,7 +18505,21 @@ export default {
       "shareText": "నేను మీ కోసం ఈ అందమైన పూల గుత్తిని తయారు చేసాను!",
       "aiGenerated": "AI పూల గుత్తి సృష్టించబడింది",
       "useThis": "దీన్ని ఉపయోగించండి →",
-      "aiGeneratedTitle": "AI పూల గుత్తి సృష్టించబడింది"
+      "aiGeneratedTitle": "AI పూల గుత్తి సృష్టించబడింది",
+      "loginRequiredDesc": "ఇమెయిల్ ద్వారా బొకేలు పంపడానికి దయచేసి సైన్ ఇన్ చేయండి.",
+      "selectFlowers": "పువ్వులను ఎంచుకోండి",
+      "selectFlowersDesc": "ప్రారంభించడానికి కనీసం 3 పువ్వులను ఎంచుకోండి. దాని అర్థం మరియు రంగు ఎంపికలను చూడటానికి పువ్వు కార్డుపై ట్యాప్ చేయండి.",
+      "arrangeThem": "వాటిని అమర్చండి",
+      "arrangeThemDesc": "కాన్వాస్‌పై పువ్వులను లాగండి. పరిమాణం, భ్రమణం మరియు లేయర్‌లను సవరించడానికి టూల్‌బార్‌ను ఉపయోగించండి.",
+      "personalizeAndSend": "వ్యక్తిగతీకరించి పంపండి",
+      "personalizeAndSendDesc": "హృదయపూర్వక సందేశాన్ని జోడించండి, ఒక పాటను ఎంచుకోండి మరియు పంచుకోవడానికి ప్రత్యేకమైన లింక్‌ను రూపొందించండి.",
+      "enjoyingApp": "యాప్‌ను ఆస్వాదిస్తున్నారా?",
+      "thankYou": "ధన్యవాదాలు!",
+      "openPlayStore": "Play స్టోర్‌ను తెరవండి",
+      "maybeLater": "బహుశా తర్వాత",
+      "sarahsSelection": "సారా ఎంపిక",
+      "createAccountAttach": "ఫోటో లేదా వాయిస్ నోట్‌ను జోడించడానికి ఖాతాను సృష్టించండి లేదా సైన్ ఇన్ చేయండి",
+      "returnToHome": "హోమ్‌కు తిరిగి వెళ్ళండి"
     },
     "bouquetView": {
       "loading": "మీ పూల గుత్తి లోడ్ అవుతోంది...",
@@ -15967,7 +18586,15 @@ export default {
       "fromLabel": "నుండి",
       "shareBouquetTitle": "పూల గుత్తిని షేర్ చేయండి",
       "shareBouquetSubtitle": "ఈ అందమైన పూల గుత్తిని ఇతరులకు పంపండి",
-      "noLanguagesFound": "భాషలు ఏవీ కనుగొనబడలేదు"
+      "noLanguagesFound": "భాషలు ఏవీ కనుగొనబడలేదు",
+      "listenOnYouTube": "YouTubeలో తెరవండి",
+      "playingFromStart": "మొదటి నుండి ప్లే అవుతోంది",
+      "playingOnYouTube": "YouTubeలో ప్లే అవుతోంది",
+      "saveCard": "కార్డును సేవ్ చేయండి",
+      "savedSuccess": "విజయవంతంగా సేవ్ చేయబడింది!",
+      "savedSuccessDesc": "బొకే మీ ఫోటో గ్యాలరీలో సేవ్ చేయబడింది.",
+      "switchToAudio": "ఆడియో మాత్రమే",
+      "switchToVideo": "వీడియో చూడండి"
     },
     "settings": {
       "title": "సెట్టింగ్‌లు",
@@ -15997,7 +18624,9 @@ export default {
       "cancel": "రద్దు చేయండి",
       "clearDataDesc": "కాష్, విడ్జెట్ మరియు చరిత్ర డేటాను నిర్వహించండి",
       "termsSubtext": "మా సేవా నిబంధనల ఒప్పందాన్ని చదవండి",
-      "privacySubtext": "మేము మీ డేటా గోప్యతను ఎలా సంరక్షిస్తామో తెలుసుకోండి"
+      "privacySubtext": "మేము మీ డేటా గోప్యతను ఎలా సంరక్షిస్తామో తెలుసుకోండి",
+      "creditsSubtext": "సాధనాలు, వనరులు మరియు ప్రత్యేక కృతజ్ఞతలు",
+      "dataManagementDesc": "కాష్ చేయబడిన ఫైళ్లు, విడ్జెట్‌లు మరియు స్వీకరించిన బొకేల ద్వారా ఆక్రమించబడిన స్థానిక నిల్వను నిర్వహించండి మరియు ఖాళీ చేయండి."
     },
     "share": {
       "subtitle": "మీ పూల గుత్తిని మీ ప్రియమైన వారితో పంచుకోండి",
@@ -16054,7 +18683,10 @@ export default {
       "successMessage": "విడ్జెట్ అప్‌డేట్ చేయబడింది! మీరు ఇంకా మీ హోమ్ స్క్రీన్‌కి విడ్జెట్‌ని జోడించకపోతే, హెల్ప్ మెనూలో ఉన్న సూచనలను అనుసరించండి.",
       "errorTitle": "లోపం",
       "errorMessage": "విడ్జెట్‌ని అప్‌డేట్ చేయడం విఫలమైంది.",
-      "from": "{name} నుండి"
+      "from": "{name} నుండి",
+      "clearMessage": "మీరు ఖచ్చితంగా ఈ విడ్జెట్‌ను క్లియర్ చేయాలనుకుంటున్నారా?",
+      "clearTitle": "విడ్జెట్‌ను క్లియర్ చేయండి",
+      "myWidgets": "నా విడ్జెట్‌లు"
     },
     "privacy": {
       "title": "గోప్యతా విధానం",
@@ -16242,6 +18874,71 @@ export default {
       "songTheyChose": "వారు మీ కోసం ఎంచుకున్న పాట",
       "yourMessage": "వారికి మీ సందేశం",
       "done": "పూర్తయింది"
+    },
+    "ageVerification": {
+      "title": "వయస్సు ధృవీకరణ",
+      "prompt": "దయచేసి మీ జన్మ సంవత్సరాన్ని నమోదు చేయండి. పిల్లల భద్రతను నిర్ధారించడానికి మరియు గోప్యతా మార్గదర్శకాలను పాటించడానికి మాత్రమే మేము దీన్ని అడుగుతున్నాము."
+    },
+    "credits": {
+      "title": "క్రెడిట్స్",
+      "specialThanks": "ప్రత్యేక కృతజ్ఞతలు",
+      "toolsTitle": "సాధనాలు & వనరులు",
+      "toolsSubtitle": "ఈ యాప్ కింది అద్భుతమైన సాధనాలు మరియు ప్లాట్‌ఫారమ్‌ల వల్ల సాధ్యమైంది:",
+      "lottieFiles": "అందమైన, అధిక నాణ్యత గల యానిమేషన్‌లను అందించినందుకు.",
+      "storyset": "అద్భుతమైన మరియు వ్యక్తీకరణాత్మక చిత్రాల కోసం.",
+      "reactNative": "ప్రధాన ఫ్రేమ్‌వర్క్ కోసం.",
+      "firebase": "బ్యాక్‌ఎండ్ సేవల కోసం.",
+      "cloudflare": "DNS మరియు వెబ్ భద్రత కోసం.",
+      "netlify": "హోస్టింగ్ మరియు డిప్లాయ్‌మెంట్ కోసం.",
+      "sarvamAI": "తెలివైన టెక్స్ట్ మరియు జనరేషన్ ఫీచర్ల కోసం."
+    },
+    "games": {
+      "title": "బ్లాసమ్ గార్డెన్ గేమ్స్",
+      "subtitle": "కొత్త బొకే డిజైన్‌లు మరియు ఆలోచనలను అన్‌లాక్ చేయడానికి రిలాక్స్ అయ్యి మా హాయిగా ఉండే పూల మినీ-గేమ్‌లను ఆడండి.",
+      "sortTitle": "బ్లాసమ్ సార్ట్ పజిల్",
+      "sortDesc": "సరిపోలే పూల కాడలను ఒకేలాంటి స్లాట్‌లలో క్రమబద్ధీకరించండి. ఎంచుకోవడానికి మరియు తరలించడానికి ట్యాప్ చేయండి.",
+      "matchTitle": "బ్లాసమ్ మ్యాచ్",
+      "matchDesc": "3 లేదా అంతకంటే ఎక్కువ వరుసగా సరిపోల్చడానికి మరియు కాస్కేడింగ్ కాంబోలను ప్రేరేపించడానికి ప్రక్కనే ఉన్న పువ్వులను మార్చండి.",
+      "playNow": "ఇప్పుడే ఆడండి"
+    },
+    "golden": {
+      "title": "గోల్డెన్ బొకే",
+      "subtitle": "జీవితంలోని అత్యంత విలువైన క్షణాలను సంగ్రహించేందుకు రూపొందించిన ఒక ప్రత్యేకమైన, పరిమిత ఎడిషన్ అమరిక.",
+      "claimTitle": "ఆహ్వానాన్ని క్లెయిమ్ చేయండి",
+      "claimDesc": "గోల్డెన్ ఆహ్వానం అందుకున్నారా? మీ సృష్టిని అన్‌లాక్ చేయడానికి క్రింద మీ కోడ్‌ను నమోదు చేయండి.",
+      "inputPlaceholder": "రెఫరల్ కోడ్‌ను నమోదు చేయండి",
+      "unlock": "అన్‌లాక్ చేయండి",
+      "shareTitle": "మాయాజాలాన్ని పంచుకోండి",
+      "shareDesc": "మీ ప్రత్యేకమైన కోడ్‌తో స్నేహితులను ఆహ్వానించండి. వారు దాన్ని ఉపయోగించినప్పుడు మీరిద్దరూ గోల్డెన్ క్రెడిట్ పొందుతారు.",
+      "signInToGetCode": "కోడ్‌ను పొందడానికి సైన్ ఇన్ చేయండి",
+      "share": "పంచుకోండి",
+      "friendsJoined": "చేరిన స్నేహితులు",
+      "noCredits": "గోల్డెన్ క్రెడిట్‌లు లేవు",
+      "noCreditsDesc": "క్రెడిట్‌లను సంపాదించడానికి స్నేహితులను ఆహ్వానించండి లేదా కోడ్‌ను ఉపయోగించండి.",
+      "create": "గోల్డెన్ బొకేను సృష్టించండి",
+      "ownCodeError": "మీరు మీ స్వంత కోడ్‌ను ఉపయోగించలేరు.",
+      "alreadyClaimedError": "మీరు ఇప్పటికే ఈ కోడ్‌ను క్లెయిమ్ చేసారు.",
+      "invalidCodeError": "చెల్లని కోడ్.",
+      "claimSuccess": "విజయవంతంగా క్లెయిమ్ చేయబడింది!",
+      "claimSuccessDesc": "మీరు ఒక గోల్డెన్ క్రెడిట్‌ను సంపాదించారు.",
+      "failed": "విఫలమైంది",
+      "error": "లోపం",
+      "connectionError": "సర్వర్‌కు కనెక్ట్ చేయడం సాధ్యం కాలేదు.",
+      "shareText": "నా ఆహ్వానంతో గోల్డెన్ బొకేను అన్‌లాక్ చేయండి! యాప్‌ను డౌన్‌లోడ్ చేసి నా కోడ్ {code} నమోదు చేయండి లేదా మీ క్రెడిట్‌ను స్వయంచాలకంగా క్లెయిమ్ చేయడానికి ఈ లింక్‌ను ఉపయోగించండి: {link}",
+      "credit": "క్రెడిట్",
+      "credits": "క్రెడిట్‌లు"
+    },
+    "raok": {
+      "guidelinesTitle": "యాదృచ్ఛిక దయ చర్య",
+      "guidelinesSubtitle": "కొంచెం వెచ్చదనాన్ని పంపి ఒక అపరిచితుడిని ఆశ్చర్యపరచండి! ఇది ఎలా పనిచేస్తుందో మరియు అనుసరించాల్సిన మార్గదర్శకాలు ఇక్కడ ఉన్నాయి.",
+      "rule1Title": "అనామకంగా ఆనందాన్ని వ్యాప్తి చేయండి",
+      "rule1Desc": "మీ బొకే మరియు సందేశం AI ద్వారా ఈ రోజు నవ్వు అవసరమైన వారితో పూర్తిగా అనామకంగా యాదృచ్ఛికంగా సరిపోల్చబడతాయి.",
+      "rule2Title": "సానుకూలంగా మరియు ప్రోత్సాహకరంగా ఉండండి",
+      "rule2Desc": "వెచ్చని, ప్రోత్సాహకరమైన మాటలు రాయండి. ఆశ, దయ మరియు మద్దతును ప్రేరేపించే వ్యాఖ్యలను ఉంచండి.",
+      "rule3Title": "వ్యక్తిగత సమాచారం వద్దు",
+      "rule3Desc": "మీ మరియు ఇతరుల భద్రత కోసం, పేర్లు, ఫోన్ నంబర్లు, చిరునామాలు, సోషల్ హ్యాండిల్స్ లేదా లింక్‌లను చేర్చవద్దు.",
+      "understand": "నాకు అర్థమైంది",
+      "soundsGood": "బాగుంది"
     }
   }
 };

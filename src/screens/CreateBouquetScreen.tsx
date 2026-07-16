@@ -10,6 +10,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   ScrollView,
   Image,
   Modal,
@@ -36,7 +37,7 @@ import { Audio } from 'expo-av';
 import * as Haptics from '../utils/haptics';
 import * as Clipboard from 'expo-clipboard';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { X, Info, Search as SearchIcon, Edit3, RotateCcw, RotateCw, Shuffle, Image as ImageIcon, Lock, Plus, Link, Music, Pause, Play, Sparkles, Layers, Settings, Check, Copy, ChevronRight, Share2, Move, ChevronUp, ChevronDown, Mail, Calendar, Clock, CheckCircle, Flag, Coins, AlertCircle, Star } from 'lucide-react-native';
+import { X, Info, Search as SearchIcon, Edit3, RotateCcw, RotateCw, Shuffle, Image as ImageIcon, Lock, Plus, Link, Music, Pause, Play, Sparkles, Layers, Settings, Check, Copy, ChevronRight, Share2, Move, ChevronUp, ChevronDown, Mail, Calendar, Clock, CheckCircle, Flag, Coins, AlertCircle, Star, Heart } from 'lucide-react-native';
 import Svg, { Path } from 'react-native-svg';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { doc, setDoc, getDoc, serverTimestamp, increment, updateDoc, collection, addDoc } from 'firebase/firestore';
@@ -45,6 +46,7 @@ import YouTubeSearchModal, { YouTubeSong } from '../components/YouTubeSearchModa
 import { getDeviceId } from '../utils/deviceId';
 import { useAuth } from '../contexts/AuthContext';
 import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { syncWidgetDataWithBouquet } from '../utils/storageManager';
 import { useSwipeNavigation } from '../hooks/useSwipeNavigation';
@@ -59,7 +61,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import { getFlowerTranslation } from '../flower-translations';
 import MessageMediaUploader from '../components/MessageMediaUploader';
 import * as StoreReview from 'expo-store-review';
-import { uploadImage, uploadAudio } from '../utils/cloudinaryUpload';
+import { uploadImage, uploadAudio, deleteAsset, getPublicIdFromUrl } from '../utils/cloudinaryUpload';
 import { NotificationModal } from '../components/NotificationModal';
 import { FlashList } from '@shopify/flash-list';
 import { FlowerCard, LazyFlowerImage } from './create-bouquet/components/FlowerCard';
@@ -91,6 +93,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { getFlowerImage, BG_IMAGES, FLOWER_GROUPS, GREENERY_OPTIONS, FILLER_OPTIONS, PRESETS, MESSAGE_SUGGESTIONS, getTranslatedPreset, getTranslatedMessageSuggestions } from '../utils/bouquetData';
 import { moderateWithSarvam, checkLocalSafety } from '../utils/raokSafety';
+import { CachedImage } from '../components/CachedImage';
 
 // LayoutAnimation is enabled by default in the New Architecture, skipping experimental flag
 
@@ -128,6 +131,49 @@ interface Song {
   spotifyUrl?: string;
 }
 
+
+// ─── BouncyButton Helper Component ───────────────────────────────────────────
+const BouncyButton: React.FC<{
+  onPress?: () => void;
+  disabled?: boolean;
+  style?: any;
+  children: React.ReactNode;
+}> = ({ onPress, disabled, style, children }) => {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  const handlePressIn = () => {
+    if (disabled) return;
+    Animated.spring(scaleAnim, {
+      toValue: 0.94,
+      useNativeDriver: true,
+      tension: 150,
+      friction: 8,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    if (disabled) return;
+    Animated.spring(scaleAnim, {
+      toValue: 1.0,
+      useNativeDriver: true,
+      tension: 150,
+      friction: 8,
+    }).start();
+  };
+
+  return (
+    <TouchableWithoutFeedback
+      onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      disabled={disabled}
+    >
+      <Animated.View style={[style, { transform: [{ scale: scaleAnim }] }]}>
+        {children}
+      </Animated.View>
+    </TouchableWithoutFeedback>
+  );
+};
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 const CreateBouquet: React.FC = () => {
@@ -199,6 +245,17 @@ const CreateBouquet: React.FC = () => {
     return () => task.cancel();
   }, []);
 
+  useEffect(() => {
+    if (isRandomActMode) {
+      AsyncStorage.getItem('hasShownRaokGuidelines').then(val => {
+        if (val !== 'true') {
+          // Show guidelines modal for RAOK
+          setShowRaokGuidelinesModal(true);
+        }
+      });
+    }
+  }, [isRandomActMode]);
+
   // Edit mode — set when navigating from History/Home with an existing bouquet
   const editId = route.params?.editId || null;
   const [editLoading, setEditLoading] = useState(!!editId);
@@ -219,8 +276,61 @@ const CreateBouquet: React.FC = () => {
   const [messageCard, setMessageCard] = useState<MessageCard>({ message: '', senderName: '', recipientName: '' });
   const [messageFormatting, setMessageFormatting] = useState({ fontStyle: 'default', bold: false, italic: false, underline: false });
   // Media attachments (logged-in only)
-  const [messageImage, setMessageImage] = useState<{ uri: string; url: string | null; uploading: boolean } | null>(null);
-  const [messageAudio, setMessageAudio] = useState<{ uri: string; url: string | null; uploading: boolean; duration?: number } | null>(null);
+  const [messageImages, setMessageImages] = useState<{ uri: string; url: string | null; publicId: string | null; uploading: boolean; isPendingUpload?: boolean }[]>([]);
+  const [messageAudio, setMessageAudio] = useState<{ uri: string; url: string | null; publicId: string | null; uploading: boolean; duration?: number; isPendingUpload?: boolean } | null>(null);
+
+  const uploadedSessionMediaRef = useRef<{ publicId: string; resourceType: 'image' | 'video' }[]>([]);
+  const isSubmittedRef = useRef(false);
+  const uploadTimersRef = useRef<Record<string, NodeJS.Timeout>>({});
+  const deleteTimersRef = useRef<Record<string, NodeJS.Timeout>>({});
+
+  const stateRef = useRef({ messageImages: [] as typeof messageImages, messageAudio: null as typeof messageAudio });
+
+  useEffect(() => {
+    stateRef.current = { messageImages, messageAudio };
+  }, [messageImages, messageAudio]);
+
+  useEffect(() => {
+    return () => {
+      // Clear all active upload timers
+      Object.values(uploadTimersRef.current).forEach(t => clearTimeout(t));
+      
+      if (!isSubmittedRef.current) {
+        // Cancel all pending delete timers
+        Object.values(deleteTimersRef.current).forEach(t => clearTimeout(t));
+        
+        // Delete all session-uploaded assets
+        const toDelete = [...uploadedSessionMediaRef.current];
+        toDelete.forEach(async (media) => {
+          try {
+            console.log('Cleanup delete on exit:', media.publicId);
+            await deleteAsset(media.publicId, media.resourceType);
+          } catch (e) {
+            console.error('Cleanup delete error:', e);
+          }
+        });
+      } else {
+        // If submitted, execute any pending delete timers for assets that are NOT in the final bouquet
+        const { messageImages: finalImages, messageAudio: finalAudio } = stateRef.current;
+        Object.keys(deleteTimersRef.current).forEach(async (publicId) => {
+          clearTimeout(deleteTimersRef.current[publicId]);
+          const inImages = finalImages.some(img => img.publicId === publicId);
+          const inAudio = finalAudio?.publicId === publicId;
+          
+          if (!inImages && !inAudio) {
+            try {
+              console.log('Executing immediate delete for removed asset on submit:', publicId);
+              const resourceType = publicId.includes('audio') || publicId.includes('video') ? 'video' : 'image';
+              await deleteAsset(publicId, resourceType);
+            } catch (e) {
+              console.error(e);
+            }
+          }
+        });
+      }
+    };
+  }, []);
+
 
   // ── Song ──
   const [selectedSong, setSelectedSong] = useState<YouTubeSong | null>(null);
@@ -228,11 +338,12 @@ const CreateBouquet: React.FC = () => {
   const soundRef = useRef<Audio.Sound | null>(null);
 
   // ── Modals ──
-  const [showPresets, setShowPresets] = useState(false);
+  const presetsModalRef = useRef<{ open: () => void; close: () => void } | null>(null);
   const [showSpotifyModal, setShowSpotifyModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showReviewFallbackModal, setShowReviewFallbackModal] = useState(false);
+  const [showRateUsConfirmModal, setShowRateUsConfirmModal] = useState(false);
   const [showRatingWidget, setShowRatingWidget] = useState(true);
   const [showSuccessLottie, setShowSuccessLottie] = useState(false);
   const [showUnsavedModal, setShowUnsavedModal] = useState(false);
@@ -258,7 +369,8 @@ const CreateBouquet: React.FC = () => {
     panY: meaningPanY,
     overlayOpacity: meaningOverlay,
     panHandlers: meaningPanHandlers,
-    onScroll: onMeaningScroll
+    onScroll: onMeaningScroll,
+    isInteractive: meaningInteractive
   } = useSwipeToClose(
     !!viewingMeaning,
     () => { setViewingMeaning(null); setShowColorPicker(null); }
@@ -271,6 +383,7 @@ const CreateBouquet: React.FC = () => {
     overlayOpacity: helpOverlay,
     panHandlers: helpPanHandlers,
     onScroll: onHelpScroll,
+    isInteractive: helpInteractive
   } = useSwipeToClose(showHelp, () => setShowHelp(false));
 
   // ── Presets modal swipe ──
@@ -312,7 +425,10 @@ const CreateBouquet: React.FC = () => {
 
   // ── Submission ──
   const [loading, setLoading] = useState(false);
+  const [isAiVerifying, setAiVerifying] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [showRaokSuccessModal, setShowRaokSuccessModal] = useState(false);
+  const [showRaokGuidelinesModal, setShowRaokGuidelinesModal] = useState(false);
   const isSubmittingRef = useRef(false);
   const [cardUrl, setCardUrl] = useState('');
 
@@ -352,6 +468,12 @@ const CreateBouquet: React.FC = () => {
       keyboardDidHideListener.remove();
     };
   }, []);
+
+  useEffect(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  }, [loading, isSuccess]);
+
+
 
 
   useEffect(() => {
@@ -407,13 +529,192 @@ const CreateBouquet: React.FC = () => {
   ];
 
   // ── Media upload handlers ──────────────────────────────────────────────────
-  const handleImagePicked = useCallback((result: { uri: string; url: string | null; uploading: boolean }) => {
-    setMessageImage({ uri: result.uri, url: result.url, uploading: result.uploading });
+  const handleAddImages = useCallback((newImages: { uri: string }[]) => {
+    setMessageImages(prev => {
+      const currentCount = prev.length;
+      const allowedCount = 5 - currentCount;
+      const imagesToAdd = newImages.slice(0, allowedCount).map(img => {
+        const tempId = img.uri;
+        
+        // Start debounced upload after 3 seconds
+        const timer = setTimeout(async () => {
+          setMessageImages(current => current.map(item => item.uri === tempId ? { ...item, uploading: true, isPendingUpload: false } : item));
+          
+          try {
+            console.log('Debounced upload starting for:', tempId);
+            const { url, publicId } = await uploadImage(tempId, 'bouquet-messages');
+            setMessageImages(current => current.map(item => item.uri === tempId ? { ...item, url, publicId, uploading: false } : item));
+            uploadedSessionMediaRef.current.push({ publicId, resourceType: 'image' });
+          } catch (error) {
+            console.error('Debounced image upload failed:', error);
+            setMessageImages(current => current.filter(item => item.uri !== tempId));
+            Toast.show({ type: 'error', text1: 'Upload failed', text2: 'Failed to upload photo.' });
+          }
+        }, 3000);
+        
+        uploadTimersRef.current[tempId] = timer;
+        
+        return {
+          uri: img.uri,
+          url: null,
+          publicId: null,
+          uploading: false,
+          isPendingUpload: true
+        };
+      });
+      
+      return [...prev, ...imagesToAdd];
+    });
   }, []);
 
-  const handleAudioRecorded = useCallback((result: { uri: string; url: string | null; uploading: boolean; duration: number }) => {
-    setMessageAudio({ uri: result.uri, url: result.url, uploading: result.uploading, duration: result.duration });
+  const handleRemoveImage = useCallback((index: number) => {
+    setMessageImages(prev => {
+      const updated = [...prev];
+      const imageToRemove = updated[index];
+      if (!imageToRemove) return prev;
+      
+      const uri = imageToRemove.uri;
+      if (uploadTimersRef.current[uri]) {
+        clearTimeout(uploadTimersRef.current[uri]);
+        delete uploadTimersRef.current[uri];
+      }
+      
+      if (imageToRemove.publicId) {
+        const publicId = imageToRemove.publicId;
+        console.log('Debouncing deletion of image:', publicId);
+        
+        const deleteTimer = setTimeout(async () => {
+          try {
+            console.log('Executing debounced Cloudinary delete for:', publicId);
+            await deleteAsset(publicId, 'image');
+            uploadedSessionMediaRef.current = uploadedSessionMediaRef.current.filter(item => item.publicId !== publicId);
+          } catch (e) {
+            console.error('Failed to execute debounced delete:', e);
+          }
+        }, 5000);
+        
+        deleteTimersRef.current[publicId] = deleteTimer;
+      }
+      
+      updated.splice(index, 1);
+      return updated;
+    });
   }, []);
+
+  const handleEditImage = useCallback((index: number, newImage: { uri: string }) => {
+    setMessageImages(prev => {
+      const updated = [...prev];
+      const oldImage = updated[index];
+      if (!oldImage) return prev;
+      
+      const oldUri = oldImage.uri;
+      if (uploadTimersRef.current[oldUri]) {
+        clearTimeout(uploadTimersRef.current[oldUri]);
+        delete uploadTimersRef.current[oldUri];
+      }
+      
+      if (oldImage.publicId) {
+        const oldPublicId = oldImage.publicId;
+        const deleteTimer = setTimeout(async () => {
+          try {
+            console.log('Debounced delete running for edited old image:', oldPublicId);
+            await deleteAsset(oldPublicId, 'image');
+            uploadedSessionMediaRef.current = uploadedSessionMediaRef.current.filter(item => item.publicId !== oldPublicId);
+          } catch (e) {
+            console.error('Failed to delete edited image:', e);
+          }
+        }, 5000);
+        deleteTimersRef.current[oldPublicId] = deleteTimer;
+      }
+      
+      const newUri = newImage.uri;
+      const timer = setTimeout(async () => {
+        setMessageImages(current => current.map(item => item.uri === newUri ? { ...item, uploading: true, isPendingUpload: false } : item));
+        
+        try {
+          console.log('Uploading edited image...', newUri);
+          const { url, publicId } = await uploadImage(newUri, 'bouquet-messages');
+          setMessageImages(current => current.map(item => item.uri === newUri ? { ...item, url, publicId, uploading: false } : item));
+          uploadedSessionMediaRef.current.push({ publicId, resourceType: 'image' });
+        } catch (error) {
+          console.error('Edited image upload failed:', error);
+          setMessageImages(current => current.filter(item => item.uri !== newUri));
+          Toast.show({ type: 'error', text1: 'Upload failed', text2: 'Failed to upload edited photo.' });
+        }
+      }, 3000);
+      
+      uploadTimersRef.current[newUri] = timer;
+      
+      updated[index] = {
+        uri: newUri,
+        url: null,
+        publicId: null,
+        uploading: false,
+        isPendingUpload: true
+      };
+      return updated;
+    });
+  }, []);
+
+  const handleAudioRecorded = useCallback((result: { uri: string; duration: number }) => {
+    const uri = result.uri;
+    
+    if (messageAudio?.publicId) {
+      const oldPublicId = messageAudio.publicId;
+      deleteAsset(oldPublicId, 'video').catch(e => console.error(e));
+      uploadedSessionMediaRef.current = uploadedSessionMediaRef.current.filter(item => item.publicId !== oldPublicId);
+    }
+    
+    const timer = setTimeout(async () => {
+      setMessageAudio(current => current && current.uri === uri ? { ...current, uploading: true, isPendingUpload: false } : current);
+      try {
+        console.log('Uploading audio...', uri);
+        const { url, publicId } = await uploadAudio(uri, 'bouquet-audio');
+        setMessageAudio(current => current && current.uri === uri ? { ...current, url, publicId, uploading: false } : current);
+        uploadedSessionMediaRef.current.push({ publicId, resourceType: 'video' });
+      } catch (error) {
+        console.error('Audio upload failed:', error);
+        setMessageAudio(null);
+        Toast.show({ type: 'error', text1: 'Upload failed', text2: 'Failed to upload voice note.' });
+      }
+    }, 3000);
+    
+    uploadTimersRef.current[uri] = timer;
+    
+    setMessageAudio({
+      uri,
+      url: null,
+      publicId: null,
+      uploading: false,
+      isPendingUpload: true,
+      duration: result.duration
+    });
+  }, [messageAudio]);
+
+  const handleRemoveAudio = useCallback(() => {
+    if (!messageAudio) return;
+    const uri = messageAudio.uri;
+    
+    if (uploadTimersRef.current[uri]) {
+      clearTimeout(uploadTimersRef.current[uri]);
+      delete uploadTimersRef.current[uri];
+    }
+    
+    if (messageAudio.publicId) {
+      const publicId = messageAudio.publicId;
+      const deleteTimer = setTimeout(async () => {
+        try {
+          await deleteAsset(publicId, 'video');
+          uploadedSessionMediaRef.current = uploadedSessionMediaRef.current.filter(item => item.publicId !== publicId);
+        } catch (e) {
+          console.error('Failed to delete audio:', e);
+        }
+      }, 5000);
+      deleteTimersRef.current[publicId] = deleteTimer;
+    }
+    setMessageAudio(null);
+  }, [messageAudio]);
+
 
   useEffect(() => {
     const id = setInterval(() => setPlaceholderIndex(p => (p + 1) % searchPlaceholders.length), 3000);
@@ -565,6 +866,34 @@ const CreateBouquet: React.FC = () => {
             setCustomSlug(bouquetData.slug);
             originalSlugRef.current = bouquetData.slug;
           }
+
+          // Restore images
+          if (bouquetData.messageImageUrls && bouquetData.messageImageUrls.length > 0) {
+            setMessageImages(bouquetData.messageImageUrls.map((url: string, idx: number) => {
+              const publicId = bouquetData.messageImagePublicIds?.[idx] || getPublicIdFromUrl(url);
+              return { uri: url, url, publicId, uploading: false };
+            }));
+          } else if (bouquetData.messageImageUrl) {
+            const url = bouquetData.messageImageUrl;
+            setMessageImages([{ uri: url, url, publicId: getPublicIdFromUrl(url), uploading: false }]);
+          } else {
+            setMessageImages([]);
+          }
+
+          // Restore audio
+          if (bouquetData.messageAudioUrl) {
+            const url = bouquetData.messageAudioUrl;
+            setMessageAudio({
+              uri: url,
+              url,
+              publicId: bouquetData.messageAudioPublicId || getPublicIdFromUrl(url),
+              uploading: false,
+              duration: bouquetData.messageAudioDuration || 0
+            });
+          } else {
+            setMessageAudio(null);
+          }
+
         }
       } catch (e) {
         console.error('Edit load error:', e);
@@ -653,9 +982,9 @@ const handlePresetSelect = useCallback((key: string) => {
   const newFlowers = preset.flowers.map(id => ({ id, uniqueId: uuidv4(), ...generateRandomPosition(id, [], background) }));
   setSelectedFlowers(newFlowers);
   setMessageCard({ message: preset.message, senderName: '', recipientName: preset.recipient });
-  setShowPresets(false);
+  presetsModalRef.current?.close();
   setCurrentStep(2);
-}, [locale, generateRandomPosition, background, setSelectedFlowers, setMessageCard, setShowPresets, setCurrentStep, setGreeneryBg, setBackground]);
+}, [locale, generateRandomPosition, background, setSelectedFlowers, setMessageCard, setCurrentStep, setGreeneryBg, setBackground]);
 
 // Greenery picker: BG wallpapers (1-5) switch the gradient BG;
 // greenery plants set the greenery overlay layer behind all flowers
@@ -808,8 +1137,10 @@ const generateAIBouquet = async (prompt: string) => {
 // ─── Random Act Submit ───────────────────────────────────────────────────────
 const handleRandomActSubmit = async () => {
   setLoading(true);
+  setAiVerifying(true);
   try {
     const sarvamResult = await moderateWithSarvam(messageCard.message);
+    setAiVerifying(false);
     
     if (!sarvamResult.isSafe) {
       const strikes = parseInt((await AsyncStorage.getItem('RAOK_strikes')) || '0', 10) + 1;
@@ -819,8 +1150,8 @@ const handleRandomActSubmit = async () => {
         const banUntil = Date.now() + (24 * 60 * 60 * 1000); // 24 hours
         await AsyncStorage.setItem('RAOK_banned_until', banUntil.toString());
         Alert.alert(
-          t('raok.bannedTitle', 'Feature Temporarily Disabled'),
-          t('raok.bannedMessage', 'You have repeatedly violated our safety guidelines. This feature is disabled for 24 hours.')
+          t('raok.bannedTitle') || 'Feature Temporarily Disabled',
+          t('raok.bannedMessage') || 'You have repeatedly violated our safety guidelines. This feature is disabled for 24 hours.'
         );
         navigation.navigate('Home' as any);
         return;
@@ -855,8 +1186,15 @@ const handleRandomActSubmit = async () => {
     sends.push(Date.now());
     await AsyncStorage.setItem('RAOK_sends', JSON.stringify(sends));
 
+    // Success morphing transition
+    setIsSuccess(true);
+    setLoading(false);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setIsSuccess(false);
+
     setShowRaokSuccessModal(true);
   } catch (error) {
+    setAiVerifying(false);
     console.error('Submission failed', error);
     Alert.alert('Error', 'Something went wrong. Please try again.');
   } finally {
@@ -867,7 +1205,10 @@ const handleRandomActSubmit = async () => {
 // ─── Submit ──────────────────────────────────────────────────────────────────
 const handleSubmit = async () => {
   if (loading) return;
-  if (messageImage?.uploading || messageAudio?.uploading) {
+  const hasUploadingImages = messageImages.some(img => img.uploading || img.isPendingUpload);
+  const isAudioUploading = messageAudio?.uploading || messageAudio?.isPendingUpload;
+
+  if (hasUploadingImages || isAudioUploading) {
     Toast.show({
       type: 'info',
       text1: 'Media uploading',
@@ -919,31 +1260,12 @@ const handleSubmit = async () => {
     const deviceId = await getDeviceId();
 
     let expoPushToken: string | null = null;
-    // We no longer automatically request permissions here. It's done manually via ShareModal.
 
-    // Upload media if present but not yet uploaded
-    let finalImageUrl = messageImage?.url || null;
-    let finalAudioUrl = messageAudio?.url || null;
-
-    try {
-      if (messageImage && !messageImage.url && messageImage.uri) {
-        console.log('Uploading image...', messageImage.uri);
-        const { url } = await uploadImage(messageImage.uri, 'bouquet-messages');
-        finalImageUrl = url;
-        setMessageImage(prev => prev ? { ...prev, url } : null);
-      }
-      if (messageAudio && !messageAudio.url && messageAudio.uri) {
-        console.log('Uploading audio...', messageAudio.uri);
-        const { url } = await uploadAudio(messageAudio.uri, 'bouquet-audio');
-        finalAudioUrl = url;
-        setMessageAudio(prev => prev ? { ...prev, url } : null);
-      }
-    } catch (e) {
-      console.error('Media upload error:', e);
-      setLoading(false);
-      Toast.show({ type: 'error', text1: 'Upload failed', text2: 'Failed to attach photo or voice note.' });
-      return;
-    }
+    const finalImageUrl = messageImages[0]?.url || null;
+    const finalImageUrls = messageImages.map(img => img.url).filter(Boolean);
+    const finalImagePublicIds = messageImages.map(img => img.publicId).filter(Boolean);
+    const finalAudioUrl = messageAudio?.url || null;
+    const finalAudioPublicId = messageAudio?.publicId || null;
 
     const bouquetPayload = {
       selectedFlowers,
@@ -954,7 +1276,10 @@ const handleSubmit = async () => {
       song: selectedSong ? JSON.parse(JSON.stringify(selectedSong)) : null,
       additionalSettings,
       messageImageUrl: finalImageUrl,
+      messageImageUrls: finalImageUrls,
+      messageImagePublicIds: finalImagePublicIds,
       messageAudioUrl: finalAudioUrl,
+      messageAudioPublicId: finalAudioPublicId,
       type: 'bouquet',
       userId: currentUser?.uid || deviceId,
       version: 2,
@@ -984,7 +1309,10 @@ const handleSubmit = async () => {
         song: selectedSong ? JSON.parse(JSON.stringify(selectedSong)) : null,
         additionalSettings,
         messageImageUrl: finalImageUrl,
+        messageImageUrls: finalImageUrls,
+        messageImagePublicIds: finalImagePublicIds,
         messageAudioUrl: finalAudioUrl,
+        messageAudioPublicId: finalAudioPublicId,
         updatedAt: serverTimestamp(),
       };
 
@@ -1060,9 +1388,17 @@ const handleSubmit = async () => {
         }
       } catch (_) { }
 
+      isSubmittedRef.current = true;
       setCardUrl(url);
       setCreatedBouquetId(bouquetId);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+
+      // Success morphing transition
+      setIsSuccess(true);
+      setLoading(false);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setIsSuccess(false);
+
       setShowShareModal(true);
     } else {
       // ── CREATE new bouquet ───────────────────────────────────────────────
@@ -1240,8 +1576,15 @@ const handleSubmit = async () => {
         }
       }
 
+      isSubmittedRef.current = true;
       setCardUrl(url);
       setCreatedBouquetId(bouquetId);
+
+      // Success morphing transition
+      setIsSuccess(true);
+      setLoading(false);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setIsSuccess(false);
       
       const hasPrompted = await AsyncStorage.getItem('notifications_prompted');
       if (!hasPrompted) {
@@ -1436,6 +1779,7 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
               locale={locale}
               styles={styles}
               isDark={isDark}
+              isRandomActMode={isRandomActMode}
             />
           )}
 
@@ -1519,12 +1863,14 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
               isSlugOffensive={isSlugOffensive}
               handleSlugCheck={handleSlugCheck}
               isDark={isDark}
-              messageImage={messageImage}
-              setMessageImage={setMessageImage}
+              isGoldenMode={isGoldenMode}
+              messageImages={messageImages}
               messageAudio={messageAudio}
-              setMessageAudio={setMessageAudio}
-              handleImagePicked={handleImagePicked}
+              handleAddImages={handleAddImages}
+              handleRemoveImage={handleRemoveImage}
+              handleEditImage={handleEditImage}
               handleAudioRecorded={handleAudioRecorded}
+              handleRemoveAudio={handleRemoveAudio}
               navigation={navigation}
               selectedSuggestionCategory={selectedSuggestionCategory}
               setSelectedSuggestionCategory={setSelectedSuggestionCategory}
@@ -1551,19 +1897,20 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
               <Text style={{ fontSize: 32 }}>✨</Text>
             </View>
             <Text style={{ fontFamily: 'Manrope-Bold', fontSize: 22, color: themeColors.brand, textAlign: 'center', marginBottom: 8 }}>
-              Bouquet Sent!
+              {t('raok.successTitle') || 'Bouquet Sent!'}
             </Text>
             <Text style={{ fontFamily: 'Manrope-Regular', fontSize: 15, color: themeColors.textMuted, textAlign: 'center', lineHeight: 22, marginBottom: 24 }}>
-              Your Random Act of Kindness has been submitted to our system. It is currently being analyzed by our AI for matching, and will automatically be sent to someone who needs it soon. Thank you for making the world a little brighter!
+              {t('raok.successMsg') || 'Your Random Act of Kindness has been submitted to our system. It is currently being analyzed by our AI for matching, and will automatically be sent to someone who needs it soon. Thank you for making the world a little brighter!'}
             </Text>
             <TouchableOpacity 
               style={{ backgroundColor: themeColors.brand, width: '100%', paddingVertical: 14, borderRadius: 12, alignItems: 'center' }}
               onPress={() => {
+                isForceLeavingRef.current = true;
                 setShowRaokSuccessModal(false);
-                navigation.navigate('Home' as any);
+                navigation.navigate('MainTabs' as any);
               }}
             >
-              <Text style={{ fontFamily: 'Manrope-Bold', color: '#fff', fontSize: 16 }}>Return to Home</Text>
+              <Text style={{ fontFamily: 'Manrope-Bold', color: '#fff', fontSize: 16 }}>{t('createBouquet.returnToHome') || 'Return to Home'}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -1582,6 +1929,7 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
 
           {/* Sheet */}
           <Animated.View
+            pointerEvents={meaningInteractive ? 'auto' : 'none'}
             style={[
               styles.modalBox,
               {
@@ -1611,7 +1959,7 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
                 <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
                 {viewingMeaning.colors.length === 1 && getFlowerImage(viewingMeaning.colors[0].id) && (
                   <View style={{ position: 'relative', alignItems: 'center' }}>
-                    <Image source={getFlowerImage(viewingMeaning.colors[0].id)} style={styles.meaningImg} resizeMode="contain" />
+                    <CachedImage source={getFlowerImage(viewingMeaning.colors[0].id)} style={styles.meaningImg} resizeMode="contain" />
                     {(() => {
                       const cnt = selectedFlowers.filter(f => f.id === viewingMeaning.colors[0].id).length;
                       return cnt > 0 ? (
@@ -1661,7 +2009,7 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
                         const translatedColor = getTranslatedFlowerData(locale, viewingMeaning, color.id);
                         return (
                           <TouchableOpacity key={color.id} onPress={() => setShowColorPicker(color.id)} style={[styles.colorVariantBtn, { width: (SCREEN_W - 48) / 3.5, borderColor: showColorPicker === color.id ? themeColors.brand : themeColors.border }, showColorPicker === color.id && styles.colorVariantSelected]}>
-                            <Image source={getFlowerImage(color.id)} style={{ width: 48, height: 48 }} resizeMode="contain" />
+                            <CachedImage source={getFlowerImage(color.id)} style={{ width: 48, height: 48 }} resizeMode="contain" />
                             {cnt > 0 && <View style={styles.miniCountBadge}><Text style={{ color: 'white', fontSize: 10 }}>{cnt}</Text></View>}
                             <Text style={[styles.colorVariantName, { color: themeColors.textMuted }]}>{translatedColor.name}</Text>
                           </TouchableOpacity>
@@ -1705,8 +2053,7 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
 
       {/* Presets Modal */}
       <PresetsModal
-        visible={showPresets}
-        onClose={() => setShowPresets(false)}
+        ref={presetsModalRef}
         locale={locale}
         themeColors={themeColors}
         t={t}
@@ -1734,7 +2081,13 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
               finalStatus = status;
             }
             if (finalStatus === 'granted') {
-              const tokenData = await Notifications.getExpoPushTokenAsync();
+              // SDK 52+: projectId must be passed explicitly for production builds
+              const projectId =
+                Constants?.expoConfig?.extra?.eas?.projectId ??
+                Constants?.easConfig?.projectId;
+              const tokenData = await Notifications.getExpoPushTokenAsync(
+                projectId ? { projectId } : undefined
+              );
               await updateDoc(doc(db, 'bouquet-cards', createdBouquetId), {
                 senderExpoPushToken: tokenData.data,
                 notifyOnReply: true
@@ -1784,16 +2137,10 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
                         setShowRatingWidget(false);
                         try {
                           await AsyncStorage.setItem('review_submitted', 'true');
-                          if (await StoreReview.hasAction()) {
-                            await StoreReview.requestReview();
-                          } else {
-                            await Clipboard.setStringAsync(cardUrl);
-                            setShowReviewFallbackModal(true);
-                          }
                         } catch (e) {
-                          await Clipboard.setStringAsync(cardUrl);
-                          setShowReviewFallbackModal(true);
+                          console.log('Error saving review_submitted', e);
                         }
+                        setShowRateUsConfirmModal(true);
                       }}
                     >
                       <Star fill="transparent" color="#FFB347" size={32} />
@@ -1830,8 +2177,9 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
               <TouchableOpacity
                 style={{ backgroundColor: '#FFF5F0', borderRadius: 14, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8, borderWidth: 1, borderColor: '#EAD5CC' }}
                 onPress={() => {
+                  isForceLeavingRef.current = true;
                   setShowSuccessModal(false);
-                  (navigation as any).navigate('BouquetView', { id: cardUrl.split('/').pop() });
+                  (navigation as any).replace('BouquetView', { id: cardUrl.split('/').pop() });
                 }}
               >
                 <Text style={{ color: '#7A5C58', fontFamily: 'Manrope-Bold', fontSize: 16 }}>{t('createBouquet.viewBouquet')}</Text>
@@ -1840,7 +2188,11 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
 
               <TouchableOpacity
                 style={{ paddingVertical: 12, alignItems: 'center' }}
-                onPress={() => { setShowSuccessModal(false); navigation.navigate('Home' as never); }}
+                onPress={() => { 
+                  isForceLeavingRef.current = true;
+                  setShowSuccessModal(false); 
+                  navigation.navigate('Home' as never); 
+                }}
               >
                 <Text style={{ fontFamily: 'Manrope-SemiBold', fontSize: 14, color: '#aaa' }}>{t('createBouquet.close')}</Text>
               </TouchableOpacity>
@@ -1862,9 +2214,19 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
             <View style={{ width: '100%', marginTop: 24, gap: 12 }}>
               <TouchableOpacity
                 style={{ backgroundColor: '#7A5C58', borderRadius: 14, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8 }}
-                onPress={() => {
-                  Linking.openURL('https://play.google.com/store/apps/details?id=com.egreet.digibouquet');
+                onPress={async () => {
                   setShowReviewFallbackModal(false);
+                  const marketUrl = 'market://details?id=com.digibouquet.app';
+                  const webUrl = 'https://play.google.com/store/apps/details?id=com.digibouquet.app';
+                  try {
+                    await Linking.openURL(marketUrl);
+                  } catch (err) {
+                    try {
+                      await Linking.openURL(webUrl);
+                    } catch (webErr) {
+                      console.error('Failed to open store URL from fallback modal:', webErr);
+                    }
+                  }
                 }}
               >
                 <Text style={{ color: '#fff', fontFamily: 'Manrope-Bold', fontSize: 16 }}>Open Play Store</Text>
@@ -1874,6 +2236,58 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
                 onPress={() => setShowReviewFallbackModal(false)}
               >
                 <Text style={{ fontFamily: 'Manrope-SemiBold', fontSize: 14, color: '#aaa' }}>Maybe Later</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal visible={showRateUsConfirmModal} transparent animationType="fade" onRequestClose={() => setShowRateUsConfirmModal(false)}>
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalBox, { paddingBottom: 24, alignItems: 'center', backgroundColor: themeColors.cardBg }]}>
+            <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: '#FFF5F0', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+              <Star fill="#FFB347" color="#FFB347" size={32} />
+            </View>
+            <Text style={[styles.modalTitle, { fontSize: 24, textAlign: 'center' }]}>Rate Digi Bouquet</Text>
+            <Text style={{ fontSize: 14, color: '#666', marginTop: 8, textAlign: 'center', lineHeight: 22 }}>
+              Would you mind taking a moment to rate us on the Play Store? Your feedback helps us grow!
+            </Text>
+            <View style={{ width: '100%', marginTop: 24, gap: 12 }}>
+              <TouchableOpacity
+                style={{ backgroundColor: '#7A5C58', borderRadius: 14, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8 }}
+                onPress={async () => {
+                  setShowRateUsConfirmModal(false);
+                  let success = false;
+                  try {
+                    if (Platform.OS !== 'web' && await StoreReview.isAvailableAsync() && await StoreReview.hasAction()) {
+                      await StoreReview.requestReview();
+                      success = true;
+                    }
+                  } catch (e) {
+                    console.warn('In-app review failed to open from success modal:', e);
+                  }
+                  if (!success) {
+                    const marketUrl = 'market://details?id=com.digibouquet.app';
+                    const webUrl = 'https://play.google.com/store/apps/details?id=com.digibouquet.app';
+                    try {
+                      await Linking.openURL(marketUrl);
+                    } catch (err) {
+                      try {
+                        await Linking.openURL(webUrl);
+                      } catch (webErr) {
+                        console.error('Failed to open store URL from success modal:', webErr);
+                      }
+                    }
+                  }
+                }}
+              >
+                <Text style={{ color: '#fff', fontFamily: 'Manrope-Bold', fontSize: 16 }}>Sure</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ paddingVertical: 12, alignItems: 'center' }}
+                onPress={() => setShowRateUsConfirmModal(false)}
+              >
+                <Text style={{ fontFamily: 'Manrope-SemiBold', fontSize: 14, color: '#aaa' }}>Not Now</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -1937,6 +2351,7 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
             <TouchableOpacity style={{ flex: 1 }} activeOpacity={1} onPress={() => setShowHelp(false)} />
           </Animated.View>
           <Animated.View
+            pointerEvents={helpInteractive ? 'auto' : 'none'}
             style={[
               styles.modalBox,
               {
@@ -1955,14 +2370,14 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
             </TouchableOpacity>
             <ScrollView showsVerticalScrollIndicator={false} onScroll={onHelpScroll} scrollEventThrottle={16} contentContainerStyle={{ paddingHorizontal: 16 }}>
               <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-              <Text style={{ fontSize: 16, fontFamily: 'Manrope-Bold', color: themeColors.text, marginBottom: 12 }}>How to create a bouquet</Text>
+              <Text style={{ fontSize: 16, fontFamily: 'Manrope-Bold', color: themeColors.text, marginBottom: 12 }}>{t('createBouquet.howToCreate') || 'How to create a bouquet'}</Text>
               <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 16 }}>
                 <View style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: themeColors.surface2, alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
                   <Text style={{ color: themeColors.brand, fontFamily: 'Manrope-Bold' }}>1</Text>
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontSize: 14, fontFamily: 'Manrope-SemiBold', color: themeColors.text }}>Select Flowers</Text>
-                  <Text style={{ fontSize: 13, color: themeColors.textMuted, marginTop: 2 }}>Choose at least 3 flowers to begin. Tap a flower card to see its meaning and color options.</Text>
+                  <Text style={{ fontSize: 14, fontFamily: 'Manrope-SemiBold', color: themeColors.text }}>{t('createBouquet.selectFlowers') || 'Select Flowers'}</Text>
+                  <Text style={{ fontSize: 13, color: themeColors.textMuted, marginTop: 2 }}>{t('createBouquet.selectFlowersDesc') || 'Choose at least 3 flowers to begin. Tap a flower card to see its meaning and color options.'}</Text>
                 </View>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 16 }}>
@@ -1970,8 +2385,8 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
                   <Text style={{ color: themeColors.brand, fontFamily: 'Manrope-Bold' }}>2</Text>
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontSize: 14, fontFamily: 'Manrope-SemiBold', color: themeColors.text }}>Arrange Them</Text>
-                  <Text style={{ fontSize: 13, color: themeColors.textMuted, marginTop: 2 }}>Drag flowers around the canvas. Use the toolbar to edit size, rotation, and layering.</Text>
+                  <Text style={{ fontSize: 14, fontFamily: 'Manrope-SemiBold', color: themeColors.text }}>{t('createBouquet.arrangeThem') || 'Arrange Them'}</Text>
+                  <Text style={{ fontSize: 13, color: themeColors.textMuted, marginTop: 2 }}>{t('createBouquet.arrangeThemDesc') || 'Drag flowers around the canvas. Use the toolbar to edit size, rotation, and layering.'}</Text>
                 </View>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 16 }}>
@@ -1979,8 +2394,8 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
                   <Text style={{ color: themeColors.brand, fontFamily: 'Manrope-Bold' }}>3</Text>
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontSize: 14, fontFamily: 'Manrope-SemiBold', color: themeColors.text }}>Personalize & Send</Text>
-                  <Text style={{ fontSize: 13, color: themeColors.textMuted, marginTop: 2 }}>Add a heartfelt message, pick a song, and generate a unique link to share with them.</Text>
+                  <Text style={{ fontSize: 14, fontFamily: 'Manrope-SemiBold', color: themeColors.text }}>{t('createBouquet.personalizeAndSend') || 'Personalize & Send'}</Text>
+                  <Text style={{ fontSize: 13, color: themeColors.textMuted, marginTop: 2 }}>{t('createBouquet.personalizeAndSendDesc') || 'Add a heartfelt message, pick a song, and generate a unique link to share with them.'}</Text>
                 </View>
               </View>
               </TouchableOpacity>
@@ -2150,36 +2565,60 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
         {currentStep === 1 && (
           <>
             {!isRandomActMode && (
-              <TouchableOpacity style={styles.fabSecondary} onPress={() => setShowPresets(true)}><Text style={styles.fabSecondaryText}>{t('createBouquet.presets')}</Text></TouchableOpacity>
+              <BouncyButton style={styles.fabSecondary} onPress={() => presetsModalRef.current?.open()}>
+                <Text style={styles.fabSecondaryText}>{t('createBouquet.presets')}</Text>
+              </BouncyButton>
             )}
-            <TouchableOpacity style={[styles.fabPrimary, !canProceedStep1 && styles.fabDisabled]} disabled={!canProceedStep1} onPress={() => setCurrentStep(2)}>
+            <BouncyButton style={[styles.fabPrimary, !canProceedStep1 && styles.fabDisabled, { backgroundColor: themeColors.brand || '#7A5C58' }]} disabled={!canProceedStep1} onPress={() => setCurrentStep(2)}>
               <Text style={styles.fabPrimaryText}>{t('createBouquet.continue')}</Text>
-            </TouchableOpacity>
+            </BouncyButton>
           </>
         )}
         {currentStep === 2 && !selectedFlowerForEdit && (
           <>
-            <TouchableOpacity style={styles.fabSecondary} onPress={() => setCurrentStep(1)}><Text style={styles.fabSecondaryText}>{t('createBouquet.back')}</Text></TouchableOpacity>
-            <TouchableOpacity style={styles.fabPrimary} onPress={() => setCurrentStep(3)}><Text style={styles.fabPrimaryText}>{t('createBouquet.addMessage')}</Text></TouchableOpacity>
+            <BouncyButton style={styles.fabSecondary} onPress={() => setCurrentStep(1)}>
+              <Text style={styles.fabSecondaryText}>{t('createBouquet.back')}</Text>
+            </BouncyButton>
+            <BouncyButton style={[styles.fabPrimary, { backgroundColor: themeColors.brand || '#7A5C58' }]} onPress={() => setCurrentStep(3)}>
+              <Text style={styles.fabPrimaryText}>{t('createBouquet.addMessage')}</Text>
+            </BouncyButton>
           </>
         )}
         {currentStep === 3 && (
           <>
-            {!editId && (
-              <TouchableOpacity style={styles.fabSecondary} onPress={() => setCurrentStep(2)}><Text style={styles.fabSecondaryText}>{t('createBouquet.back')}</Text></TouchableOpacity>
+            {!editId && !(loading || isSuccess) && (
+              <BouncyButton style={styles.fabSecondary} onPress={() => setCurrentStep(2)}>
+                <Text style={styles.fabSecondaryText}>{t('createBouquet.back')}</Text>
+              </BouncyButton>
             )}
-            <TouchableOpacity style={[styles.fabPrimary, (!canProceedStep3 || loading) && styles.fabDisabled]} disabled={!canProceedStep3 || loading} onPress={() => {
-              if (isSubmittingRef.current) return;
-              isSubmittingRef.current = true;
-              const submitFn = isRandomActMode ? handleRandomActSubmit : handleSubmit;
-              submitFn().finally(() => { isSubmittingRef.current = false; });
-            }}>
-              {loading ? (
+            <BouncyButton
+              disabled={!canProceedStep3 || loading || isSuccess}
+              style={[
+                styles.fabPrimary,
+                { backgroundColor: isSuccess ? '#2ecc71' : (themeColors.brand || '#7A5C58') },
+                (!canProceedStep3 || (loading && !isSuccess)) && styles.fabDisabled,
+                (loading || isSuccess) && { flex: 0, width: 56, height: 56, borderRadius: 28 }
+              ]}
+              onPress={() => {
+                if (isSubmittingRef.current) return;
+                isSubmittingRef.current = true;
+                const submitFn = isRandomActMode ? handleRandomActSubmit : handleSubmit;
+                submitFn().finally(() => { isSubmittingRef.current = false; });
+              }}
+            >
+              {isSuccess ? (
+                <Check size={24} color="white" />
+              ) : loading ? (
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                  <ActivityIndicator color="#fff" size="small" />
+                  {isAiVerifying && (
+                    <Text style={[styles.fabPrimaryText, { color: '#fff' }]}>{t('createBouquet.verifyingAi', 'Verifying with AI...')}</Text>
+                  )}
+                </View>
+              ) : (hasUploadingImages || messageAudio?.uploading) ? (
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                  <ActivityIndicator color="#fff" />
-                  <Text style={styles.fabPrimaryText}>
-                    {((messageImage && !messageImage.url && messageImage.uri) || (messageAudio && !messageAudio.url && messageAudio.uri)) ? 'Uploading assets...' : t('createBouquet.creating')}
-                  </Text>
+                  <ActivityIndicator color="#fff" size="small" />
+                  <Text style={styles.fabPrimaryText}>{t('createBouquet.uploadingAssets', 'Uploading Assets...')}</Text>
                 </View>
               ) : (
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
@@ -2187,11 +2626,92 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
                   <Check size={18} color="white" />
                 </View>
               )}
-            </TouchableOpacity>
+            </BouncyButton>
           </>
         )}
       </Animated.View>
     )}
+
+    {/* ── Random Act of Kindness Guidelines Modal ── */}
+    <Modal
+      visible={showRaokGuidelinesModal}
+      transparent={true}
+      animationType="fade"
+      statusBarTranslucent={true}
+    >
+      <View style={styles.raokModalBackdrop}>
+        <View style={[styles.raokModalContainer, { backgroundColor: themeColors.bg, borderColor: themeColors.border }]}>
+          {/* Header */}
+          <View style={styles.raokModalHeader}>
+            <View style={[styles.raokIconWrapper, { backgroundColor: isDark ? 'rgba(196, 151, 143, 0.15)' : 'rgba(122, 92, 88, 0.1)' }]}>
+              <Heart size={32} color={themeColors.brand || '#7A5C58'} />
+            </View>
+            <Text style={[styles.raokModalTitle, { color: themeColors.text }]}>{t('raok.guidelinesTitle') || 'Random Act of Kindness'}</Text>
+            <Text style={[styles.raokModalSubtitle, { color: themeColors.textMuted }]}>
+              {t('raok.guidelinesSubtitle') || 'Send a little warmth and surprise a stranger! Here is how it works & guidelines to follow.'}
+            </Text>
+          </View>
+
+          {/* Rules/Info List */}
+          <View style={styles.raokRulesList}>
+            {/* Rule 1: How it works */}
+            <View style={styles.raokRuleRow}>
+              <View style={[styles.raokRuleNumWrapper, { backgroundColor: isDark ? '#3D3533' : '#f0f0f0' }]}>
+                <Text style={[styles.raokRuleNumText, { color: themeColors.text }]}>1</Text>
+              </View>
+              <View style={styles.raokRuleTextContainer}>
+                <Text style={[styles.raokRuleTitle, { color: themeColors.text }]}>{t('raok.rule1Title') || 'Spread Joy Anonymously'}</Text>
+                <Text style={[styles.raokRuleDesc, { color: themeColors.textMuted }]}>
+                  {t('raok.rule1Desc') || 'Your bouquet and message will be randomly matched by AI to someone who needs a smile today, completely anonymously.'}
+                </Text>
+              </View>
+            </View>
+
+            {/* Rule 2: Keep it positive */}
+            <View style={styles.raokRuleRow}>
+              <View style={[styles.raokRuleNumWrapper, { backgroundColor: isDark ? '#3D3533' : '#f0f0f0' }]}>
+                <Text style={[styles.raokRuleNumText, { color: themeColors.text }]}>2</Text>
+              </View>
+              <View style={styles.raokRuleTextContainer}>
+                <Text style={[styles.raokRuleTitle, { color: themeColors.text }]}>{t('raok.rule2Title') || 'Be Positive & Uplifting'}</Text>
+                <Text style={[styles.raokRuleDesc, { color: themeColors.textMuted }]}>
+                  {t('raok.rule2Desc') || 'Write warm, encouraging words. Leave comments that inspire hope, kindness, and support.'}
+                </Text>
+              </View>
+            </View>
+
+            {/* Rule 3: Keep it safe */}
+            <View style={styles.raokRuleRow}>
+              <View style={[styles.raokRuleNumWrapper, { backgroundColor: isDark ? '#3D3533' : '#f0f0f0' }]}>
+                <Text style={[styles.raokRuleNumText, { color: themeColors.text }]}>3</Text>
+              </View>
+              <View style={styles.raokRuleTextContainer}>
+                <Text style={[styles.raokRuleTitle, { color: themeColors.text }]}>{t('raok.rule3Title') || 'No Personal Information'}</Text>
+                <Text style={[styles.raokRuleDesc, { color: themeColors.textMuted }]}>
+                  {t('raok.rule3Desc') || 'For your safety and others, do not include names, phone numbers, addresses, social handles, or links.'}
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          {/* CTA Button */}
+          <TouchableOpacity
+            style={[styles.raokSoundsGoodBtn, { backgroundColor: themeColors.brand || '#7A5C58' }]}
+            onPress={async () => {
+              try {
+                await AsyncStorage.setItem('hasShownRaokGuidelines', 'true');
+              } catch (e) {
+                console.warn(e);
+              }
+              setShowRaokGuidelinesModal(false);
+            }}
+            activeOpacity={0.9}
+          >
+            <Text style={styles.raokSoundsGoodText}>{t('raok.soundsGood') || 'Sounds good'}</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
   </SafeAreaView>
 );
 };
@@ -2225,7 +2745,7 @@ const styles = StyleSheet.create({
   searchIcon: { fontSize: 16, marginRight: 6 },
   searchInput: { flex: 1, fontSize: 15, paddingVertical: 10, color: '#7A5C58' },
   clearBtn: { fontSize: 16, color: '#999', paddingLeft: 8 },
-  clearAllBtn: { paddingHorizontal: 14, paddingVertical: 10, backgroundColor: '#e74c3c', borderRadius: 30 },
+  clearAllBtn: { paddingHorizontal: 10, height: 48, justifyContent: 'center', backgroundColor: '#e74c3c', borderRadius: 24 },
   clearAllBtnText: { color: 'white', fontSize: 13, fontWeight: '500' },
 
   noResultsBox: { alignItems: 'center', padding: 30, backgroundColor: 'white', borderRadius: 12, borderWidth: 2, borderColor: '#7A5C58', marginVertical: 20 },
@@ -2492,4 +3012,92 @@ const styles = StyleSheet.create({
     opacity: 0.85,
   },
   // ─── END GOLDEN BOUQUET FEATURE ──────────────────────────────────────────────
+  // RAOK Guidelines Modal styles
+  raokModalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  raokModalContainer: {
+    width: '100%',
+    maxWidth: 360,
+    borderRadius: 24,
+    borderWidth: 1,
+    padding: 24,
+    alignItems: 'center',
+  },
+  raokModalHeader: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  raokIconWrapper: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  raokModalTitle: {
+    fontFamily: 'Manrope-Bold',
+    fontSize: 20,
+    textAlign: 'center',
+    marginBottom: 6,
+  },
+  raokModalSubtitle: {
+    fontFamily: 'Manrope-Regular',
+    fontSize: 13,
+    textAlign: 'center',
+    lineHeight: 18,
+    paddingHorizontal: 6,
+  },
+  raokRulesList: {
+    width: '100%',
+    gap: 16,
+    marginBottom: 24,
+  },
+  raokRuleRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+  },
+  raokRuleNumWrapper: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 2,
+  },
+  raokRuleNumText: {
+    fontFamily: 'Manrope-Bold',
+    fontSize: 12,
+  },
+  raokRuleTextContainer: {
+    flex: 1,
+  },
+  raokRuleTitle: {
+    fontFamily: 'Manrope-Bold',
+    fontSize: 14,
+    marginBottom: 2,
+  },
+  raokRuleDesc: {
+    fontFamily: 'Manrope-Regular',
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  raokSoundsGoodBtn: {
+    width: '100%',
+    paddingVertical: 13,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  raokSoundsGoodText: {
+    fontFamily: 'Manrope-Bold',
+    fontSize: 15,
+    color: '#FAF7F2',
+  },
 });

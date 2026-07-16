@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, getStateFromPath } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import CustomTabBar from './components/CustomTabBar';
@@ -23,7 +23,8 @@ import { JosefinSans_400Regular, JosefinSans_600SemiBold } from '@expo-google-fo
 import { Cinzel_400Regular, Cinzel_700Bold } from '@expo-google-fonts/cinzel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Platform, View, Text } from 'react-native';
+import { Platform, View, Text, Linking, LogBox } from 'react-native';
+import * as Notifications from 'expo-notifications';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 import { Check, X, Info as InfoIcon } from 'lucide-react-native';
@@ -31,6 +32,7 @@ import { collection, query, onSnapshot, orderBy, limit, where } from 'firebase/f
 import { db } from './firebase';
 import { useAuth , AuthProvider } from './contexts/AuthContext';
 import { scheduleInteractionNotification , scheduleHolidayNotifications } from './utils/notifications';
+import { checkForInstallReferrer } from './utils/referral';
 
 import { AlertProvider } from './contexts/AlertContext';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
@@ -39,6 +41,13 @@ import { AccessibilityProvider } from './contexts/AccessibilityContext';
 import { CountryProvider } from './contexts/CountryContext';
 
 
+LogBox.ignoreLogs([
+  'Encountered an error loading page',
+  'react-native-youtube-iframe',
+  '@firebase/firestore: Firestore',
+  'Instant email failed',
+  'WebChannelConnection RPC'
+]);
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -177,6 +186,66 @@ const linking = {
       Home: '*',
     },
   },
+  getStateFromPath(path, options) {
+    const urlParts = path.split('?');
+    const cleanPath = urlParts[0];
+    const queryString = urlParts[1] || '';
+    const normalizedPath = cleanPath.replace(/^\/+/, '');
+    
+    if (normalizedPath.startsWith('bouquet/')) {
+      let id = '';
+      if (normalizedPath === 'bouquet/reply') {
+        const match = queryString.match(/(?:^|&)id=([^&]+)/);
+        if (match) {
+          id = decodeURIComponent(match[1]);
+        }
+      } else {
+        id = normalizedPath.substring('bouquet/'.length);
+      }
+      
+      if (id) {
+        return {
+          routes: [
+            {
+              name: 'MainTabs',
+            },
+            {
+              name: 'BouquetView',
+              params: { id }
+            }
+          ]
+        };
+      }
+    }
+    return getStateFromPath(path, options);
+  },
+  async getInitialURL() {
+    const url = await Linking.getInitialURL();
+    if (url != null) return url;
+    
+    // Check if app was opened from a push notification
+    const response = await Notifications.getLastNotificationResponseAsync();
+    const notifUrl = response?.notification?.request?.content?.data?.url;
+    if (notifUrl) return notifUrl;
+    
+    return null;
+  },
+  subscribe(listener) {
+    const onReceiveURL = ({ url }) => listener(url);
+    const linkingSubscription = Linking.addEventListener('url', onReceiveURL);
+    
+    const notificationSubscription = Notifications.addNotificationResponseReceivedListener(response => {
+      const url = response.notification.request.content.data.url;
+      if (url) {
+        listener(url);
+      }
+    });
+    
+    return () => {
+      linkingSubscription.remove();
+      notificationSubscription.remove();
+    };
+  }
 };
 
 function ThemedNavigator({ initialRoute }) {
@@ -281,8 +350,11 @@ function InteractionListener() {
       snap.docChanges().forEach((change) => {
         if (change.type === 'added') {
           const d = change.doc.data();
-          if (!d.read && (d.type === 'reply' || d.type === 'referral')) {
-            scheduleInteractionNotification(d.type, d.username);
+          // Only schedule a local notification for 'referral' — reply push is
+          // already sent by the Cloud Function (onBouquetReply). Firing it here
+          // too would cause a double-notification for every reply.
+          if (!d.read && d.type === 'referral') {
+            scheduleInteractionNotification(d.type, d.username, d.bouquetId);
           }
         }
       });
@@ -362,6 +434,9 @@ export default function AppShell({ onReady }) {
 
     // Schedule holiday notifications (if enabled by user)
     scheduleHolidayNotifications();
+
+    // Check for Android Google Play install referrer
+    checkForInstallReferrer();
 
     return () => clearTimeout(timer);
   }, []);

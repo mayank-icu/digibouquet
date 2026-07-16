@@ -16,6 +16,7 @@ import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as Haptics from '../utils/haptics';
 import { useTheme } from '../contexts/ThemeContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { soundManager } from '../utils/soundManager';
 
 const { width: SCREEN_W } = Dimensions.get('window');
@@ -23,6 +24,7 @@ const { width: SCREEN_W } = Dimensions.get('window');
 export default function GameHubScreen() {
   const navigation = useNavigation() as any;
   const { theme: t, isDark } = useTheme();
+  const { t: translate } = useLanguage();
   const insets = useSafeAreaInsets();
 
   const swipeRef = useRef(
@@ -77,9 +79,9 @@ export default function GameHubScreen() {
       >
         {/* Title / Description */}
         <View style={{ marginBottom: 28 }}>
-          <Text style={[styles.title, { color: t.text }]}>Blossom Garden Games</Text>
+          <Text style={[styles.title, { color: t.text }]}>{translate('games.title') || 'Blossom Garden Games'}</Text>
           <Text style={[styles.subtitle, { color: t.textMuted }]}>
-            Relax and play our cozy flower mini-games to unlock new bouquet designs and ideas.
+            {translate('games.subtitle') || 'Relax and play our cozy flower mini-games to unlock new bouquet designs and ideas.'}
           </Text>
         </View>
 
@@ -91,19 +93,19 @@ export default function GameHubScreen() {
             activeOpacity={0.85}
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-              navigation.navigate('GameLevelPath', { gameId: 'sort', title: 'Blossom Sort' });
+              navigation.navigate('GameLevelPath', { gameId: 'sort', title: translate('games.sortTitle') || 'Blossom Sort' });
             }}
           >
             <View style={[styles.iconContainer, { backgroundColor: t.brand + '15' }]}>
               <MaterialCommunityIcons name="flower-tulip-outline" size={32} color={t.brand} />
             </View>
             <View style={{ flex: 1, marginLeft: 16 }}>
-              <Text style={[styles.gameTitle, { color: t.text }]}>Blossom Sort Puzzle</Text>
+              <Text style={[styles.gameTitle, { color: t.text }]}>{translate('games.sortTitle') || 'Blossom Sort Puzzle'}</Text>
               <Text style={[styles.gameDesc, { color: t.textMuted }]}>
-                Sort matching flower stems into identical slots. Tap to select and move.
+                {translate('games.sortDesc') || 'Sort matching flower stems into identical slots. Tap to select and move.'}
               </Text>
               <View style={styles.playRow}>
-                <Text style={[styles.playText, { color: t.brand }]}>Play Now</Text>
+                <Text style={[styles.playText, { color: t.brand }]}>{translate('games.playNow') || 'Play Now'}</Text>
                 <Feather name="arrow-right" size={14} color={t.brand} style={{ marginLeft: 4 }} />
               </View>
             </View>
@@ -115,19 +117,19 @@ export default function GameHubScreen() {
             activeOpacity={0.85}
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-              navigation.navigate('GameLevelPath', { gameId: 'match3', title: 'Blossom Match' });
+              navigation.navigate('GameLevelPath', { gameId: 'match3', title: translate('games.matchTitle') || 'Blossom Match' });
             }}
           >
             <View style={[styles.iconContainer, { backgroundColor: '#FF8A8A15' }]}>
               <MaterialCommunityIcons name="grid" size={32} color="#FF8A8A" />
             </View>
             <View style={{ flex: 1, marginLeft: 16 }}>
-              <Text style={[styles.gameTitle, { color: t.text }]}>Blossom Match</Text>
+              <Text style={[styles.gameTitle, { color: t.text }]}>{translate('games.matchTitle') || 'Blossom Match'}</Text>
               <Text style={[styles.gameDesc, { color: t.textMuted }]}>
-                Swap adjacent flowers to match 3 or more in a row and trigger cascading combos.
+                {translate('games.matchDesc') || 'Swap adjacent flowers to match 3 or more in a row and trigger cascading combos.'}
               </Text>
               <View style={styles.playRow}>
-                <Text style={[styles.playText, { color: t.brand }]}>Play Now</Text>
+                <Text style={[styles.playText, { color: t.brand }]}>{translate('games.playNow') || 'Play Now'}</Text>
                 <Feather name="arrow-right" size={14} color={t.brand} style={{ marginLeft: 4 }} />
               </View>
             </View>

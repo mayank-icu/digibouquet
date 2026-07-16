@@ -9,6 +9,7 @@ import * as Clipboard from 'expo-clipboard';
 import { ChevronLeft, Gift, Share2, Sparkles } from 'lucide-react-native';
 import { doc, getDoc, setDoc, increment, collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const GOLD_DARK   = '#8B6914';
 const GOLD_MID    = '#C9960C';
@@ -18,6 +19,7 @@ const GOLD_BORDER = '#D4AF37';
 export default function GoldenBouquetScreen() {
   const navigation = useNavigation();
   const { currentUser } = useAuth();
+  const { t } = useLanguage();
   const [referralCode, setReferralCode] = useState('');
   const [loading, setLoading] = useState(false);
   const shimmerAnim = useRef(new Animated.Value(0)).current;
@@ -89,7 +91,7 @@ export default function GoldenBouquetScreen() {
     if (!enteredCode) return;
 
     if (enteredCode === userUniqueCode) {
-      Toast.show({ type: 'error', text1: 'You cannot use your own code.' });
+      Toast.show({ type: 'error', text1: t('golden.ownCodeError') || 'You cannot use your own code.' });
       return;
     }
 
@@ -100,7 +102,7 @@ export default function GoldenBouquetScreen() {
       const claimSnap = await getDoc(claimRef);
       if (claimSnap.exists()) {
         setLoading(false);
-        Toast.show({ type: 'error', text1: 'You have already claimed this code.' });
+        Toast.show({ type: 'error', text1: t('golden.alreadyClaimedError') || 'You have already claimed this code.' });
         return;
       }
 
@@ -109,49 +111,32 @@ export default function GoldenBouquetScreen() {
       const codeSnap = await getDoc(codeRef);
       if (!codeSnap.exists()) {
         setLoading(false);
-        Toast.show({ type: 'error', text1: 'Invalid code.' });
+        Toast.show({ type: 'error', text1: t('golden.invalidCodeError') || 'Invalid code.' });
         return;
       }
 
-      const creatorUid = codeSnap.data().ownerUid;
-
-      // 3. Update both users and record claim
-      // Mark as claimed
-      await setDoc(claimRef, { claimedAt: Date.now() });
-
       // Add to creator's joined users
-      const joinedRef = doc(db, `golden_codes/${enteredCode}/joined_users`, currentUser.uid);
-      await setDoc(joinedRef, { 
-        name: currentUser.displayName || currentUser.email?.split('@')[0] || 'A Friend',
-        date: new Date().toLocaleDateString()
+      const projectId = process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || 'digibouquet-app';
+      const res = await fetch(`https://asia-south1-${projectId}.cloudfunctions.net/claimGoldenReferral`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          referralCode: referralCode.trim(),
+          userId: currentUser.uid,
+        })
       });
-
-      // Increment credits for receiver
-      await setDoc(doc(db, 'users', currentUser.uid), {
-        goldenCredits: increment(1)
-      }, { merge: true });
-
-      // Increment credits for creator
-      await setDoc(doc(db, 'users', creatorUid), {
-        goldenCredits: increment(1)
-      }, { merge: true });
-
-      setLoading(false);
-      Toast.show({ type: 'success', text1: 'Golden Bouquet Unlocked! +1 Credit' });
-      setReferralCode('');
-      
-      // Optionally navigate immediately, or let them see the success and credit bump
-      // navigation.navigate('CreateBouquet' as any, { goldenMode: true, fadeUp: true } as any);
-
+      const data = await res.json();
+      if (res.ok) {
+        Toast.show({ type: 'success', text1: t('golden.claimSuccess') || 'Claimed Successfully!', text2: t('golden.claimSuccessDesc') || 'You earned a Golden Credit.' });
+        setReferralCode('');
+      } else {
+        Toast.show({ type: 'error', text1: t('golden.failed') || 'Failed', text2: data.error || t('golden.invalidCodeError') || 'Invalid code.' });
+      }
     } catch (e) {
-      console.error(e);
+      Toast.show({ type: 'error', text1: t('golden.error') || 'Error', text2: t('golden.connectionError') || 'Could not connect to server.' });
+    } finally {
       setLoading(false);
-      Toast.show({ type: 'error', text1: 'Error claiming code. Please try again.' });
     }
-  };
-
-  const handleCreateTesting = () => {
-    navigation.navigate('CreateBouquet' as any, { goldenMode: true, fadeUp: true } as any);
   };
 
   const copyUniqueCode = async () => {
@@ -160,8 +145,13 @@ export default function GoldenBouquetScreen() {
       return;
     }
     try {
+      const playStoreLink = `https://play.google.com/store/apps/details?id=com.digibouquet.app&referrer=utm_content%3D${userUniqueCode}`;
+      const defaultMsg = `Unlock the Golden Bouquet with my invitation! Download the app and enter my code ${userUniqueCode} or use this link to automatically claim your credit: ${playStoreLink}`;
+      const translatedMsg = (t('golden.shareText') || defaultMsg)
+        .replace('{code}', userUniqueCode)
+        .replace('{link}', playStoreLink);
       await Share.share({
-        message: `Here is my Golden Bouquet code: ${userUniqueCode}`
+        message: translatedMsg
       });
     } catch (error) {
       // ignore
@@ -184,7 +174,9 @@ export default function GoldenBouquetScreen() {
           </TouchableOpacity>
           <View style={styles.creditsBadge}>
             <Sparkles size={14} color="#1A1200" />
-            <Text style={styles.creditsText}>{goldenCredits} Credits</Text>
+            <Text style={styles.creditsText}>
+              {goldenCredits} {goldenCredits === 0 || goldenCredits === 1 ? t('golden.credit') : t('golden.credits')}
+            </Text>
           </View>
         </View>
 
@@ -195,8 +187,8 @@ export default function GoldenBouquetScreen() {
         >
           {/* Header Title & Subtitle */}
           <View style={styles.titleContainer}>
-            <Text style={styles.mainTitle}>Golden Bouquet</Text>
-            <Text style={styles.subTitle}>An exclusive, limited edition arrangement designed to capture life's most precious moments.</Text>
+            <Text style={styles.mainTitle}>{t('golden.title') || 'Golden Bouquet'}</Text>
+            <Text style={styles.subTitle}>{t('golden.subtitle') || 'An exclusive, limited edition arrangement designed to capture life\'s most precious moments.'}</Text>
           </View>
 
           {/* Unified Elegant Card */}
@@ -214,14 +206,14 @@ export default function GoldenBouquetScreen() {
               <View style={styles.actionBlock}>
                 <View style={styles.blockHeaderRow}>
                   <Gift size={20} color={GOLD_LIGHT} />
-                  <Text style={styles.blockTitle}>Claim Invitation</Text>
+                  <Text style={styles.blockTitle}>{t('golden.claimTitle') || 'Claim Invitation'}</Text>
                 </View>
-                <Text style={styles.blockDesc}>Received a golden invitation? Enter your code below to unlock your creation.</Text>
+                <Text style={styles.blockDesc}>{t('golden.claimDesc') || 'Received a golden invitation? Enter your code below to unlock your creation.'}</Text>
                 
                 <View style={styles.inputRow}>
                   <TextInput 
                     style={styles.input}
-                    placeholder="Enter referral code"
+                    placeholder={t('golden.inputPlaceholder') || 'Enter referral code'}
                     placeholderTextColor="rgba(245, 200, 66, 0.4)"
                     value={referralCode}
                     onChangeText={setReferralCode}
@@ -232,7 +224,7 @@ export default function GoldenBouquetScreen() {
                     disabled={!referralCode || loading}
                     onPress={handleClaim}
                   >
-                    <Text style={styles.actionBtnText}>{loading ? '...' : 'Unlock'}</Text>
+                    <Text style={styles.actionBtnText}>{loading ? '...' : (t('golden.unlock') || 'Unlock')}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -243,23 +235,23 @@ export default function GoldenBouquetScreen() {
               <View style={styles.actionBlock}>
                 <View style={styles.blockHeaderRow}>
                   <Share2 size={20} color={GOLD_LIGHT} />
-                  <Text style={styles.blockTitle}>Share the Magic</Text>
+                  <Text style={styles.blockTitle}>{t('golden.shareTitle') || 'Share the Magic'}</Text>
                 </View>
-                <Text style={styles.blockDesc}>Invite friends with your unique code. You both earn a Golden Credit when they use it.</Text>
+                <Text style={styles.blockDesc}>{t('golden.shareDesc') || 'Invite friends with your unique code. You both earn a Golden Credit when they use it.'}</Text>
                 
                 <View style={styles.codeRow}>
                   <Text style={styles.codeText}>
-                    {currentUser ? userUniqueCode : 'Sign in to get code'}
+                    {currentUser ? userUniqueCode : (t('golden.signInToGetCode') || 'Sign in to get code')}
                   </Text>
                   <TouchableOpacity style={styles.copyBtn} onPress={copyUniqueCode}>
-                    <Text style={styles.copyBtnText}>Share</Text>
+                    <Text style={styles.copyBtnText}>{t('golden.share') || 'Share'}</Text>
                   </TouchableOpacity>
                 </View>
                 
                 {/* Joined Users List */}
                 {joinedUsers.length > 0 && (
                   <View style={{ marginTop: 24 }}>
-                    <Text style={[styles.blockTitle, { fontSize: 16, marginBottom: 12 }]}>Friends Joined</Text>
+                    <Text style={[styles.blockTitle, { fontSize: 16, marginBottom: 12 }]}>{t('golden.friendsJoined') || 'Friends Joined'}</Text>
                     {joinedUsers.map((u, i) => (
                       <View key={u.id} style={styles.joinedUserRow}>
                         <View style={styles.joinedUserAvatar}>
@@ -281,8 +273,21 @@ export default function GoldenBouquetScreen() {
             </View>
           </View>
 
-          {/* Testing Mode */}
-          <TouchableOpacity style={styles.testBtn} onPress={handleCreateTesting} activeOpacity={0.8}>
+          <TouchableOpacity 
+            style={[styles.testBtn, goldenCredits <= 0 && { opacity: 0.6 }]} 
+            onPress={() => {
+              if (goldenCredits > 0) {
+                navigation.navigate('CreateBouquet' as any, { goldenMode: true, fadeUp: true } as any);
+              } else {
+                Toast.show({
+                  type: 'error',
+                  text1: t('golden.noCredits') || 'No Golden Credits',
+                  text2: t('golden.noCreditsDesc') || 'Invite friends or use a code to earn credits.'
+                });
+              }
+            }} 
+            activeOpacity={0.8}
+          >
             <LinearGradient
               colors={['#C9960C', '#8B6914']}
               start={{ x: 0, y: 0 }}
@@ -290,7 +295,7 @@ export default function GoldenBouquetScreen() {
               style={styles.testBtnGradient}
             >
               <Sparkles size={18} color="#1A1200" />
-              <Text style={styles.testBtnText}>Preview Design (Test Mode)</Text>
+              <Text style={styles.testBtnText}>{t('golden.create') || 'Create Golden Bouquet'}</Text>
             </LinearGradient>
           </TouchableOpacity>
           
@@ -311,6 +316,9 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 16,
     paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   backBtn: {
     width: 44,

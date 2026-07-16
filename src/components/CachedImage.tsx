@@ -7,16 +7,52 @@ interface CachedImageProps extends ImageProps {
   source: any;
 }
 
+export const preloadImage = async (uri: string) => {
+  if (!uri || typeof uri !== 'string' || !uri.startsWith('http')) return;
+  try {
+    const hashed = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, uri);
+    const ext = uri.split('.').pop()?.split('?')[0] || 'jpg';
+    const validExt = ext.length > 5 ? 'jpg' : ext;
+    const filename = `proxy_${hashed}.${validExt}`;
+    // @ts-ignore
+    const fileUri = `${FileSystem.cacheDirectory}${filename}`;
+
+    const info = await FileSystem.getInfoAsync(fileUri);
+    if (!info.exists) {
+      let downloadUri = uri;
+      if (uri.includes('res.cloudinary.com')) {
+        const noProtocol = uri.replace(/^https?:\/\//, '');
+        const proxyBase = process.env.EXPO_PUBLIC_IMAGE_PROXY_URL || 'https://wsrv.nl/?url=';
+        downloadUri = `${proxyBase}${encodeURIComponent(noProtocol)}`;
+      }
+      let res = await FileSystem.downloadAsync(downloadUri, fileUri);
+      if (res.status !== 200 && downloadUri !== uri) {
+        await FileSystem.downloadAsync(uri, fileUri);
+      }
+    }
+  } catch (error) {
+    // Ignore preload errors
+  }
+};
+
 export const CachedImage = (props: CachedImageProps) => {
+  const { source, ...imageProps } = props;
   const [cachedSource, setCachedSource] = useState<any>(null);
   const [proxyFailed, setProxyFailed] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+  const lastSourceRef = React.useRef(source);
 
   useEffect(() => {
+    if (lastSourceRef.current !== source) {
+      lastSourceRef.current = source;
+      setRetryCount(0);
+      setProxyFailed(false);
+      return;
+    }
+
     let isMounted = true;
     
     const loadCachedImage = async () => {
-      const { source } = props;
-      
       // Fallback for Web or non-network images
       if (
         Platform.OS === 'web' ||
@@ -47,7 +83,6 @@ export const CachedImage = (props: CachedImageProps) => {
         );
         const ext = uri.split('.').pop()?.split('?')[0] || 'jpg';
         const validExt = ext.length > 5 ? 'jpg' : ext;
-        // Use a different filename prefix if we're proxying so we don't mix cache
         const filename = `${proxyFailed ? 'orig_' : 'proxy_'}${hashed}.${validExt}`;
         // @ts-ignore
         const fileUri = `${FileSystem.cacheDirectory}${filename}`;
@@ -92,22 +127,27 @@ export const CachedImage = (props: CachedImageProps) => {
     return () => {
       isMounted = false;
     };
-  }, [props.source, proxyFailed]);
+  }, [source, proxyFailed, retryCount]);
 
   if (!cachedSource) {
-    let sourceToUse = props.source;
-    if (props.source && props.source.uri && typeof props.source.uri === 'string' && props.source.uri.includes('res.cloudinary.com') && !proxyFailed) {
-      const noProtocol = props.source.uri.replace(/^https?:\/\//, '');
+    let sourceToUse = source;
+    if (source && source.uri && typeof source.uri === 'string' && source.uri.includes('res.cloudinary.com') && !proxyFailed) {
+      const noProtocol = source.uri.replace(/^https?:\/\//, '');
       const proxyBase = process.env.EXPO_PUBLIC_IMAGE_PROXY_URL || 'https://wsrv.nl/?url=';
-      sourceToUse = { ...props.source, uri: `${proxyBase}${encodeURIComponent(noProtocol)}` };
+      sourceToUse = { ...source, uri: `${proxyBase}${encodeURIComponent(noProtocol)}` };
     }
     return (
       <Image 
-        {...props} 
+        {...imageProps} 
         source={sourceToUse} 
         onError={(e) => {
-          if (props.onError) props.onError(e);
+          if (imageProps.onError) imageProps.onError(e);
           setProxyFailed(true);
+          if (retryCount < 3) {
+            setTimeout(() => {
+              setRetryCount(prev => prev + 1);
+            }, 2000);
+          }
         }} 
       />
     );
@@ -115,13 +155,18 @@ export const CachedImage = (props: CachedImageProps) => {
 
   return (
     <Image 
-      {...props} 
+      {...imageProps} 
       source={cachedSource} 
       onError={(e) => {
-        if (props.onError) props.onError(e);
+        if (imageProps.onError) imageProps.onError(e);
         if (cachedSource && cachedSource.uri && cachedSource.uri.includes('wsrv.nl')) {
           setProxyFailed(true);
-          setCachedSource(props.source);
+          setCachedSource(source);
+        }
+        if (retryCount < 3) {
+          setTimeout(() => {
+            setRetryCount(prev => prev + 1);
+          }, 2000);
         }
       }}
     />

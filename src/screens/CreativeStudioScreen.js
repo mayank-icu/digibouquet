@@ -20,7 +20,7 @@ export default function CreativeStudioScreen({ navigation }) {
 
   const swipeHandlers = useSwipeNavigation({
     onSwipeLeft: () => navigation.navigate('History', { fade: true }),
-    onSwipeRight: () => navigation.navigate('Home', { fade: true }),
+    onSwipeRight: () => navigation.navigate('MainTabs', { screen: 'Home', fade: true }),
   });
 
   // Scroll Animations for Floating Tab Bar

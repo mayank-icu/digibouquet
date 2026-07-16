@@ -34,7 +34,7 @@ const MID   = '#EAE0D5';
 const WHITE = '#fff';
 const RED   = '#E05252';
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ navigation, route }) {
   const insets = useSafeAreaInsets();
   const { theme: t, isDark } = useTheme();
   const { t: tr } = useLanguage();
@@ -46,7 +46,11 @@ export default function LoginScreen({ navigation }) {
   const [loading, setLoading]   = useState(false);
 
   const handleBack = () => {
-    navigation.replace('MainTabs');
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.replace('MainTabs');
+    }
   };
 
   const swipeHandlers = useSwipeNavigation({
@@ -55,9 +59,9 @@ export default function LoginScreen({ navigation }) {
 
   React.useEffect(() => {
     if (currentUser) {
-      navigation.replace('ProActivation');
+      navigation.replace('ProActivation', { fromScreen: route.params?.fromScreen });
     }
-  }, [currentUser, navigation]);
+  }, [currentUser, navigation, route.params?.fromScreen]);
 
   const handleLogin = async () => {
     if (!email.trim() || !password) return;
@@ -153,7 +157,7 @@ export default function LoginScreen({ navigation }) {
 
         <HapticButton 
           style={styles.switchRow}
-          onPress={() => navigation.navigate('Register')}
+          onPress={() => navigation.navigate('Register', { fromScreen: route.params?.fromScreen })}
           activeOpacity={0.7}
         >
           <Text style={[styles.switchText, { color: t.textMuted, textAlign: 'center' }]}>

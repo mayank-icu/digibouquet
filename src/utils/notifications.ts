@@ -254,7 +254,7 @@ export const scheduleHolidayNotifications = async () => {
   }
 };
 
-export const scheduleInteractionNotification = async (type: 'reply' | 'referral', username?: string) => {
+export const scheduleInteractionNotification = async (type: 'reply' | 'referral', username?: string, bouquetId?: string) => {
   try {
     const isEnabled = await AsyncStorage.getItem('notifications_enabled');
     if (isEnabled !== 'true') return;
@@ -274,10 +274,14 @@ export const scheduleInteractionNotification = async (type: 'reply' | 'referral'
       content: {
         title,
         body,
-        data: { type },
+        data: { 
+          type,
+          url: type === 'reply' && bouquetId ? `digibouquet://bouquet/reply?id=${bouquetId}` : undefined
+        },
         sound: 'notification.mp3', // For iOS
       },
       trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
         seconds: 1,
         channelId: 'bouquet_alerts', // For Android
       },

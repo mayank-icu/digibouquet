@@ -1,8 +1,17 @@
 import { registerRootComponent } from 'expo';
 import { registerWidgetTaskHandler } from 'react-native-android-widget';
 import * as Sentry from '@sentry/react-native';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 import App from './App';
+
+// ─── Google Sign-In — Configure at Boot ───────────────────────────────────────
+// Configure ONCE synchronously at app entry (before any screen mounts).
+// This eliminates the useEffect delay — by the time Welcome/Login/Register
+// screens appear, the SDK is already fully configured and ready to sign in.
+GoogleSignin.configure({
+  webClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
+});
 
 // ─── Widget Task Handler ───────────────────────────────────────────────────────
 import { widgetTaskHandler } from './src/widgets/widgetTaskHandler';

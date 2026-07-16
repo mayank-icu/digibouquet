@@ -76,6 +76,16 @@ export const getFlowerImage = (id: string) => {
   return FLOWER_IMAGE_MAP[id] || null;
 };
 
+import { preloadImage } from '../components/CachedImage';
+
+export const preloadAllFlowerImages = () => {
+  Object.values(FLOWER_IMAGE_MAP).forEach((source: any) => {
+    if (source && source.uri) {
+      preloadImage(source.uri);
+    }
+  });
+};
+
 export const BG_IMAGES: any[] = [
   { uri: 'https://raw.githubusercontent.com/mayank-icu/digibouquet-assets/main/bouquet/1.webp' },
   { uri: 'https://raw.githubusercontent.com/mayank-icu/digibouquet-assets/main/bouquet/2.webp' },
