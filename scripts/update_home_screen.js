@@ -11,7 +11,7 @@ content = content.replace(
 
 // Define HamburgerMenu component before HomeScreen
 const menuComponent = `
-const HamburgerMenu = memo(forwardRef(({ navigation, currentUser, translate, getTextSize, isDark, t, toggleTheme, memoizedCherryBlossom, insets }, ref) => {
+const HamburgerMenu = React.memo(React.forwardRef(({ navigation, currentUser, translate, getTextSize, isDark, t, toggleTheme, memoizedCherryBlossom, insets }, ref) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(-300)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -179,14 +179,14 @@ export default function HomeScreen`;
 content = content.replace('export default function HomeScreen', menuComponent);
 
 // Remove state from HomeScreen
-const stateStr = \`  const [menuVisible, setMenuVisible] = useState(false);
+const stateStr = `  const [menuVisible, setMenuVisible] = useState(false);
   const [slideAnim] = useState(() => new Animated.Value(-300));
-  const [fadeAnim] = useState(() => new Animated.Value(0));\`;
+  const [fadeAnim] = useState(() => new Animated.Value(0));`;
 
 content = content.replace(stateStr, '  const menuRef = useRef(null);');
 
 // Remove hardware back button effect from HomeScreen
-const backEffectStr = \`  useEffect(() => {
+const backEffectStr = `  useEffect(() => {
     if (menuVisible) {
       const backAction = () => {
         closeMenu();
@@ -195,21 +195,21 @@ const backEffectStr = \`  useEffect(() => {
       const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
       return () => backHandler.remove();
     }
-  }, [menuVisible]);\`;
+  }, [menuVisible]);`;
 
 content = content.replace(backEffectStr, '');
 
 // Remove handleToggleTheme
-const toggleThemeStr = \`  const handleToggleTheme = () => {
+const toggleThemeStr = `  const handleToggleTheme = () => {
     // Immediately toggle theme for instant UI response
     toggleTheme();
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-  };\`;
+  };`;
 
 content = content.replace(toggleThemeStr, '');
 
 // Remove closeMenu and navTo
-const menuFnsStr = \`  const closeMenu = () => {
+const menuFnsStr = `  const closeMenu = () => {
     Animated.parallel([
       Animated.timing(slideAnim, { toValue: -300, duration: 180, useNativeDriver: true }),
       Animated.timing(fadeAnim, { toValue: 0, duration: 180, useNativeDriver: true }),
@@ -234,12 +234,12 @@ const menuFnsStr = \`  const closeMenu = () => {
       // Only unmount the modal after animation finishes
       setMenuVisible(false);
     });
-  };\`;
+  };`;
 
 content = content.replace(menuFnsStr, '');
 
 // Replace handleRateUs
-const rateUsStr = \`  const handleRateUs = async () => {
+const rateUsStr = `  const handleRateUs = async () => {
     closeMenu();
     const storeUrl = 'https://play.google.com/store/apps/details?id=com.egreet.digibouquet';
     if (Platform.OS !== 'web' && await StoreReview.isAvailableAsync()) {
@@ -247,25 +247,25 @@ const rateUsStr = \`  const handleRateUs = async () => {
     } else {
       Linking.openURL(storeUrl);
     }
-  };\`;
+  };`;
 
 content = content.replace(rateUsStr, '');
 
 // Replace openMenu
-const openMenuStr = \`  const openMenu = () => {
+const openMenuStr = `  const openMenu = () => {
     setMenuVisible(true);
     Animated.parallel([
       Animated.timing(slideAnim, { toValue: 0, duration: 200, useNativeDriver: true }),
       Animated.timing(fadeAnim, { toValue: 1, duration: 200, useNativeDriver: true }),
     ]).start();
-  };\`;
+  };`;
 
-content = content.replace(openMenuStr, \`  const openMenu = () => {
+content = content.replace(openMenuStr, `  const openMenu = () => {
     menuRef.current?.open();
-  };\`);
+  };`);
 
 // Replace swipe handlers logic
-const swipeHandlersStr = \`  const swipeHandlers = useSwipeNavigation({
+const swipeHandlersStr = `  const swipeHandlers = useSwipeNavigation({
     onSwipeLeft: () => {
       if (menuVisible) {
         closeMenu(); // Close menu if open
@@ -278,9 +278,9 @@ const swipeHandlersStr = \`  const swipeHandlers = useSwipeNavigation({
         openMenu(); // Use the smooth openMenu function
       }
     },
-  });\`;
+  });`;
 
-content = content.replace(swipeHandlersStr, \`  const swipeHandlers = useSwipeNavigation({
+content = content.replace(swipeHandlersStr, `  const swipeHandlers = useSwipeNavigation({
     onSwipeLeft: () => {
       if (menuRef.current?.isOpen()) {
         menuRef.current?.close(); // Close menu if open
@@ -293,10 +293,10 @@ content = content.replace(swipeHandlersStr, \`  const swipeHandlers = useSwipeNa
         openMenu(); // Use the smooth openMenu function
       }
     },
-  });\`);
+  });`);
 
 // Replace the old JSX menu with HamburgerMenu
-const oldMenuJsx = \`      {/* ── Hamburger Menu Overlay ── */}
+const oldMenuJsx = `      {/* ── Hamburger Menu Overlay ── */}
       <View 
         style={[StyleSheet.absoluteFill, { zIndex: 9999, elevation: 9999 }]} 
         pointerEvents={menuVisible ? 'auto' : 'none'}
@@ -390,9 +390,9 @@ const oldMenuJsx = \`      {/* ── Hamburger Menu Overlay ── */}
             </View>
           </Animated.View>
         </View>
-      </View>\`;
+      </View>`;
 
-content = content.replace(oldMenuJsx, \`      {/* ── Hamburger Menu Overlay ── */}
+content = content.replace(oldMenuJsx, `      {/* ── Hamburger Menu Overlay ── */}
       <HamburgerMenu
         ref={menuRef}
         navigation={navigation}
@@ -404,7 +404,7 @@ content = content.replace(oldMenuJsx, \`      {/* ── Hamburger Menu Overlay 
         toggleTheme={toggleTheme}
         memoizedCherryBlossom={memoizedCherryBlossom}
         insets={insets}
-      />\`);
+      />`);
 
 fs.writeFileSync(file, content);
 console.log('Update successful');
