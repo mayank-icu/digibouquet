@@ -26,7 +26,7 @@ export function AlertProvider({ children }) {
     <AlertContext.Provider value={showAlert}>
       {children}
       {alertData && (
-        <Modal 
+        <Modal hardwareAccelerated={true} 
           transparent 
           animationType="fade" 
           visible={true} 

@@ -463,6 +463,8 @@ export const SharedWallpaperCanvas = forwardRef<View, SharedWallpaperCanvasProps
   );
 });
 
+SharedWallpaperCanvas.displayName = 'SharedWallpaperCanvas';
+
 const styles = StyleSheet.create({
   attrWrapper: { position: 'absolute', left: 0, right: 0, alignItems: 'center' },
   flowerArea:  { position: 'absolute', left: 0, right: 0, alignItems: 'center', justifyContent: 'center' },

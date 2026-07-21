@@ -261,7 +261,7 @@ export default function MessageMediaUploader({
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
-      quality: 0.8,
+      quality: 0.3, // highly compress initially
       useLaunchedPhotoPicker: true,
       allowsMultipleSelection: true,
       selectionLimit: remainingSlots,
@@ -271,11 +271,11 @@ export default function MessageMediaUploader({
       for (const asset of result.assets) {
         let localUri = asset.uri;
         try {
-          // Force resize width to 900px to save bandwidth
+          // Force resize width to 720px and highly compress
           const manipResult = await ImageManipulator.manipulateAsync(
             localUri,
-            [{ resize: { width: 900 } }],
-            { compress: 0.6, format: ImageManipulator.SaveFormat.JPEG }
+            [{ resize: { width: 720 } }],
+            { compress: 0.3, format: ImageManipulator.SaveFormat.JPEG }
           );
           localUri = manipResult.uri;
         } catch (err) {
@@ -435,12 +435,7 @@ export default function MessageMediaUploader({
             <Feather name="check" size={10} color="#fff" />
           </View>
         )}
-        {/* Edit hint icon */}
-        {!img.uploading && !img.isPendingUpload && (
-          <View style={{ position: 'absolute', bottom: 6, right: 30, backgroundColor: 'rgba(0,0,0,0.45)', borderRadius: 10, padding: 4 }}>
-            <Feather name="edit-2" size={10} color="#fff" />
-          </View>
-        )}
+
         {/* Remove button */}
         <HapticButton
           style={{ position: 'absolute', top: 5, right: 5, backgroundColor: 'rgba(0,0,0,0.55)', borderRadius: 12, padding: 4, zIndex: 10 }}
@@ -618,7 +613,7 @@ export default function MessageMediaUploader({
       )}
 
       {/* Custom Image Editor Modal */}
-      <Modal visible={editorVisible && !!activeEditImage} animationType="slide" transparent={false} onRequestClose={() => { setEditorVisible(false); setEditingImageIndex(null); }}>
+      <Modal hardwareAccelerated={true} visible={editorVisible && !!activeEditImage} animationType="slide" transparent={false} onRequestClose={() => { setEditorVisible(false); setEditingImageIndex(null); }}>
            <View style={{flex: 1, backgroundColor: '#000'}}>
              <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 16, paddingTop: 50, zIndex: 10, backgroundColor: 'rgba(0,0,0,0.5)'}}>
                <HapticButton onPress={() => {
@@ -953,7 +948,7 @@ export default function MessageMediaUploader({
       </Modal>
 
       {/* Text Input Modal Overlay */}
-      <Modal visible={textInputVisible} transparent animationType="fade" onRequestClose={() => setTextInputVisible(false)}>
+      <Modal hardwareAccelerated={true} visible={textInputVisible} transparent animationType="fade" onRequestClose={() => setTextInputVisible(false)}>
         <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.85)', justifyContent: 'center', alignItems: 'center', padding: 20 }}>
           <TextInput
             style={{

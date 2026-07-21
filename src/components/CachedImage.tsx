@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Image, ImageProps, Platform } from 'react-native';
+import { ImageProps, Platform } from 'react-native';
+import { Image } from 'expo-image';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Crypto from 'expo-crypto';
 

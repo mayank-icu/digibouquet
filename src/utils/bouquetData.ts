@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { getBouquetTranslations } from '../bouquetTranslations';
 
+import { preloadImage } from '../components/CachedImage';
+
 const FLOWER_IMAGE_MAP: Record<string, any> = {
   rose: { uri: 'https://raw.githubusercontent.com/mayank-icu/digibouquet-assets/main/bouquet/rose.webp' },
   tulip: { uri: 'https://raw.githubusercontent.com/mayank-icu/digibouquet-assets/main/bouquet/tulip.webp' },
@@ -75,8 +77,6 @@ const FLOWER_IMAGE_MAP: Record<string, any> = {
 export const getFlowerImage = (id: string) => {
   return FLOWER_IMAGE_MAP[id] || null;
 };
-
-import { preloadImage } from '../components/CachedImage';
 
 export const preloadAllFlowerImages = () => {
   Object.values(FLOWER_IMAGE_MAP).forEach((source: any) => {

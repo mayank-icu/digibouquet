@@ -416,7 +416,7 @@ function YouTubeSearchModal({ visible, onClose, onSongSelect, currentSong }: Pro
 
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={handleClose}>
+    <Modal hardwareAccelerated={true} visible={visible} transparent animationType="slide" onRequestClose={handleClose}>
       <KeyboardAvoidingView
         style={s.overlay}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -740,6 +740,7 @@ function YouTubeSearchModal({ visible, onClose, onSongSelect, currentSong }: Pro
             <FlatList
               data={results.length > 0 ? results : POPULAR_SONGS}
               keyExtractor={i => i.id}
+              getItemLayout={(data, index) => ({ length: 80, offset: 80 * index, index })}
               contentContainerStyle={{
                 paddingHorizontal: 16,
                 paddingTop: keyboardHeight > 0 ? 12 : 4,
@@ -773,7 +774,7 @@ function YouTubeSearchModal({ visible, onClose, onSongSelect, currentSong }: Pro
   );
 }
 
-export default memo(YouTubeSearchModal);
+export default React.memo(YouTubeSearchModal);
 
 // ── Styles ─────────────────────────────────────────────────────────────────────
 const s = StyleSheet.create({

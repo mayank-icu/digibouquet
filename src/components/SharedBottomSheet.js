@@ -1,11 +1,29 @@
 import { HapticButton } from '../components/HapticButton';
 import React, { useState, useEffect } from 'react';
-import { Animated, StyleSheet, View, Modal } from 'react-native';
-import { BlurView } from 'expo-blur';
+import { Animated, StyleSheet, View, Modal , BackHandler } from 'react-native';
 import { useSwipeToClose } from '../hooks/useSwipeToClose';
 
-const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
-
+/**
+ * SharedBottomSheet
+ *
+ * A swipe-to-close bottom sheet using the header-zone-only PanResponder.
+ * Exposes `onScroll` so inner ScrollViews can report their scroll offset,
+ * preventing the swipe gesture from triggering while the user scrolls content.
+ *
+ * Usage:
+ *   <SharedBottomSheet visible={...} onClose={...}>
+ *     {({ onScroll }) => (
+ *       <ScrollView onScroll={onScroll} scrollEventThrottle={16}>
+ *         ...
+ *       </ScrollView>
+ *     )}
+ *   </SharedBottomSheet>
+ *
+ * OR pass plain children (no scroll tracking):
+ *   <SharedBottomSheet visible={...} onClose={...}>
+ *     <Text>Hello</Text>
+ *   </SharedBottomSheet>
+ */
 export default function SharedBottomSheet({ visible, onClose, children, style = {}, overlayStyle = {} }) {
   const [mounted, setMounted] = useState(visible);
 
@@ -25,28 +43,40 @@ export default function SharedBottomSheet({ visible, onClose, children, style = 
     panY,
     overlayOpacity,
     panHandlers,
-    isInteractive
+    onScroll,
   } = useSwipeToClose(visible, onClose);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const backAction = () => {
+      onClose();
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  }, [mounted, onClose]);
 
   if (!mounted) return null;
 
+  // Support render-prop pattern so children can get onScroll
+  const renderedChildren = typeof children === 'function'
+    ? children({ onScroll })
+    : children;
+
   return (
-    <Modal visible={mounted} transparent animationType="none" onRequestClose={onClose}>
-      <View style={[StyleSheet.absoluteFillObject, { zIndex: 9999, elevation: 999 }]} pointerEvents="box-none">
-        <AnimatedBlurView
-          intensity={overlayOpacity.interpolate({ inputRange: [0, 1], outputRange: [0, 20] })}
-          tint="dark"
-          style={[styles.overlay, overlayStyle, { opacity: overlayOpacity }]}
+    <Modal hardwareAccelerated={true} visible={mounted} transparent={true} animationType="none" onRequestClose={onClose}>
+      <View style={[StyleSheet.absoluteFillObject]} pointerEvents="box-none">
+        <Animated.View
+          style={[styles.overlay, overlayStyle, { backgroundColor: 'rgba(0,0,0,0.5)', opacity: overlayOpacity }]}
           pointerEvents={mounted ? 'auto' : 'none'}
         >
           <HapticButton style={{ flex: 1 }} activeOpacity={1} onPress={onClose} />
-        </AnimatedBlurView>
+        </Animated.View>
         <Animated.View
           style={[styles.sheet, style, { transform: [{ translateY: Animated.add(slideAnim, panY) }] }]}
           {...panHandlers}
-          pointerEvents={isInteractive ? 'auto' : 'none'}
         >
-          {children}
+          {renderedChildren}
         </Animated.View>
       </View>
     </Modal>

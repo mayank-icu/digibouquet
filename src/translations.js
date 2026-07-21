@@ -472,6 +472,7 @@ export default {
       "addMessage": "Add Message →",
       "saveChanges": "Save Changes",
       "finishBouquet": "Finish Bouquet",
+      "verifyingAi": "Checking with AI...",
       "meaning": "Meaning",
       "purpose": "Purpose",
       "bestFor": "Best For",
@@ -898,7 +899,9 @@ export default {
       "rule3Title": "No Personal Information",
       "rule3Desc": "For your safety and others, do not include names, phone numbers, addresses, social handles, or links.",
       "understand": "I understand",
-      "soundsGood": "Sounds good"
+      "soundsGood": "Sounds good",
+      "successTitle": "Bouquet Sent!",
+      "successMsg": "Your random act of kindness has been sent out into the world. Thank you for spreading joy today!"
     }
   },
   "es": {

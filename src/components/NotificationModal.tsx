@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { BlurView } from 'expo-blur';
 import { Bell, X } from 'lucide-react-native';
 
 interface NotificationModalProps {
@@ -37,8 +36,8 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({ visible, o
   };
 
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={handleLater}>
-      <BlurView intensity={40} style={styles.overlay} tint="dark">
+    <Modal hardwareAccelerated={true} visible={visible} transparent animationType="fade" onRequestClose={handleLater}>
+      <View style={[styles.overlay, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
         <View style={styles.container}>
           <TouchableOpacity style={styles.closeBtn} onPress={handleLater}>
             <X color="#999" size={24} />
@@ -63,7 +62,7 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({ visible, o
             </TouchableOpacity>
           </View>
         </View>
-      </BlurView>
+      </View>
     </Modal>
   );
 };

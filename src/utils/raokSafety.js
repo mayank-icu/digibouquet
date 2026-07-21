@@ -1,5 +1,6 @@
 import { removePII } from '@coffeeandfun/remove-pii';
 import { checkProfanity } from 'glin-profanity';
+import { RAOK_SUGGESTIONS } from './raokSuggestions';
 
 // Initialize profanity filter if it requires configuration
 // Assuming default configuration handles multiple languages
@@ -62,6 +63,27 @@ export const checkLocalSafety = (text) => {
 export const moderateWithSarvam = async (text) => {
   if (!text || text.trim() === '') {
     return { isSafe: true, tags: [] };
+  }
+
+  let isPreset = false;
+  let presetTags = [];
+
+  for (const category of RAOK_SUGGESTIONS) {
+    for (const msg of category.messages) {
+      const lengthDiff = Math.abs(text.length - msg.length);
+      // Check if length is similar and shares first or last 50 characters
+      if (lengthDiff < 100 && (text.includes(msg.substring(0, 50)) || text.includes(msg.substring(msg.length - 50)))) {
+        isPreset = true;
+        presetTags = category.tags || [];
+        break;
+      }
+    }
+    if (isPreset) break;
+  }
+
+  if (isPreset) {
+    const local = checkLocalSafety(text);
+    return { isSafe: local.isSafe, tags: presetTags.length ? presetTags : ['encouragement'] };
   }
 
   const SARVAM_API_KEY = 'sk_zv7duy20_MqNmTQeHzNpQFnr2LFJHOdhd'; // Existing key from codebase

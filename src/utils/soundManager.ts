@@ -1,16 +1,16 @@
 import { Audio } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const SOUNDS: Record<string, string> = {
-  button_click: 'https://cdn.jsdelivr.net/gh/mayank-icu/digibouquet-assets@main/audios/button_click.mp3',
-  chest_open: 'https://cdn.jsdelivr.net/gh/mayank-icu/digibouquet-assets@main/audios/chest_open.mp3',
-  confetti_pop: 'https://cdn.jsdelivr.net/gh/mayank-icu/digibouquet-assets@main/audios/confetti_pop.mp3',
-  hint_magic: 'https://cdn.jsdelivr.net/gh/mayank-icu/digibouquet-assets@main/audios/hint_magic.mp3',
-  level_complete: 'https://cdn.jsdelivr.net/gh/mayank-icu/digibouquet-assets@main/audios/level_complete.mp3',
-  locked_error: 'https://cdn.jsdelivr.net/gh/mayank-icu/digibouquet-assets@main/audios/locked_error.mp3',
-  match_success: 'https://cdn.jsdelivr.net/gh/mayank-icu/digibouquet-assets@main/audios/match_success.mp3',
-  shuffle_items: 'https://cdn.jsdelivr.net/gh/mayank-icu/digibouquet-assets@main/audios/shuffle_items.mp3',
-  undo_move: 'https://cdn.jsdelivr.net/gh/mayank-icu/digibouquet-assets@main/audios/undo_move.mp3',
+const SOUNDS: Record<string, any> = {
+  button_click: require('../../assets/audios/button_click.mp3'),
+  chest_open: require('../../assets/audios/chest_open.mp3'),
+  confetti_pop: require('../../assets/audios/confetti_pop.mp3'),
+  hint_magic: require('../../assets/audios/hint_magic.mp3'),
+  level_complete: require('../../assets/audios/level_complete.mp3'),
+  locked_error: require('../../assets/audios/locked_error.mp3'),
+  match_success: require('../../assets/audios/match_success.mp3'),
+  shuffle_items: require('../../assets/audios/shuffle_items.mp3'),
+  undo_move: require('../../assets/audios/undo_move.mp3'),
 };
 
 class SoundManager {
@@ -60,7 +60,7 @@ class SoundManager {
         if (this.loadedSounds[key]) return;
         try {
           const { sound } = await Audio.Sound.createAsync(
-            { uri: url },
+            url,
             { shouldPlay: false, positionMillis: 0, volume: 1.0 }
           );
           this.loadedSounds[key] = sound;
@@ -85,7 +85,7 @@ class SoundManager {
       try {
         console.log(`[SoundManager] Sound ${key} not preloaded, loading on the fly...`);
         const { sound: newSound } = await Audio.Sound.createAsync(
-          { uri: SOUNDS[key] },
+          SOUNDS[key],
           { shouldPlay: true, positionMillis: 0 }
         );
         this.loadedSounds[key] = newSound;

@@ -41,6 +41,7 @@ export default function ShareModal({
   onShareImage = undefined,
   // Bouquet data for the image tab
   bouquetData = null,
+  initialTab = 'link',
 }) {
   const insets = useSafeAreaInsets();
   const { theme: t } = useTheme();
@@ -55,7 +56,7 @@ export default function ShareModal({
   const [fontKey, setFontKey] = useState('handwritten');
   const [layoutKey, setLayoutKey] = useState('center');
   const [showPetals, setShowPetals] = useState(true);
-  const [showMessage, setShowMessage] = useState(false);
+  const [showMessage, setShowMessage] = useState(true);
   const [showBrand, setShowBrand] = useState(true);
   const [isCapturing, setIsCapturing] = useState(false);
 
@@ -64,9 +65,9 @@ export default function ShareModal({
   useEffect(() => {
     if (visible) {
       setHasRequestedNotify(false);
-      setActiveTab('link');
+      setActiveTab(initialTab);
     }
-  }, [visible]);
+  }, [visible, initialTab]);
 
   // Build personalized share text
   const getShareText = () => {
@@ -331,7 +332,7 @@ export default function ShareModal({
   };
 
   // ── Image Tab ────────────────────────────────────────────────────────────────
-  const renderImageTab = () => {
+  const renderImageTab = (onScroll) => {
     const th = THEMES[themeKey] ?? THEMES['linen'];
     // The canvas is W×H. We scale it by PREVIEW_SCALE.
     // To align the transform origin to top-left we shift by -(W - PREVIEW_W)/2 horizontally
@@ -339,7 +340,12 @@ export default function ShareModal({
     const dx = -(W - PREVIEW_W) / 2;
     const dy = -(H - PREVIEW_H) / 2;
     return (
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 8 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 8 }}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+      >
         {/* Preview card */}
         <View style={styles.previewWrapper}>
           {/* Off-screen full-size canvas for capture */}
@@ -518,76 +524,85 @@ export default function ShareModal({
         maxHeight: H * 0.92,
       }}
     >
-      <View style={[styles.handle, { backgroundColor: t.border }]} />
-      <Text style={[styles.title, { color: t.text }]}>
-        {title || translate('history.share') || 'Share Bouquet'}
-      </Text>
-      {subtitle ? <Text style={[styles.subtitle, { color: t.textMuted }]}>{subtitle}</Text> : null}
-
-      {/* ── Tab bar (only shown if bouquetData provided) ── */}
-      {bouquetData && (
-        <View style={[styles.tabBar, { backgroundColor: t.bg, borderColor: t.border }]}>
-          <HapticButton
-            style={[styles.tab, activeTab === 'link' && { backgroundColor: t.cardBg }]}
-            onPress={() => setActiveTab('link')}
-          >
-            <Feather name="link-2" size={14} color={activeTab === 'link' ? t.brand : t.textMuted} style={{ marginRight: 5 }} />
-            <Text style={[styles.tabText, { color: activeTab === 'link' ? t.brand : t.textMuted }]}>Link</Text>
-          </HapticButton>
-          <HapticButton
-            style={[styles.tab, activeTab === 'image' && { backgroundColor: t.cardBg }]}
-            onPress={() => setActiveTab('image')}
-          >
-            <Feather name="image" size={14} color={activeTab === 'image' ? t.brand : t.textMuted} style={{ marginRight: 5 }} />
-            <Text style={[styles.tabText, { color: activeTab === 'image' ? t.brand : t.textMuted }]}>Image</Text>
-          </HapticButton>
-        </View>
-      )}
-
-      {/* ── Link Tab ── */}
-      {(!bouquetData || activeTab === 'link') && (
+      {({ onScroll }) => (
         <>
-          {renderAppOptions()}
+          <View style={[styles.handle, { backgroundColor: t.border }]} />
+          <Text style={[styles.title, { color: t.text }]}>
+            {title || translate('history.share') || 'Share Bouquet'}
+          </Text>
+          {subtitle ? <Text style={[styles.subtitle, { color: t.textMuted }]}>{subtitle}</Text> : null}
 
-          {onShareImage ? (
-            <>
-              <View style={[styles.divider, { backgroundColor: t.border }]} />
+          {/* ── Tab bar (only shown if bouquetData provided) ── */}
+          {bouquetData && (
+            <View style={[styles.tabBar, { backgroundColor: t.bg, borderColor: t.border }]}>
               <HapticButton
-                style={[styles.notifyBtn, { backgroundColor: t.brand + '15' }]}
-                onPress={async () => {
-                  await onShareImage();
-                  onClose();
-                }}
+                style={[styles.tab, activeTab === 'link' && { backgroundColor: t.cardBg }]}
+                onPress={() => setActiveTab('link')}
               >
-                <Feather name="image" size={18} color={t.brand} />
-                <Text style={[styles.notifyText, { color: t.brand }]}>Share as Image</Text>
+                <Feather name="link-2" size={14} color={activeTab === 'link' ? t.brand : t.textMuted} style={{ marginRight: 5 }} />
+                <Text style={[styles.tabText, { color: activeTab === 'link' ? t.brand : t.textMuted }]}>Link</Text>
               </HapticButton>
-            </>
-          ) : null}
-
-          {url ? (
-            <View style={[styles.linkContainer, { borderColor: t.border }]}>
-              <Text style={[styles.linkText, { color: t.text }]} selectable>{url}</Text>
               <HapticButton
-                style={styles.copyBtn}
-                onPress={async () => {
-                  const { setStringAsync } = await import('expo-clipboard');
-                  await setStringAsync(url);
-                }}
+                style={[styles.tab, activeTab === 'image' && { backgroundColor: t.cardBg }]}
+                onPress={() => setActiveTab('image')}
               >
-                <Feather name="copy" size={18} color={t.brand} />
+                <Feather name="image" size={14} color={activeTab === 'image' ? t.brand : t.textMuted} style={{ marginRight: 5 }} />
+                <Text style={[styles.tabText, { color: activeTab === 'image' ? t.brand : t.textMuted }]}>Image</Text>
               </HapticButton>
             </View>
-          ) : null}
+          )}
 
-          <HapticButton style={[styles.cancelBtn, { backgroundColor: t.bg, marginTop: 8 }]} onPress={onClose}>
-            <Text style={[styles.cancelText, { color: t.brand }]}>{translate('common.cancel') || 'Cancel'}</Text>
-          </HapticButton>
+          {/* ── Link Tab ── */}
+          {(!bouquetData || activeTab === 'link') && (
+            <>
+              {renderAppOptions()}
+
+              {(!bouquetData && onShareImage) ? (
+                <>
+                  <View style={[styles.divider, { backgroundColor: t.border }]} />
+                  <HapticButton
+                    style={[styles.notifyBtn, { backgroundColor: t.brand + '15' }]}
+                    disabled={isCapturing}
+                    onPress={async () => {
+                      if (onShareImage) {
+                        await onShareImage();
+                        onClose();
+                      }
+                    }}
+                  >
+                    <Feather name="image" size={18} color={t.brand} />
+                    <Text style={[styles.notifyText, { color: t.brand }]}>
+                      {isCapturing ? 'Preparing...' : 'Share as Image'}
+                    </Text>
+                  </HapticButton>
+                </>
+              ) : null}
+
+              {url ? (
+                <View style={[styles.linkContainer, { borderColor: t.border }]}>
+                  <Text style={[styles.linkText, { color: t.text }]} selectable>{url}</Text>
+                  <HapticButton
+                    style={styles.copyBtn}
+                    onPress={async () => {
+                      const { setStringAsync } = await import('expo-clipboard');
+                      await setStringAsync(url);
+                    }}
+                  >
+                    <Feather name="copy" size={18} color={t.brand} />
+                  </HapticButton>
+                </View>
+              ) : null}
+
+              <HapticButton style={[styles.cancelBtn, { backgroundColor: t.bg, marginTop: 8 }]} onPress={onClose}>
+                <Text style={[styles.cancelText, { color: t.brand }]}>{translate('common.cancel') || 'Cancel'}</Text>
+              </HapticButton>
+            </>
+          )}
+
+          {/* ── Image Tab — onScroll passed so scrolling doesn't trigger swipe-to-close ── */}
+          {bouquetData && activeTab === 'image' && renderImageTab(onScroll)}
         </>
       )}
-
-      {/* ── Image Tab ── */}
-      {bouquetData && activeTab === 'image' && renderImageTab()}
     </SharedBottomSheet>
   );
 }

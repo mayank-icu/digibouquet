@@ -3,6 +3,8 @@ import { initializeFirestore, getFirestore, persistentLocalCache } from 'firebas
 import { initializeAuth, getReactNativePersistence, getAuth } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { getFunctions } from 'firebase/functions';
+
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -45,8 +47,6 @@ try {
   auth = getAuth(app);
 }
 export { auth };
-
-import { getFunctions } from 'firebase/functions';
 
 let functionsInstance;
 try {

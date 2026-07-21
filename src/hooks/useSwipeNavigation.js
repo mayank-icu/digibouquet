@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { PanResponder } from 'react-native';
 import { useAccessibility } from '../contexts/AccessibilityContext';
 
@@ -9,7 +10,7 @@ const H_RATIO = 2.0;         // horizontal must be 2? the vertical movement
 export function useSwipeNavigation({ onSwipeLeft, onSwipeRight, disabled } = {}) {
   const { swipeNavigation } = useAccessibility();
 
-  const panResponder = PanResponder.create({
+  const panResponder = useMemo(() => PanResponder.create({
     // Never steal from children on start
     onStartShouldSetPanResponder: () => false,
     onStartShouldSetPanResponderCapture: () => false,
@@ -50,7 +51,7 @@ export function useSwipeNavigation({ onSwipeLeft, onSwipeRight, disabled } = {})
     },
     onPanResponderTerminate: () => {},
     onPanResponderTerminationRequest: () => true,
-  });
+  }), [disabled, swipeNavigation, onSwipeLeft, onSwipeRight]);
 
   return panResponder.panHandlers;
 }

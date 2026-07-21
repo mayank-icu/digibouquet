@@ -16,7 +16,7 @@ const SCREEN_H = Dimensions.get('window').height;
  *   @param {number} opts.openDuration  - slide-in duration ms (default 300)
  *   @param {number} opts.closeDuration - slide-out duration ms (default 220)
  *
- * Returns { slideAnim, panY, panHandlers, overlayOpacity, isInteractive }
+ * Returns { slideAnim, panY, panHandlers, overlayOpacity, isInteractive, onScroll }
  * Wire slideAnim + panY into your Animated.View transform like:
  *   transform: [{ translateY: Animated.add(slideAnim, panY) }]
  */
@@ -35,14 +35,22 @@ export function useSwipeToClose(visible, onClose, opts = {}) {
   const scrollY = useRef(0);
   const isDraggingDown = useRef(false);
   const isAnimatingOut = useRef(false);
-  const [isInteractive, setIsInteractive] = useState(false);
+  // isInteractiveRef lets PanResponder closures always read the current value
+  const isInteractiveRef = useRef(true);
+  const [isInteractive, _setIsInteractive] = useState(true);
+
+  const setIsInteractive = (val) => {
+    isInteractiveRef.current = val;
+    _setIsInteractive(val);
+  };
 
   useEffect(() => {
     if (visible) {
       isAnimatingOut.current = false;
       panY.setValue(0);
       slideAnim.setValue(SCREEN_H);
-      setIsInteractive(false);
+      // Buttons are always tappable - don't block them during animation
+      setIsInteractive(true);
       Animated.parallel([
         Animated.spring(slideAnim, {
           toValue: 0,
@@ -55,13 +63,8 @@ export function useSwipeToClose(visible, onClose, opts = {}) {
           duration: openDuration,
           useNativeDriver: true,
         }),
-      ]).start((result) => {
-        if (result.finished) {
-          setIsInteractive(true);
-        }
-      });
+      ]).start();
     } else {
-      setIsInteractive(false);
       if (isAnimatingOut.current) {
         isAnimatingOut.current = false;
         return;
@@ -85,38 +88,44 @@ export function useSwipeToClose(visible, onClose, opts = {}) {
     PanResponder.create({
       onStartShouldSetPanResponder: () => false,
       onStartShouldSetPanResponderCapture: () => false,
-      
-      onMoveShouldSetPanResponder: (_, gs) => {
+
+      onMoveShouldSetPanResponder: (evt, gs) => {
+        if (!isInteractiveRef.current) return false;
         const { dx, dy } = gs;
         const absDx = Math.abs(dx);
         const absDy = Math.abs(dy);
-        // Must have moved at least 5px vertically and be 2x more vertical
-        return dy > 5 && absDy > absDx * 2 && scrollY.current <= 15;
+        // Only swipe-to-close from the header zone (top 56px of the sheet)
+        const touchY = evt.nativeEvent.locationY;
+        const inHeader = touchY < 56;
+        // Must move vertically and scroll must be at top
+        return inHeader && dy > 5 && absDy > absDx * 2 && scrollY.current <= 15;
       },
-      
-      onMoveShouldSetPanResponderCapture: (_, gs) => {
+
+      onMoveShouldSetPanResponderCapture: (evt, gs) => {
+        if (!isInteractiveRef.current) return false;
         const { dx, dy } = gs;
         const absDx = Math.abs(dx);
         const absDy = Math.abs(dy);
-        // Aggressively capture to beat ScrollView
-        return dy > 2 && absDy > absDx && scrollY.current <= 5;
+        const touchY = evt.nativeEvent.locationY;
+        const inHeader = touchY < 56;
+        // Only capture from header zone to avoid stealing scroll events
+        return inHeader && dy > 2 && absDy > absDx && scrollY.current <= 5;
       },
 
       onPanResponderGrant: () => {
         isDraggingDown.current = true;
       },
-      
+
       onPanResponderMove: (_, gs) => {
         if (gs.dy > 0) slideAnim.setValue(gs.dy);
       },
-      
+
       onPanResponderRelease: (_, gs) => {
         isDraggingDown.current = false;
         const { dy, vy } = gs;
-        
+
         if (dy >= threshold || vy >= velocityThreshold) {
           isAnimatingOut.current = true;
-          setIsInteractive(false);
           Animated.parallel([
             Animated.timing(slideAnim, {
               toValue: SCREEN_H,
@@ -132,28 +141,18 @@ export function useSwipeToClose(visible, onClose, opts = {}) {
             onClose();
           });
         } else {
-          setIsInteractive(false);
           Animated.spring(slideAnim, {
             toValue: 0,
             useNativeDriver: true,
             tension: 80,
             friction: 10,
-          }).start((result) => {
-            if (result.finished) {
-              setIsInteractive(true);
-            }
-          });
+          }).start();
         }
       },
-      
+
       onPanResponderTerminate: () => {
         isDraggingDown.current = false;
-        setIsInteractive(false);
-        Animated.spring(slideAnim, { toValue: 0, useNativeDriver: true }).start((result) => {
-          if (result.finished) {
-            setIsInteractive(true);
-          }
-        });
+        Animated.spring(slideAnim, { toValue: 0, useNativeDriver: true }).start();
       },
       onPanResponderTerminationRequest: () => true,
     })

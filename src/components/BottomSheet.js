@@ -1,10 +1,8 @@
 import { HapticButton } from '../components/HapticButton';
 import React, { useRef, useEffect } from 'react';
 import { StyleSheet, View, Dimensions, Animated, TouchableOpacity, Modal } from 'react-native';
-import { BlurView } from 'expo-blur';
-import { PanGestureHandler, State, ScrollView as RNGHScrollView } from 'react-native-gesture-handler';
+import { PanGestureHandler, State } from 'react-native-gesture-handler';
 
-const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 const SCREEN_H = Dimensions.get('window').height;
 
@@ -76,17 +74,15 @@ export function BottomSheet({ visible, onClose, children, containerStyle = {}, o
   };
 
   return (
-    <Modal visible={visible} transparent animationType="none" onRequestClose={onClose}>
+    <Modal hardwareAccelerated={true} visible={visible} transparent animationType="none" onRequestClose={onClose}>
       <View style={StyleSheet.absoluteFill}>
         {/* Dim overlay */}
-        <AnimatedBlurView
-          intensity={20}
-          tint="dark"
+        <Animated.View
           pointerEvents={visible ? 'auto' : 'none'}
-          style={[StyleSheet.absoluteFill, { opacity: overlayOpacity }, overlayStyle]}
+          style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.5)', opacity: overlayOpacity }, overlayStyle]}
         >
           <HapticButton style={{ flex: 1 }} activeOpacity={1} onPress={onClose} />
-        </AnimatedBlurView>
+        </Animated.View>
 
         {/* Sheet */}
         <PanGestureHandler
