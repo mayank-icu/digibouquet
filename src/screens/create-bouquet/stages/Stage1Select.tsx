@@ -153,7 +153,7 @@ export const Stage1Select = ({
           {aiGenerating && (
             <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 40 }}>
               <LottieView
-                source={{ uri: 'https://raw.githubusercontent.com/mayank-icu/digibouquet-assets/main/animations/ai-bouquet.json' }}
+                source={require('../../../../assets/animations/ai-bouquet.json')}
                 autoPlay
                 loop
                 style={{ width: 160, height: 160 }}

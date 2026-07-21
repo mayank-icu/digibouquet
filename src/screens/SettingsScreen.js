@@ -524,7 +524,7 @@ export default function SettingsScreen({ navigation }) {
       </ScrollView>
 
       {/* Delete account modal */}
-      <Modal visible={showDeleteModal} transparent animationType="none" onRequestClose={closeDeleteModal}>
+      <Modal hardwareAccelerated={true} visible={showDeleteModal} transparent animationType="none" onRequestClose={closeDeleteModal}>
         <KeyboardAvoidingView 
           style={{ flex: 1 }} 
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -598,7 +598,7 @@ export default function SettingsScreen({ navigation }) {
     </Modal>
       
       {/* Success Animation Modal */}
-      <Modal visible={showSuccess} transparent animationType="fade">
+      <Modal hardwareAccelerated={true} visible={showSuccess} transparent animationType="fade">
         <View style={styles.successOverlay}>
           <LottieView
             source={showSuccess ? { uri: 'https://raw.githubusercontent.com/mayank-icu/digibouquet-assets/main/animations/Done.json' } : null}

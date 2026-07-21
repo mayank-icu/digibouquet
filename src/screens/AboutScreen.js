@@ -6,7 +6,6 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
-import * as StoreReview from 'expo-store-review';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAccessibility } from '../contexts/AccessibilityContext';
@@ -38,28 +37,10 @@ export default function AboutScreen({ navigation }) {
   ];
 
   const handleRateUs = async () => {
-    let success = false;
     try {
-      const isAvailable = await StoreReview.isAvailableAsync();
-      const hasAction = await StoreReview.hasAction();
-      if (isAvailable && hasAction) {
-        await StoreReview.requestReview();
-        success = true;
-      }
+      await Linking.openURL(STORE_URL);
     } catch (e) {
-      console.warn('In-app review failed on About screen:', e);
-    }
-    if (!success) {
-      const marketUrl = 'market://details?id=com.digibouquet.app';
-      try {
-        await Linking.openURL(marketUrl);
-      } catch (err) {
-        try {
-          await Linking.openURL(STORE_URL);
-        } catch (webErr) {
-          console.error('Failed to open store URL from About screen:', webErr);
-        }
-      }
+      console.error('Failed to open Play Store from About screen:', e);
     }
   };
 

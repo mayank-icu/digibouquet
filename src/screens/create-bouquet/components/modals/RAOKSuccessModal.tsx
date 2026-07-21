@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Modal } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, BackHandler } from 'react-native';
 
 export const RAOKSuccessModal = ({
   visible,
@@ -10,8 +10,20 @@ export const RAOKSuccessModal = ({
   themeColors: any;
   onClose: () => void;
 }) => {
+  useEffect(() => {
+    if (!visible) return;
+    const backAction = () => {
+      onClose();
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  }, [visible, onClose]);
+
+  if (!visible) return null;
+
   return (
-    <Modal visible={visible} transparent animationType="fade">
+    <View style={[StyleSheet.absoluteFill, { zIndex: 9999, elevation: 999 }]} pointerEvents="box-none">
       <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center', padding: 20 }}>
         <View style={{ backgroundColor: themeColors.cardBg, borderRadius: 20, padding: 24, width: '100%', maxWidth: 400, alignItems: 'center' }}>
           <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: '#E8F5E9', justifyContent: 'center', alignItems: 'center', marginBottom: 16 }}>
@@ -31,6 +43,6 @@ export const RAOKSuccessModal = ({
           </TouchableOpacity>
         </View>
       </View>
-    </Modal>
+    </View>
   );
 };

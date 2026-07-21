@@ -664,7 +664,7 @@ export default function MakeBouquetTogetherScreen({ navigation }) {
         />
       )}
       {/* Guide Modal */}
-      <Modal visible={showGuide} transparent animationType="slide">
+      <Modal hardwareAccelerated={true} visible={showGuide} transparent animationType="slide">
         <View style={styles.guideModalRoot}>
           <View style={[styles.guideModalCard, { backgroundColor: t.bg }]}>
             <View style={styles.guideModalHeader}>
@@ -679,7 +679,7 @@ export default function MakeBouquetTogetherScreen({ navigation }) {
       </Modal>
 
       {/* ── Custom Exit Warning Modal ── */}
-      <Modal visible={showExitModal} transparent animationType="fade" onRequestClose={() => setShowExitModal(false)}>
+      <Modal hardwareAccelerated={true} visible={showExitModal} transparent animationType="fade" onRequestClose={() => setShowExitModal(false)}>
         <View style={styles.modalOverlay}>
           <HapticButton style={StyleSheet.absoluteFillObject} activeOpacity={1} onPress={() => setShowExitModal(false)} />
           <View style={[styles.modalBox, { backgroundColor: t.cardBg }]}>
@@ -706,7 +706,7 @@ export default function MakeBouquetTogetherScreen({ navigation }) {
       </Modal>
 
       {/* ── Custom Clear Canvas Modal ── */}
-      <Modal visible={showClearModal} transparent animationType="fade" onRequestClose={() => setShowClearModal(false)}>
+      <Modal hardwareAccelerated={true} visible={showClearModal} transparent animationType="fade" onRequestClose={() => setShowClearModal(false)}>
         <View style={styles.modalOverlay}>
           <HapticButton style={StyleSheet.absoluteFillObject} activeOpacity={1} onPress={() => setShowClearModal(false)} />
           <View style={[styles.modalBox, { backgroundColor: t.cardBg }]}>

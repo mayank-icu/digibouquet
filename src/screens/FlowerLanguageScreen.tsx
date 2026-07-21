@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { Image } from 'expo-image';
 import {
   View,
   Text,
@@ -156,6 +157,8 @@ const MemoizedKeyboard = React.memo(({ onKeyPress, onBackspace, onClear, theme, 
     </View>
   );
 });
+
+MemoizedKeyboard.displayName = 'MemoizedKeyboard';
 
 export default function FlowerLanguageScreen() {
   const navigation = useNavigation() as any;

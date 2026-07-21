@@ -1,5 +1,6 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Modal, Image, ScrollView, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, BackHandler } from 'react-native';
+import { Image } from 'expo-image';
 import Toast from 'react-native-toast-message';
 import { Flag } from 'lucide-react-native';
 import { getFlowerImage } from '../../../../utils/bouquetData';
@@ -19,8 +20,20 @@ export const AIGenerationResultModal = ({
   setCurrentStep,
   background,
 }: any) => {
+  useEffect(() => {
+    if (!aiGenerationResult) return;
+    const backAction = () => {
+      setAiGenerationResult(null);
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  }, [!!aiGenerationResult, setAiGenerationResult]);
+
+  if (!aiGenerationResult) return null;
+
   return (
-    <Modal visible={!!aiGenerationResult} transparent animationType="fade" onRequestClose={() => setAiGenerationResult(null)}>
+    <View style={[StyleSheet.absoluteFill, { zIndex: 9999, elevation: 999 }]} pointerEvents="box-none">
       <View style={[styles.modalOverlay, { zIndex: 9999, elevation: 9999 }]}>
         <TouchableOpacity
           style={StyleSheet.absoluteFillObject}
@@ -133,6 +146,6 @@ export const AIGenerationResultModal = ({
           )}
         </View>
       </View>
-    </Modal>
+    </View>
   );
 };

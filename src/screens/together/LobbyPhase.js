@@ -146,7 +146,7 @@ export default function LobbyPhase({
         </View>
 
         {/* Custom End Room Dialog */}
-        <Modal visible={showEndDialog} transparent animationType="fade">
+        <Modal hardwareAccelerated={true} visible={showEndDialog} transparent animationType="fade">
           <View style={s.modalOverlay}>
             <View style={[s.modalCard, { backgroundColor: t.cardBg, borderColor: t.border }]}>
               <Text style={[s.modalTitle, { color: t.text }]}>End Room</Text>

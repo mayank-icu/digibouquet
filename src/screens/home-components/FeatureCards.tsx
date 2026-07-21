@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Share } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { HapticButton } from '../../components/HapticButton';
 
-export const FeatureCards = memo(({ themeColors, translate, getTextSize, navigation, currentUser, hasScheduled }) => {
+export const FeatureCards = React.memo(({ themeColors, translate, getTextSize, navigation, currentUser, hasScheduled }) => {
   const handleShare = async () => {
     try {
       if (currentUser) {

@@ -1,6 +1,6 @@
 import { PremiumImage } from '../components/PremiumImage';
 import { HapticButton } from '../components/HapticButton';
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, memo } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {
   Platform,
   Alert,
   Animated,
+  AppState,
   PanResponder,
   NativeModules} from 'react-native';
 import { Feather, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
@@ -51,7 +52,7 @@ const BG_IMAGES = [
   { uri: 'https://raw.githubusercontent.com/mayank-icu/digibouquet-assets/main/bouquet/5.webp' },
 ];
 
-function WidgetPreview({ styleId, bouquet, t }) {
+const WidgetPreview = React.memo(function WidgetPreview({ styleId, bouquet, t }) {
   const getFlowerImg = (id) => {
     return getFlowerImage(id);
   };
@@ -182,7 +183,94 @@ function WidgetPreview({ styleId, bouquet, t }) {
       </View>
     </View>
   );
-}
+});
+
+const BouquetRow = React.memo(({ 
+  item, 
+  theme, 
+  t, 
+  isSelected, 
+  isInOtherWidget, 
+  isCurrentWidgetBouquet, 
+  ownerWidgetIdx,
+  onPress,
+  getFlowerImg
+}) => {
+  const recipient = item.messageCard?.recipientName || item.recipientName || 'Friend';
+  const flowerIds = (item.selectedFlowers || []).map(f => typeof f === 'string' ? f : f.id);
+
+  return (
+    <HapticButton
+      onPress={onPress}
+      activeOpacity={isInOtherWidget ? 1 : 0.7}
+      style={[
+        styles.bouquetRow,
+        { 
+          backgroundColor: isSelected 
+            ? (theme.isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.03)')
+            : theme.cardBg, 
+          borderColor: theme.border,
+          borderWidth: 1,
+          opacity: isInOtherWidget ? 0.5 : 1,
+        }
+      ]}
+    >
+      <View style={[styles.bouquetFlowerCard, { backgroundColor: theme.bg, borderColor: theme.border }]}>
+        {flowerIds.length === 0 ? (
+          <MaterialCommunityIcons name="flower-outline" size={22} color={theme.border} />
+        ) : (
+          <View style={styles.flowerContainer}>
+            {flowerIds.slice(0, 3).map((fid, idx) => (
+              <PremiumImage 
+                key={idx} 
+                source={getFlowerImg(fid)} 
+                style={[
+                  styles.bouquetRowFlowerImg, 
+                  { 
+                    marginLeft: idx > 0 ? -8 : 0,
+                    zIndex: 3 - idx
+                  }
+                ]} 
+                resizeMode="contain"
+              />
+            ))}
+          </View>
+        )}
+      </View>
+      
+      <View style={{ flex: 1 }}>
+        <Text style={[styles.rowRecipient, { color: theme.text }]} numberOfLines={1}>
+          {t('widgetOverlay.to')} {recipient}
+        </Text>
+        <Text style={[styles.rowDate, { color: theme.textMuted }]}>
+          {isInOtherWidget
+            ? `In Widget ${ownerWidgetIdx}`
+            : isCurrentWidgetBouquet && !isSelected
+            ? 'Current widget'
+            : item.createdAt?.toMillis 
+              ? new Date(item.createdAt.toMillis()).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+              : item.createdAt?._millis
+              ? new Date(item.createdAt._millis).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+              : ''}
+        </Text>
+      </View>
+      
+      {isInOtherWidget ? (
+        <View style={[styles.checkCircle, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.05)' }]}>
+          <Feather name="lock" size={11} color={theme.textMuted} />
+        </View>
+      ) : isSelected ? (
+        <View style={[styles.checkCircle, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)' }]}>
+          <Feather name="check" size={13} color={theme.text} />
+        </View>
+      ) : (
+        <View style={styles.emptyCircle} />
+      )}
+    </HapticButton>
+  );
+});
+
+BouquetRow.displayName = 'BouquetRow';
 
 
 export default function WidgetOverlayScreen({ navigation }) {
@@ -517,12 +605,56 @@ export default function WidgetOverlayScreen({ navigation }) {
     return unsubscribe;
   }, [navigation, initializeWidget]);
 
+  // Also re-detect widgets when the app returns to the foreground.
+  // This handles the case where the user: (1) taps "Add Widget" in our app,
+  // (2) Android shows the system pin-widget dialog, (3) user confirms and
+  // places the widget, (4) user navigates back to the app.
+  // Without this listener the widget screen would only refresh on next full
+  // focus event, requiring the user to close and reopen the screen.
+  useEffect(() => {
+    if (Platform.OS !== 'android') return;
+    const subscription = AppState.addEventListener('change', (nextState) => {
+      if (nextState === 'active') {
+        initializeWidget(true);
+      }
+    });
+    return () => subscription.remove();
+  }, [initializeWidget]);
+
+  const handlePinWidget = useCallback(async () => {
+    if (Platform.OS !== 'android') return;
+    if (!NativeModules.WidgetPin) {
+      // Native module not available — fall back to manual instructions
+      setAddGuideVisible(true);
+      return;
+    }
+    try {
+      const supported = await NativeModules.WidgetPin.isRequestPinAppWidgetSupported();
+      setAddGuideVisible(true); // Always show manual instructions as fallback
+      if (supported) {
+        // Trigger the Android system "pin widget" dialog
+        await NativeModules.WidgetPin.requestPinAppWidget(
+          'com.digibouquet.app.widget.BouquetWidget'
+        );
+      }
+    } catch (e) {
+      console.warn('requestPinAppWidget error:', e);
+      setAddGuideVisible(true);
+    }
+  }, []);
+
   const handleConfirm = async () => {
     if (!selectedBouquet) return;
 
     if (!selectedWidgetId) {
-      // Show a proper centered guide modal instead of an alert
-      setAddGuideVisible(true);
+      // No widget detected on home screen yet.
+      // If the launcher supports one-tap pinning, trigger it directly.
+      // Otherwise fall back to the manual instruction guide.
+      if (Platform.OS === 'android' && canPinWidget) {
+        await handlePinWidget();
+      } else {
+        setAddGuideVisible(true);
+      }
       return;
     }
 
@@ -652,78 +784,20 @@ export default function WidgetOverlayScreen({ navigation }) {
                   ? activeWidgets.findIndex(w => w.widgetId === ownerWidget.widgetId) + 1
                   : null;
                 
+                
                 return (
-                  <HapticButton
+                  <BouquetRow 
                     key={item.id}
+                    item={item}
+                    theme={theme}
+                    t={t}
+                    isSelected={isSelected}
+                    isInOtherWidget={isInOtherWidget}
+                    isCurrentWidgetBouquet={isCurrentWidgetBouquet}
+                    ownerWidgetIdx={ownerWidgetIdx}
                     onPress={() => !isInOtherWidget && setSelectedBouquet(item)}
-                    activeOpacity={isInOtherWidget ? 1 : 0.7}
-                    style={[
-                      styles.bouquetRow,
-                      { 
-                        backgroundColor: isSelected 
-                          ? (theme.isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.03)')
-                          : theme.cardBg, 
-                        borderColor: theme.border,
-                        borderWidth: 1,
-                        opacity: isInOtherWidget ? 0.5 : 1,
-                      }
-                    ]}
-                  >
-                    {/* Flower Card */}
-                    <View style={[styles.bouquetFlowerCard, { backgroundColor: theme.bg, borderColor: theme.border }]}>
-                      {flowerIds.length === 0 ? (
-                        <MaterialCommunityIcons name="flower-outline" size={22} color={theme.border} />
-                      ) : (
-                        <View style={styles.flowerContainer}>
-                          {flowerIds.slice(0, 3).map((fid, idx) => (
-                            <PremiumImage 
-                              key={idx} 
-                              source={getFlowerImg(fid)} 
-                              style={[
-                                styles.bouquetRowFlowerImg, 
-                                { 
-                                  marginLeft: idx > 0 ? -8 : 0,
-                                  zIndex: 3 - idx
-                                }
-                              ]} 
-                              resizeMode="contain"
-                            />
-                          ))}
-                        </View>
-                      )}
-                    </View>
-                    
-                    {/* Text Content */}
-                    <View style={{ flex: 1 }}>
-                      <Text style={[styles.rowRecipient, { color: theme.text }]} numberOfLines={1}>
-                        {t('widgetOverlay.to')} {recipient}
-                      </Text>
-                      <Text style={[styles.rowDate, { color: theme.textMuted }]}>
-                        {isInOtherWidget
-                          ? `In Widget ${ownerWidgetIdx}`
-                          : isCurrentWidgetBouquet && !isSelected
-                          ? 'Current widget'
-                          : item.createdAt?.toMillis 
-                            ? new Date(item.createdAt.toMillis()).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
-                            : item.createdAt?._millis
-                            ? new Date(item.createdAt._millis).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
-                            : ''}
-                      </Text>
-                    </View>
-                    
-                    {/* Indicator */}
-                    {isInOtherWidget ? (
-                      <View style={[styles.checkCircle, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.05)' }]}>
-                        <Feather name="lock" size={11} color={theme.textMuted} />
-                      </View>
-                    ) : isSelected ? (
-                      <View style={[styles.checkCircle, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)' }]}>
-                        <Feather name="check" size={13} color={theme.text} />
-                      </View>
-                    ) : (
-                      <View style={styles.emptyCircle} />
-                    )}
-                  </HapticButton>
+                    getFlowerImg={getFlowerImg}
+                  />
                 );
               })
             )}
@@ -860,69 +934,72 @@ export default function WidgetOverlayScreen({ navigation }) {
       </SharedBottomSheet>
 
       {/* ── Add-widget guide modal (shown when no widget placed yet) ─── */}
-      <Modal visible={addGuideVisible} transparent animationType="fade" onRequestClose={() => setAddGuideVisible(false)}>
-        <HapticButton style={styles.successOverlay} activeOpacity={1} onPress={() => setAddGuideVisible(false)}>
-          <View style={[styles.successBox, { backgroundColor: theme.cardBg }]} onStartShouldSetResponder={() => true}>
-            <View style={[styles.successIconCircle, { backgroundColor: theme.brand }]}>
-              <Feather name="smartphone" size={30} color="#fff" />
-            </View>
-            <Text style={[styles.successTitle, { color: theme.text }]}>
-              {t('widget.howToUseWidgets') || 'How to Add a Widget'}
-            </Text>
-            {canPinWidget ? (
-              <>
-                <Text style={[styles.successMessage, { color: theme.textMuted, textAlign: 'center', marginBottom: 20 }]}>
-                  You can now pin the DigiBouquet widget directly to your home screen!
-                </Text>
-                <HapticButton
-                  style={[styles.helpCloseBtn, { backgroundColor: theme.brand, alignSelf: 'center', paddingHorizontal: 36, width: '100%' }]}
-                  onPress={() => {
-                    NativeModules.WidgetPin.requestPinAppWidget("com.digibouquet.app.widget.BouquetWidget");
-                    setAddGuideVisible(false);
-                  }}
-                >
-                  <Text style={styles.helpCloseText}>One-Tap Add</Text>
-                </HapticButton>
-              </>
-            ) : (
-              <>
-                {[
-                  Platform.OS === 'android'
-                    ? '1. Go to your home screen'
-                    : 'Home screen widgets are available on Android.',
-                  Platform.OS === 'android' ? '2. Long-press on an empty space' : null,
-                  Platform.OS === 'android' ? '3. Tap "Widgets"' : null,
-                  Platform.OS === 'android' ? '4. Find & select "DigiBouquet"' : null,
-                  Platform.OS === 'android' ? '5. Place it, then come back here!' : null,
-                ].filter(Boolean).map((step, i) => (
-                  <Text key={i} style={[styles.successMessage, { color: theme.textMuted, textAlign: 'left', alignSelf: 'stretch', marginTop: 4 }]}>
-                    {step}
+      {addGuideVisible && (
+        <View style={[StyleSheet.absoluteFillObject, { zIndex: 9999, elevation: 999 }]} pointerEvents="box-none">
+          <HapticButton style={styles.successOverlay} activeOpacity={1} onPress={() => setAddGuideVisible(false)}>
+            <View style={[styles.successBox, { backgroundColor: theme.cardBg }]} onStartShouldSetResponder={() => true}>
+              <View style={[styles.successIconCircle, { backgroundColor: theme.brand }]}>
+                <Feather name="smartphone" size={30} color="#fff" />
+              </View>
+              <Text style={[styles.successTitle, { color: theme.text }]}>
+                {t('widget.howToUseWidgets') || 'How to Add a Widget'}
+              </Text>
+              {canPinWidget && (
+                <>
+                  <Text style={[styles.successMessage, { color: theme.textMuted, textAlign: 'center', marginBottom: 12 }]}>
+                    You can try pinning the widget directly!
                   </Text>
-                ))}
-                <HapticButton
-                  style={[styles.helpCloseBtn, { backgroundColor: theme.brand, marginTop: 24, alignSelf: 'center', paddingHorizontal: 36, width: '100%' }]}
-                  onPress={() => setAddGuideVisible(false)}
-                >
-                  <Text style={styles.helpCloseText}>{t('widget.gotIt') || 'OK, Got It!'}</Text>
-                </HapticButton>
-              </>
-            )}
-          </View>
-        </HapticButton>
-      </Modal>
+                  <HapticButton
+                    style={[styles.helpCloseBtn, { backgroundColor: theme.brand, alignSelf: 'center', paddingHorizontal: 36, width: '100%', marginBottom: 12 }]}
+                    onPress={() => {
+                      handlePinWidget();
+                    }}
+                  >
+                    <Text style={styles.helpCloseText}>One-Tap Add</Text>
+                  </HapticButton>
+                  <Text style={[styles.successMessage, { color: theme.textMuted, textAlign: 'center', marginBottom: 12, fontSize: 13, fontWeight: '600' }]}>
+                    Or add it manually:
+                  </Text>
+                </>
+              )}
+              
+              {[
+                Platform.OS === 'android' ? '1. Go to your home screen' : 'Home screen widgets are available on Android.',
+                Platform.OS === 'android' ? '2. Long-press on an empty space' : null,
+                Platform.OS === 'android' ? '3. Tap "Widgets"' : null,
+                Platform.OS === 'android' ? '4. Find & select "DigiBouquet"' : null,
+                Platform.OS === 'android' ? '5. Place it, then come back here!' : null,
+              ].filter(Boolean).map((step, i) => (
+                <Text key={i} style={[styles.successMessage, { color: theme.textMuted, textAlign: 'left', alignSelf: 'stretch', marginTop: 4 }]}>
+                  {step}
+                </Text>
+              ))}
+              
+              <HapticButton
+                style={[styles.helpCloseBtn, { backgroundColor: theme.brand, marginTop: 24, alignSelf: 'center', paddingHorizontal: 36, width: '100%' }]}
+                onPress={() => setAddGuideVisible(false)}
+              >
+                <Text style={styles.helpCloseText}>{t('widget.gotIt') || 'OK, Got It!'}</Text>
+              </HapticButton>
+            </View>
+          </HapticButton>
+        </View>
+      )}
 
       {/* ── Success modal ─────────────────────────────────────────────── */}
-      <Modal visible={successVisible} transparent animationType="fade" onRequestClose={() => setSuccessVisible(false)}>
-        <HapticButton style={styles.successOverlay} activeOpacity={1} onPress={() => setSuccessVisible(false)}>
-          <View style={[styles.successBox, { backgroundColor: theme.cardBg }]} onStartShouldSetResponder={() => true}>
-            <View style={styles.successIconCircle}>
-              <Feather name="check" size={32} color="#fff" />
+      {successVisible && (
+        <View style={[StyleSheet.absoluteFillObject, { zIndex: 9999, elevation: 999 }]} pointerEvents="box-none">
+          <HapticButton style={styles.successOverlay} activeOpacity={1} onPress={() => setSuccessVisible(false)}>
+            <View style={[styles.successBox, { backgroundColor: theme.cardBg }]} onStartShouldSetResponder={() => true}>
+              <View style={styles.successIconCircle}>
+                <Feather name="check" size={32} color="#fff" />
+              </View>
+              <Text style={[styles.successTitle, { color: theme.text }]}>{t('widgetOverlay.successTitle') || 'Success'}</Text>
+              <Text style={[styles.successMessage, { color: theme.textMuted }]}>{t('widgetOverlay.successMessage') || 'Widget updated!'}</Text>
             </View>
-            <Text style={[styles.successTitle, { color: theme.text }]}>{t('widgetOverlay.successTitle') || 'Success'}</Text>
-            <Text style={[styles.successMessage, { color: theme.textMuted }]}>{t('widgetOverlay.successMessage') || 'Widget updated!'}</Text>
-          </View>
-        </HapticButton>
-      </Modal>
+          </HapticButton>
+        </View>
+      )}
     </View>
   );
 }

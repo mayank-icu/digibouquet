@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { HapticButton } from '../../components/HapticButton';
 
-export const DashboardActions = memo(({ themeColors, translate, getTextSize, navigation }) => {
+export const DashboardActions = React.memo(({ themeColors, translate, getTextSize, navigation }) => {
   return (
     <View style={styles.threeCol}>
       <HapticButton style={[styles.smallCard, { backgroundColor: themeColors.cardBg }]} activeOpacity={0.85} onPress={() => navigation.navigate('Discover', { fade: true })}>

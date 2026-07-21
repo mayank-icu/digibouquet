@@ -110,7 +110,7 @@ function ConfirmModal({ visible, title, message, onConfirm, onCancel, confirmTex
   }, [visible, slideAnim, overlayAnim]);
 
   return (
-    <Modal visible={visible} transparent animationType="none" onRequestClose={onCancel}>
+    <Modal hardwareAccelerated={true} visible={visible} transparent animationType="none" onRequestClose={onCancel}>
       <View style={StyleSheet.absoluteFill}>
         <Animated.View 
           pointerEvents="auto" 

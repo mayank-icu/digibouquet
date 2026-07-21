@@ -1,13 +1,25 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Modal, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, BackHandler } from 'react-native';
 
 export const SarahInfoModal = ({
   visible,
   onClose,
   styles,
 }: any) => {
+  useEffect(() => {
+    if (!visible) return;
+    const backAction = () => {
+      onClose();
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  }, [visible, onClose]);
+
+  if (!visible) return null;
+
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+    <View style={[StyleSheet.absoluteFill, { zIndex: 9999, elevation: 999 }]} pointerEvents="box-none">
       <View style={[styles.modalOverlay, { backgroundColor: 'rgba(0, 0, 0, 0.3)' }]}>
         <TouchableOpacity style={StyleSheet.absoluteFillObject} activeOpacity={1} onPress={onClose} />
         <View style={[styles.modalBox, { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 24, width: '85%', alignSelf: 'center', marginBottom: 'auto', marginTop: 'auto' }]}>
@@ -38,6 +50,6 @@ export const SarahInfoModal = ({
           </TouchableOpacity>
         </View>
       </View>
-    </Modal>
+    </View>
   );
 };

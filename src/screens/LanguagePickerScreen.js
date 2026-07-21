@@ -1,11 +1,11 @@
 import { HapticButton } from '../components/HapticButton';
 import React, { useState, useEffect, useMemo } from 'react';
+import { ExpoImageBackground as ImageBackground } from '../components/ExpoImageBackground';
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
-  ImageBackground,
   Platform,
   ActivityIndicator,
 } from 'react-native';

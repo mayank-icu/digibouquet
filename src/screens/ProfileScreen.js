@@ -548,7 +548,7 @@ export default function ProfileScreen({ navigation }) {
 
       </ScrollView>
 
-      <Modal visible={showCountryModal} transparent animationType="none" onRequestClose={closeCountryModal}>
+      <Modal hardwareAccelerated={true} visible={showCountryModal} transparent animationType="none" onRequestClose={closeCountryModal}>
         <View style={{ flex: 1 }}>
           <Animated.View 
             pointerEvents="auto" 
@@ -644,7 +644,7 @@ export default function ProfileScreen({ navigation }) {
       </Modal>
 
       {/* Sign out confirmation modal */}
-      <Modal visible={showSignOutModal} transparent animationType="none" onRequestClose={closeSignOutModal}>
+      <Modal hardwareAccelerated={true} visible={showSignOutModal} transparent animationType="none" onRequestClose={closeSignOutModal}>
         <View style={StyleSheet.absoluteFill}>
           <Animated.View 
             pointerEvents="auto" 
@@ -706,7 +706,7 @@ export default function ProfileScreen({ navigation }) {
       </Modal>
 
       {/* Change password modal */}
-      <Modal visible={showPwModal} transparent animationType="none" onRequestClose={closePwModal}>
+      <Modal hardwareAccelerated={true} visible={showPwModal} transparent animationType="none" onRequestClose={closePwModal}>
         <KeyboardAvoidingView 
           style={{ flex: 1 }} 
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -782,7 +782,7 @@ export default function ProfileScreen({ navigation }) {
       </Modal>
 
       {/* Google management modal */}
-      <Modal visible={showGoogleModal} transparent animationType="none" onRequestClose={closeGoogleModal}>
+      <Modal hardwareAccelerated={true} visible={showGoogleModal} transparent animationType="none" onRequestClose={closeGoogleModal}>
         <View style={StyleSheet.absoluteFill}>
           <Animated.View 
             pointerEvents="auto" 
@@ -871,7 +871,7 @@ export default function ProfileScreen({ navigation }) {
       </Modal>
 
       {/* Create password modal */}
-      <Modal visible={showCreatePwModal} transparent animationType="none" onRequestClose={closeCreatePwModal}>
+      <Modal hardwareAccelerated={true} visible={showCreatePwModal} transparent animationType="none" onRequestClose={closeCreatePwModal}>
         <KeyboardAvoidingView 
           style={{ flex: 1 }} 
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -944,7 +944,7 @@ export default function ProfileScreen({ navigation }) {
 
       
       {/* Success Animation Modal */}
-      <Modal visible={showSuccess} transparent animationType="fade">
+      <Modal hardwareAccelerated={true} visible={showSuccess} transparent animationType="fade">
         <View style={styles.successOverlay}>
           <LottieView
             source={showSuccess ? { uri: 'https://raw.githubusercontent.com/mayank-icu/digibouquet-assets/main/animations/Done.json' } : null}

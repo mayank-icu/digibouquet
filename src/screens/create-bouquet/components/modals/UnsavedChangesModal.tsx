@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Modal } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, BackHandler } from 'react-native';
 
 export const UnsavedChangesModal = ({
   visible,
@@ -10,8 +10,20 @@ export const UnsavedChangesModal = ({
   onStay,
   onLeave,
 }: any) => {
+  useEffect(() => {
+    if (!visible) return;
+    const backAction = () => {
+      if (onStay) onStay();
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  }, [visible, onStay]);
+
+  if (!visible) return null;
+
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onStay}>
+    <View style={[StyleSheet.absoluteFill, { zIndex: 9999, elevation: 999 }]} pointerEvents="box-none">
       <View style={styles.modalOverlay}>
         <TouchableOpacity style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} activeOpacity={1} onPress={onStay} />
         <View style={[styles.modalBox, { paddingBottom: insets.bottom + 24, backgroundColor: themeColors.cardBg }]}>
@@ -30,6 +42,6 @@ export const UnsavedChangesModal = ({
           </View>
         </View>
       </View>
-    </Modal>
+    </View>
   );
 };

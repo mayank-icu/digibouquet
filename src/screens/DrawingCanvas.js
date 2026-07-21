@@ -236,7 +236,7 @@ const DrawingCanvas = React.forwardRef(({
       </ScrollView>
 
       {/* Custom color input modal */}
-      <Modal visible={showCustomColor} transparent animationType="fade">
+      <Modal hardwareAccelerated={true} visible={showCustomColor} transparent animationType="fade">
         <HapticButton
           style={styles.customColorOverlay}
           activeOpacity={1}
@@ -383,3 +383,5 @@ const styles = StyleSheet.create({
     paddingVertical: 12, paddingHorizontal: 16, borderRadius: 12, alignItems: 'center',
   },
 });
+
+DrawingCanvas.displayName = 'DrawingCanvas';

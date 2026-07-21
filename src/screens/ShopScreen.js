@@ -349,7 +349,7 @@ function SwipeableBottomSheet({ visible, onClose, children, maxHeight = '90%' })
   if (!shouldRender) return null;
 
   return (
-    <Modal visible={shouldRender} transparent animationType="none">
+    <Modal hardwareAccelerated={true} visible={shouldRender} transparent animationType="none">
       {/* Attach PanResponder to the FULL modal container so swipe works anywhere on screen */}
       <View style={{ flex: 1, justifyContent: 'flex-end' }} {...panResponder.panHandlers}>
         {/* Backdrop fades with sheet — no black flash */}
@@ -1545,7 +1545,7 @@ Rules:
       </SwipeableBottomSheet>
 
       {/* Location Selector Modal */}
-      <Modal visible={locationModalVisible} transparent animationType="fade">
+      <Modal hardwareAccelerated={true} visible={locationModalVisible} transparent animationType="fade">
         <View style={styles.locationModalOverlay}>
           <View style={{ width: '80%', backgroundColor: t.bg, borderRadius: 20, padding: 20 }}>
             <Text style={{ fontFamily: 'Manrope-Bold', fontSize: 18, color: DARK, marginBottom: 16 }}>Delivery Location</Text>
@@ -1669,7 +1669,7 @@ Rules:
                     {msg.loading ? (
                       <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 12 }}>
                         <LottieView
-                          source={{ uri: 'https://raw.githubusercontent.com/mayank-icu/digibouquet-assets/main/animations/ai-bouquet.json' }}
+                          source={require('../../assets/animations/ai-bouquet.json')}
                           autoPlay
                           loop
                           style={{ width: 80, height: 80 }}

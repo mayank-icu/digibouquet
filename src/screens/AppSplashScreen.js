@@ -1,9 +1,9 @@
 import { PremiumImage } from '../components/PremiumImage';
+import { ExpoImageBackground as ImageBackground } from '../components/ExpoImageBackground';
 import React, { useEffect, useState } from 'react';
 import { preloadAllFlowerImages } from '../utils/bouquetData';
 import {
   View,
-  ImageBackground,
   StyleSheet,
   Animated,
   Dimensions,

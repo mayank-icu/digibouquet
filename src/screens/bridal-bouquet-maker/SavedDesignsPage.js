@@ -1,6 +1,7 @@
 import { HapticButton } from '../../components/HapticButton';
 import React from 'react';
-import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, SafeAreaView, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions } from 'react-native';
+import { ExpoImageBackground as ImageBackground } from '../../components/ExpoImageBackground';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { theme, globalStyles } from './styles';

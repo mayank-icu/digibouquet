@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Image } from 'expo-image';
 import {
   View,
   Text,
@@ -8,7 +9,7 @@ import {
   Animated,
   StatusBar,
   ScrollView,
- Image } from 'react-native';
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeft, RotateCcw, Award, Play, ChevronRight, Check, Pointer } from 'lucide-react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -563,10 +564,10 @@ function SortTutorialAnimation({ t }: { t: any }) {
       {/* Pointer */}
       <Animated.View style={{ 
         position: 'absolute', 
-        left: 0,
+        left: 20,
         top: 0,
         transform: [
-          { translateX: Animated.add(pointerAnim.x, new Animated.Value(20)) },
+          { translateX: pointerAnim.x },
           { translateY: pointerAnim.y },
           { scale: pointerScale }
         ],

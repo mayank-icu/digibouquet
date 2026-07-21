@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { Image } from 'expo-image';
 import {
   View,
   Text,
   TouchableOpacity,
   ScrollView,
-  Image,
   StyleSheet,
   Dimensions,
   Animated,
@@ -344,7 +344,7 @@ export default function FloristRecipeCardScreen() {
             {/* Note Card message draft */}
             <View style={[styles.cardMessageBox, { backgroundColor: t.bg }]}>
               <Text style={[styles.sectionHeading, { marginBottom: 6 }]}>PRE-WRITTEN CARD NOTE</Text>
-              <Text style={[styles.cardMessageText, { color: t.text }]}>"{currentRecipe.cardMessage}"</Text>
+              <Text style={[styles.cardMessageText, { color: t.text }]}>&quot;{currentRecipe.cardMessage}&quot;</Text>
               
               <TouchableOpacity style={styles.copyNoteBtn} onPress={handleCopyToClipboard}>
                 <Copy size={14} color={t.brand} style={{ marginRight: 4 }} />

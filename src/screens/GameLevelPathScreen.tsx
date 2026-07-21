@@ -572,9 +572,9 @@ export default function GameLevelPathScreen() {
         </TouchableOpacity>
 
         <TouchableOpacity 
-          style={[styles.floatingNextStage, unlockedLevel <= 11 && styles.lockedStage]} 
+          style={[styles.floatingNextStage, unlockedLevel <= 8 && styles.lockedStage]} 
           onPress={() => {
-            if (unlockedLevel > 11) {
+            if (unlockedLevel > 8) {
               soundManager.play('button_click');
               Toast.show({ type: 'success', text1: 'Coming Soon!', text2: 'Next stage is under development. Stay tuned!' });
             } else {
@@ -584,7 +584,7 @@ export default function GameLevelPathScreen() {
           }}
           activeOpacity={0.8}
         >
-          {unlockedLevel > 11 ? (
+          {unlockedLevel > 8 ? (
             <LinearGradient
               colors={['#7ac143', '#5a9b2b']}
               style={StyleSheet.absoluteFillObject}
@@ -592,7 +592,7 @@ export default function GameLevelPathScreen() {
               end={{ x: 0, y: 1 }}
             />
           ) : null}
-          <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 14, color: unlockedLevel <= 11 ? '#a89d92' : '#fff', zIndex: 1 }}>
+          <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 14, color: unlockedLevel <= 8 ? '#a89d92' : '#fff', zIndex: 1 }}>
             Next Stage
           </Text>
         </TouchableOpacity>
@@ -763,12 +763,7 @@ export default function GameLevelPathScreen() {
             colors={isDark ? ['#3c312b', '#251c16'] : ['#fffaeb', '#ffe3c0']}
             style={styles.rewardModalContent}
           >
-            <LottieView
-              source={{ uri: 'https://raw.githubusercontent.com/mayank-icu/digibouquet-assets/main/animations/confetti.json' }}
-              autoPlay
-              loop={false}
-              style={[StyleSheet.absoluteFillObject, { zIndex: -1, opacity: 0.8 }]}
-            />
+            {/* LottieView removed to prevent crash on missing remote URI */}
 
             <Text style={styles.rewardTitle}>
               {(rewardAmount.ai > 0 || rewardAmount.email > 0) ? 'Treasure Found!' : 'Better luck next time!'}
@@ -1062,13 +1057,14 @@ export default function GameLevelPathScreen() {
       </Modal>
 
       {showConfetti && (
-        <LottieView
-          source={{ uri: 'https://raw.githubusercontent.com/mayank-icu/digibouquet-assets/main/animations/confetti.json' }}
-          autoPlay
-          loop={false}
-          style={[StyleSheet.absoluteFillObject, { zIndex: 1000, pointerEvents: 'none' }]}
-          onAnimationFinish={() => setShowConfetti(false)}
-        />
+        <View style={[StyleSheet.absoluteFillObject, { zIndex: 1000 }]} pointerEvents="none">
+          {/* LottieView removed to prevent crash on missing remote URI.
+              Trigger completion immediately. */}
+          {(() => {
+             setTimeout(() => setShowConfetti(false), 2000);
+             return null;
+          })()}
+        </View>
       )}
     </View>
   );

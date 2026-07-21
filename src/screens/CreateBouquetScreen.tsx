@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
+import { Image } from 'expo-image';
 import {
   View,
   Text,
@@ -12,7 +13,6 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   ScrollView,
-  Image,
   Modal,
   Alert,
   StyleSheet,
@@ -40,7 +40,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { X, Info, Search as SearchIcon, Edit3, RotateCcw, RotateCw, Shuffle, Image as ImageIcon, Lock, Plus, Link, Music, Pause, Play, Sparkles, Layers, Settings, Check, Copy, ChevronRight, Share2, Move, ChevronUp, ChevronDown, Mail, Calendar, Clock, CheckCircle, Flag, Coins, AlertCircle, Star, Heart } from 'lucide-react-native';
 import Svg, { Path } from 'react-native-svg';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { doc, setDoc, getDoc, serverTimestamp, increment, updateDoc, collection, addDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, serverTimestamp, increment, updateDoc, collection, addDoc, writeBatch, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import YouTubeSearchModal, { YouTubeSong } from '../components/YouTubeSearchModal';
 import { getDeviceId } from '../utils/deviceId';
@@ -541,7 +541,7 @@ const CreateBouquet: React.FC = () => {
           setMessageImages(current => current.map(item => item.uri === tempId ? { ...item, uploading: true, isPendingUpload: false } : item));
           
           try {
-            console.log('Debounced upload starting for:', tempId);
+
             const { url, publicId } = await uploadImage(tempId, 'bouquet-messages');
             setMessageImages(current => current.map(item => item.uri === tempId ? { ...item, url, publicId, uploading: false } : item));
             uploadedSessionMediaRef.current.push({ publicId, resourceType: 'image' });
@@ -1153,7 +1153,7 @@ const handleRandomActSubmit = async () => {
           t('raok.bannedTitle') || 'Feature Temporarily Disabled',
           t('raok.bannedMessage') || 'You have repeatedly violated our safety guidelines. This feature is disabled for 24 hours.'
         );
-        navigation.navigate('Home' as any);
+        navigation.navigate('MainTabs' as any, { screen: 'Home' });
         return;
       } else {
         Alert.alert(
@@ -1211,8 +1211,8 @@ const handleSubmit = async () => {
   if (hasUploadingImages || isAudioUploading) {
     Toast.show({
       type: 'info',
-      text1: 'Media uploading',
-      text2: 'Please wait a moment for your media to finish uploading.',
+      text1: t('createBouquet.mediaUploading', 'Media uploading'),
+      text2: t('createBouquet.mediaUploadingDesc', 'Please wait a moment for your media to finish uploading.'),
     });
     return;
   }
@@ -1890,7 +1890,7 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
       {/* ══════════════════════ MODALS ══════════════════════ */}
       
       {/* RAOK Success Modal */}
-      <Modal visible={showRaokSuccessModal} transparent animationType="fade">
+      <Modal hardwareAccelerated={true} visible={showRaokSuccessModal} transparent animationType="fade">
         <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center', padding: 20 }}>
           <View style={{ backgroundColor: themeColors.cardBg, borderRadius: 20, padding: 24, width: '100%', maxWidth: 400, alignItems: 'center' }}>
             <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: '#E8F5E9', justifyContent: 'center', alignItems: 'center', marginBottom: 16 }}>
@@ -1917,7 +1917,7 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
       </Modal>
 
       {/* Flower Meaning Modal — animated bottom sheet with scroll-aware swipe */}
-      <Modal visible={!!viewingMeaning} transparent animationType="none" onRequestClose={() => { setViewingMeaning(null); setShowColorPicker(null); }}>
+      <Modal hardwareAccelerated={true} visible={!!viewingMeaning} transparent animationType="none" onRequestClose={() => { setViewingMeaning(null); setShowColorPicker(null); }}>
         <View style={StyleSheet.absoluteFill}>
           {/* Dim overlay */}
           <Animated.View
@@ -2092,6 +2092,21 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
                 senderExpoPushToken: tokenData.data,
                 notifyOnReply: true
               });
+              
+              if (currentUser) {
+                await setDoc(doc(db, 'users', currentUser.uid), { expoPushToken: tokenData.data }, { merge: true });
+                // Also update other bouquets just in case
+                const bouquetSnap = await getDocs(query(collection(db, 'bouquet-cards'), where('userId', '==', currentUser.uid)));
+                if (!bouquetSnap.empty) {
+                  const batch = writeBatch(db);
+                  bouquetSnap.forEach(d => {
+                    batch.update(doc(db, 'bouquet-cards', d.id), { notifyOnReply: true, senderExpoPushToken: tokenData.data });
+                  });
+                  await batch.commit();
+                }
+              }
+              
+              await AsyncStorage.setItem('notifications_enabled', 'true');
               Toast.show({ type: 'success', text1: 'Notifications Enabled', text2: 'You will be notified when they reply.' });
             }
           } catch (e) {
@@ -2101,14 +2116,14 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
       />
 
       {/* Success Modal (Stays until closed) */}
-      <Modal visible={showSuccessModal} transparent animationType="fade" onRequestClose={() => { }}>
+      <Modal hardwareAccelerated={true} visible={showSuccessModal} transparent animationType="fade" onRequestClose={() => { }}>
         <View style={styles.modalOverlay}>
           <View style={[styles.modalBox, { paddingBottom: 24, alignItems: 'center', backgroundColor: themeColors.cardBg }]}>
             {/* Lottie Animation (Over the modal) */}
             {showSuccessLottie && (
               <View style={{ position: 'absolute', top: -100, left: 0, right: 0, bottom: 0, zIndex: 9999, pointerEvents: 'none', alignItems: 'center', justifyContent: 'center' }}>
                 <LottieView
-                  source={{ uri: 'https://raw.githubusercontent.com/mayank-icu/digibouquet-assets/main/animations/bouqet-created.json' }}
+                  source={require('../../assets/animations/bouqet-created.json')}
                   autoPlay
                   loop={false}
                   style={{ width: SCREEN_W * 1.2, height: SCREEN_W * 1.2 }}
@@ -2191,7 +2206,7 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
                 onPress={() => { 
                   isForceLeavingRef.current = true;
                   setShowSuccessModal(false); 
-                  navigation.navigate('Home' as never); 
+                  navigation.navigate('MainTabs' as never, { screen: 'Home' } as never);
                 }}
               >
                 <Text style={{ fontFamily: 'Manrope-SemiBold', fontSize: 14, color: '#aaa' }}>{t('createBouquet.close')}</Text>
@@ -2201,7 +2216,7 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
         </View>
       </Modal>
 
-      <Modal visible={showReviewFallbackModal} transparent animationType="fade" onRequestClose={() => setShowReviewFallbackModal(false)}>
+      <Modal hardwareAccelerated={true} visible={showReviewFallbackModal} transparent animationType="fade" onRequestClose={() => setShowReviewFallbackModal(false)}>
         <View style={styles.modalOverlay}>
           <View style={[styles.modalBox, { paddingBottom: 24, alignItems: 'center', backgroundColor: themeColors.cardBg }]}>
             <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: '#FFF5F0', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
@@ -2216,16 +2231,11 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
                 style={{ backgroundColor: '#7A5C58', borderRadius: 14, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8 }}
                 onPress={async () => {
                   setShowReviewFallbackModal(false);
-                  const marketUrl = 'market://details?id=com.digibouquet.app';
                   const webUrl = 'https://play.google.com/store/apps/details?id=com.digibouquet.app';
                   try {
-                    await Linking.openURL(marketUrl);
-                  } catch (err) {
-                    try {
-                      await Linking.openURL(webUrl);
-                    } catch (webErr) {
-                      console.error('Failed to open store URL from fallback modal:', webErr);
-                    }
+                    await Linking.openURL(webUrl);
+                  } catch (webErr) {
+                    console.error('Failed to open store URL from fallback modal:', webErr);
                   }
                 }}
               >
@@ -2242,7 +2252,7 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
         </View>
       </Modal>
 
-      <Modal visible={showRateUsConfirmModal} transparent animationType="fade" onRequestClose={() => setShowRateUsConfirmModal(false)}>
+      <Modal hardwareAccelerated={true} visible={showRateUsConfirmModal} transparent animationType="fade" onRequestClose={() => setShowRateUsConfirmModal(false)}>
         <View style={styles.modalOverlay}>
           <View style={[styles.modalBox, { paddingBottom: 24, alignItems: 'center', backgroundColor: themeColors.cardBg }]}>
             <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: '#FFF5F0', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
@@ -2257,27 +2267,11 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
                 style={{ backgroundColor: '#7A5C58', borderRadius: 14, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8 }}
                 onPress={async () => {
                   setShowRateUsConfirmModal(false);
-                  let success = false;
+                  const webUrl = 'https://play.google.com/store/apps/details?id=com.digibouquet.app';
                   try {
-                    if (Platform.OS !== 'web' && await StoreReview.isAvailableAsync() && await StoreReview.hasAction()) {
-                      await StoreReview.requestReview();
-                      success = true;
-                    }
+                    await Linking.openURL(webUrl);
                   } catch (e) {
-                    console.warn('In-app review failed to open from success modal:', e);
-                  }
-                  if (!success) {
-                    const marketUrl = 'market://details?id=com.digibouquet.app';
-                    const webUrl = 'https://play.google.com/store/apps/details?id=com.digibouquet.app';
-                    try {
-                      await Linking.openURL(marketUrl);
-                    } catch (err) {
-                      try {
-                        await Linking.openURL(webUrl);
-                      } catch (webErr) {
-                        console.error('Failed to open store URL from success modal:', webErr);
-                      }
-                    }
+                    console.error('Failed to open Play Store from success modal:', e);
                   }
                 }}
               >
@@ -2304,7 +2298,7 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
       />
 
       {/* Unsaved Changes Modal */}
-      <Modal visible={showUnsavedModal} transparent animationType="fade" onRequestClose={() => setShowUnsavedModal(false)}>
+      <Modal hardwareAccelerated={true} visible={showUnsavedModal} transparent animationType="fade" onRequestClose={() => setShowUnsavedModal(false)}>
         <View style={styles.modalOverlay}>
           <TouchableOpacity style={StyleSheet.absoluteFillObject} activeOpacity={1} onPress={() => setShowUnsavedModal(false)} />
           <View style={[styles.modalBox, { paddingBottom: insets.bottom + 24, backgroundColor: themeColors.cardBg }]}>
@@ -2342,7 +2336,7 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
       />
 
       {/* Help Modal — minimal swipe-down sheet */}
-      <Modal visible={showHelp} transparent animationType="none" onRequestClose={() => setShowHelp(false)}>
+      <Modal hardwareAccelerated={true} visible={showHelp} transparent animationType="none" onRequestClose={() => setShowHelp(false)}>
         <View style={StyleSheet.absoluteFill}>
           <Animated.View
             pointerEvents={showHelp ? 'auto' : 'none'}
@@ -2405,7 +2399,7 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
       </Modal>
 
       {/* AI Result Modal */}
-      <Modal visible={!!aiGenerationResult} transparent animationType="fade" onRequestClose={() => setAiGenerationResult(null)}>
+      <Modal hardwareAccelerated={true} visible={!!aiGenerationResult} transparent animationType="fade" onRequestClose={() => setAiGenerationResult(null)}>
         <View style={[styles.modalOverlay, { zIndex: 9999, elevation: 9999 }]}>
           <TouchableOpacity
             style={StyleSheet.absoluteFillObject}
@@ -2521,7 +2515,7 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
       </Modal>
 
       {/* Sarah Info Modal */}
-      <Modal visible={showSarahInfo} transparent animationType="fade" onRequestClose={() => setShowSarahInfo(false)}>
+      <Modal hardwareAccelerated={true} visible={showSarahInfo} transparent animationType="fade" onRequestClose={() => setShowSarahInfo(false)}>
         <View style={[styles.modalOverlay, { backgroundColor: 'rgba(0, 0, 0, 0.3)' }]}>
           <TouchableOpacity style={StyleSheet.absoluteFillObject} activeOpacity={1} onPress={() => setShowSarahInfo(false)} />
           <View style={[styles.modalBox, { borderRadius: 20, padding: 24, width: '85%', alignSelf: 'center', marginBottom: 'auto', marginTop: 'auto' }]}>
@@ -2612,10 +2606,10 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                   <ActivityIndicator color="#fff" size="small" />
                   {isAiVerifying && (
-                    <Text style={[styles.fabPrimaryText, { color: '#fff' }]}>{t('createBouquet.verifyingAi', 'Verifying with AI...')}</Text>
+                    <Text style={[styles.fabPrimaryText, { color: '#fff' }]}>{t('createBouquet.verifyingAi', 'Checking with AI...')}</Text>
                   )}
                 </View>
-              ) : (hasUploadingImages || messageAudio?.uploading) ? (
+              ) : (messageImages.some(img => img.uploading || img.isPendingUpload) || messageAudio?.uploading) ? (
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
                   <ActivityIndicator color="#fff" size="small" />
                   <Text style={styles.fabPrimaryText}>{t('createBouquet.uploadingAssets', 'Uploading Assets...')}</Text>
@@ -2697,13 +2691,9 @@ const handleSlugCheck = useCallback(async (slugToCheck: string) => {
           {/* CTA Button */}
           <TouchableOpacity
             style={[styles.raokSoundsGoodBtn, { backgroundColor: themeColors.brand || '#7A5C58' }]}
-            onPress={async () => {
-              try {
-                await AsyncStorage.setItem('hasShownRaokGuidelines', 'true');
-              } catch (e) {
-                console.warn(e);
-              }
+            onPress={() => {
               setShowRaokGuidelinesModal(false);
+              AsyncStorage.setItem('hasShownRaokGuidelines', 'true').catch(console.warn);
             }}
             activeOpacity={0.9}
           >

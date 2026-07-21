@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Image, StyleSheet } from 'react-native';
-import Modal from 'react-native-modal';
+import { Image } from 'expo-image';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import SharedBottomSheet from '../../../../components/SharedBottomSheet';
 import { getFlowerImage } from '../../../../utils/bouquetData';
 import { Plus } from 'lucide-react-native';
 
@@ -33,45 +34,39 @@ export const FlowerMeaningModal = ({
     }
   };
   return (
-    <Modal
-      isVisible={!!viewingMeaning}
-      onSwipeComplete={onClose}
-      swipeDirection="down"
-      propagateSwipe={true}
-      scrollTo={handleScrollTo}
-      scrollOffset={scrollOffset}
-      scrollOffsetMax={100} // Trigger swipe down when near top
-      onBackdropPress={onClose}
-      style={{ margin: 0, justifyContent: 'flex-end' }}
-      animationIn="slideInUp"
-      animationOut="slideOutDown"
-      backdropOpacity={0.55}
-      useNativeDriverForBackdrop
+    <SharedBottomSheet
+      visible={!!viewingMeaning}
+      onClose={onClose}
+      style={[
+        styles.modalBox,
+        {
+          paddingBottom: insets.bottom + 16,
+          backgroundColor: themeColors.cardBg,
+          maxHeight: SCREEN_H * 0.9,
+          borderTopLeftRadius: 24,
+          borderTopRightRadius: 24,
+        },
+      ]}
     >
-      <View
-        style={[
-          styles.modalBox,
-          {
-            paddingBottom: insets.bottom + 16,
-            backgroundColor: themeColors.cardBg,
-            maxHeight: SCREEN_H * 0.9,
-          },
-        ]}
-      >
-        {/* Drag handle */}
-        <View style={{ alignItems: 'center', paddingVertical: 14, marginTop: -8 }}>
-          <View style={{ width: 40, height: 4, borderRadius: 2, backgroundColor: themeColors.border }} />
-        </View>
+      {({ onScroll }) => (
+        <>
+          {/* Drag handle */}
+          <View style={{ alignItems: 'center', paddingVertical: 14, marginTop: -8 }}>
+            <View style={{ width: 40, height: 4, borderRadius: 2, backgroundColor: themeColors.border }} />
+          </View>
 
-        {viewingMeaning && (
-          <ScrollView
-            ref={scrollViewRef}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 20 }}
-            scrollEventThrottle={16}
-            onScroll={handleOnScroll}
-            bounces={false}
-          >
+          {viewingMeaning && (
+            <ScrollView
+              ref={scrollViewRef}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ paddingBottom: 20 }}
+              scrollEventThrottle={16}
+              onScroll={(e) => {
+                if (onScroll) onScroll(e);
+                handleOnScroll(e);
+              }}
+              bounces={false}
+            >
               {viewingMeaning.colors.length === 1 && getFlowerImage(viewingMeaning.colors[0].id) && (
                 <View style={{ position: 'relative', alignItems: 'center' }}>
                   <Image source={getFlowerImage(viewingMeaning.colors[0].id)} style={styles.meaningImg} resizeMode="contain" />
@@ -147,8 +142,9 @@ export const FlowerMeaningModal = ({
                 </View>
               )}
             </ScrollView>
-        )}
-      </View>
-    </Modal>
+          )}
+        </>
+      )}
+    </SharedBottomSheet>
   );
 };

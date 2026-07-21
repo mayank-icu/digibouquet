@@ -10,12 +10,16 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as Application from 'expo-application';
 // ─── GOLDEN BOUQUET FEATURE END: imports ─────────────────────────────────────
 import { ScrollView } from 'react-native-gesture-handler';
+import Reanimated, { useSharedValue, useAnimatedStyle, withTiming, runOnJS } from 'react-native-reanimated';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
+
 
 import * as StoreReview from 'expo-store-review';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons, Ionicons, Feather } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
-import { collection, query, where, orderBy, limit, getDocs, doc, deleteDoc, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, orderBy, limit, getDocs, doc, deleteDoc, onSnapshot, setDoc, writeBatch } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
 import Toast from 'react-native-toast-message';
@@ -131,28 +135,28 @@ const sheetStyles = StyleSheet.create({
 // ── Cache key ─────────────────────────────────────────────────────────────────
 const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 
-const HamburgerMenu = memo(forwardRef(({ navigation, currentUser, translate, getTextSize, isDark, t, toggleTheme, memoizedCherryBlossom, insets }, ref) => {
+const HamburgerMenu = React.memo(React.forwardRef(({ navigation, currentUser, translate, getTextSize, isDark, t, toggleTheme, memoizedCherryBlossom, insets }, ref) => {
   const [menuVisible, setMenuVisible] = useState(false);
-  const slideAnim = useRef(new Animated.Value(-300)).current;
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useSharedValue(-300);
+  const fadeAnim = useSharedValue(0);
+
+  const onMenuClosed = () => {
+    setMenuVisible(false);
+  };
 
   const closeMenu = () => {
     DeviceEventEmitter.emit('toggleMenu', false);
-    Animated.parallel([
-      Animated.timing(slideAnim, { toValue: -300, duration: 180, useNativeDriver: true }),
-      Animated.timing(fadeAnim, { toValue: 0, duration: 180, useNativeDriver: true }),
-    ]).start(() => {
-      setMenuVisible(false);
+    slideAnim.value = withTiming(-300, { duration: 180 });
+    fadeAnim.value = withTiming(0, { duration: 180 }, () => {
+      runOnJS(onMenuClosed)();
     });
   };
 
   const openMenu = () => {
     DeviceEventEmitter.emit('toggleMenu', true);
     setMenuVisible(true);
-    Animated.parallel([
-      Animated.timing(slideAnim, { toValue: 0, duration: 200, useNativeDriver: true }),
-      Animated.timing(fadeAnim, { toValue: 1, duration: 200, useNativeDriver: true }),
-    ]).start();
+    slideAnim.value = withTiming(0, { duration: 200 });
+    fadeAnim.value = withTiming(1, { duration: 200 });
   };
 
   useImperativeHandle(ref, () => ({
@@ -176,37 +180,19 @@ const HamburgerMenu = memo(forwardRef(({ navigation, currentUser, translate, get
     DeviceEventEmitter.emit('toggleMenu', false);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     navigation.navigate(screen, params);
-    Animated.parallel([
-      Animated.timing(slideAnim, { toValue: -300, duration: 180, useNativeDriver: true }),
-      Animated.timing(fadeAnim, { toValue: 0, duration: 180, useNativeDriver: true }),
-    ]).start(() => {
-      setMenuVisible(false);
+    slideAnim.value = withTiming(-300, { duration: 180 });
+    fadeAnim.value = withTiming(0, { duration: 180 }, () => {
+      runOnJS(onMenuClosed)();
     });
   };
 
   const handleRateUs = async () => {
     closeMenu();
-    let success = false;
+    const webUrl = 'https://play.google.com/store/apps/details?id=com.digibouquet.app';
     try {
-      if (Platform.OS !== 'web' && await StoreReview.isAvailableAsync() && await StoreReview.hasAction()) {
-        await StoreReview.requestReview();
-        success = true;
-      }
+      await Linking.openURL(webUrl);
     } catch (e) {
-      console.warn('In-app review failed to open from menu:', e);
-    }
-    if (!success) {
-      const marketUrl = 'market://details?id=com.digibouquet.app';
-      const webUrl = 'https://play.google.com/store/apps/details?id=com.digibouquet.app';
-      try {
-        await Linking.openURL(marketUrl);
-      } catch (err) {
-        try {
-          await Linking.openURL(webUrl);
-        } catch (webErr) {
-          console.error('Failed to open store URL from menu:', webErr);
-        }
-      }
+      console.error('Failed to open Play Store from menu:', e);
     }
   };
 
@@ -215,17 +201,27 @@ const HamburgerMenu = memo(forwardRef(({ navigation, currentUser, translate, get
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
+  const animatedCloseAreaStyle = useAnimatedStyle(() => ({
+    opacity: fadeAnim.value,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+  }));
+
+  const animatedContainerStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: slideAnim.value }],
+    backgroundColor: t.bg,
+  }));
+
   return (
     <View 
       style={[StyleSheet.absoluteFill, { zIndex: 9999, elevation: 9999 }]} 
       pointerEvents={menuVisible ? 'box-none' : 'none'}
     >
       <View style={styles.menuOverlay} pointerEvents="box-none">
-        <Animated.View style={[styles.menuCloseArea, { opacity: fadeAnim, backgroundColor: 'rgba(0,0,0,0.4)' }]} pointerEvents={menuVisible ? 'auto' : 'none'}>
+        <Reanimated.View style={[styles.menuCloseArea, animatedCloseAreaStyle]} pointerEvents={menuVisible ? 'auto' : 'none'}>
           <HapticButton style={{ flex: 1 }} onPress={closeMenu} activeOpacity={1} />
-        </Animated.View>
-        <Animated.View 
-          style={[styles.menuContainer, { transform: [{ translateX: slideAnim }], backgroundColor: t.bg }]}
+        </Reanimated.View>
+        <Reanimated.View 
+          style={[styles.menuContainer, animatedContainerStyle]}
           pointerEvents={menuVisible ? 'auto' : 'none'}
         >
           <View style={[styles.menuHeader, { paddingTop: insets.top + 8, borderBottomColor: t.border }]} pointerEvents="box-none">
@@ -307,7 +303,7 @@ const HamburgerMenu = memo(forwardRef(({ navigation, currentUser, translate, get
             </View>
             <Text style={[styles.menuFooterVersion, { color: t.textMuted }]}>v{packageJson.version}</Text>
           </View>
-        </Animated.View>
+        </Reanimated.View>
       </View>
     </View>
   );
@@ -326,6 +322,7 @@ export default function HomeScreen({ navigation }) {
   const showAlert = useCustomAlert();
   const [lottieProgress] = useState(() => new Animated.Value(isDark ? 0.5 : 0));
   const [showUpdateOverlay, setShowUpdateOverlay] = useState(false);
+  const [showNotificationPrompt, setShowNotificationPrompt] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
 
   const tabTranslateY = useRef(new Animated.Value(0)).current;
@@ -482,6 +479,26 @@ export default function HomeScreen({ navigation }) {
     };
     checkOverlay();
   }, []);
+
+  useEffect(() => {
+    const checkNotificationPrompt = async () => {
+      if (!currentUser) return;
+      try {
+        const enabled = await AsyncStorage.getItem('notifications_enabled');
+        const dismissed = await AsyncStorage.getItem('hasDismissedNotificationPrompt');
+        if (enabled !== 'true' && dismissed !== 'true') {
+          const { status } = await Notifications.getPermissionsAsync();
+          if (status !== 'granted') {
+            setShowNotificationPrompt(true);
+          }
+        }
+      } catch (err) {
+        console.warn('Error checking notification prompt status', err);
+      }
+    };
+    // Small delay so it doesn't fight with splash or other popups
+    setTimeout(checkNotificationPrompt, 1500);
+  }, [currentUser]);
 
   useEffect(() => {
     let active = true;
@@ -736,6 +753,74 @@ export default function HomeScreen({ navigation }) {
             ════════════════════════════════════════════════════════════════ */}
         <GoldenBouquetBanner navigation={navigation} />
         
+        {showNotificationPrompt && (
+          <View style={[styles.notificationPrompt, { backgroundColor: isDark ? 'rgba(122,92,88,0.15)' : '#FFF5F5', borderColor: isDark ? 'rgba(122,92,88,0.3)' : '#FFE8E8' }]}>
+            <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 12 }}>
+              <View style={[styles.iconCircle, { width: 40, height: 40, backgroundColor: isDark ? 'rgba(122,92,88,0.3)' : '#FFE0E0', marginRight: 12 }]}>
+                <Ionicons name="notifications" size={20} color={t.brand} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontFamily: 'Manrope-Bold', fontSize: 16, color: t.text, marginBottom: 4 }}>Turn on Notifications</Text>
+                <Text style={{ fontFamily: 'Manrope-Regular', fontSize: 13, color: t.textMuted, lineHeight: 18 }}>
+                  Get notified when someone replies to your bouquets or sends you a Random Act of Kindness!
+                </Text>
+              </View>
+            </View>
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <TouchableOpacity 
+                style={[styles.soundsGoodBtn, { flex: 1, backgroundColor: t.brand, paddingVertical: 10, borderRadius: 12 }]}
+                onPress={async () => {
+                  try {
+                    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+                    let finalStatus = existingStatus;
+                    if (existingStatus !== 'granted') {
+                      const { status } = await Notifications.requestPermissionsAsync();
+                      finalStatus = status;
+                    }
+                    if (finalStatus === 'granted') {
+                      const projectId = Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
+                      const tokenData = await Notifications.getExpoPushTokenAsync(projectId ? { projectId } : undefined);
+                      await AsyncStorage.setItem('notifications_enabled', 'true');
+                      
+                      // Save to user doc
+                      if (currentUser) {
+                        await setDoc(doc(db, 'users', currentUser.uid), { expoPushToken: tokenData.data }, { merge: true });
+                        // Update existing bouquet-cards
+                        const bouquetSnap = await getDocs(query(collection(db, 'bouquet-cards'), where('userId', '==', currentUser.uid)));
+                        if (!bouquetSnap.empty) {
+                          const batch = writeBatch(db);
+                          bouquetSnap.forEach(d => {
+                            batch.update(doc(db, 'bouquet-cards', d.id), { notifyOnReply: true, senderExpoPushToken: tokenData.data });
+                          });
+                          await batch.commit();
+                        }
+                      }
+                      
+                      Toast.show({ type: 'success', text1: 'Notifications Enabled' });
+                      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                      setShowNotificationPrompt(false);
+                    }
+                  } catch (e) {
+                    console.error('Error enabling notifications:', e);
+                  }
+                }}
+              >
+                <Text style={styles.soundsGoodBtnText}>Turn On</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={{ flex: 1, paddingVertical: 10, alignItems: 'center', justifyContent: 'center' }}
+                onPress={() => {
+                  LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                  setShowNotificationPrompt(false);
+                  AsyncStorage.setItem('hasDismissedNotificationPrompt', 'true');
+                }}
+              >
+                <Text style={{ fontFamily: 'Manrope-SemiBold', fontSize: 14, color: t.textMuted }}>Maybe Later</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+        
         {/* ── Action Cards Row ── */}
         <ActionCardsRow navigation={navigation} currentUser={currentUser} translate={translate} t={t} showAlert={showAlert} />
 
@@ -937,13 +1022,9 @@ export default function HomeScreen({ navigation }) {
             {/* Sounds Good Button */}
             <HapticButton
               style={[styles.soundsGoodBtn, { backgroundColor: t.brand }]}
-              onPress={async () => {
-                try {
-                  await AsyncStorage.setItem('hasShownNewUpdateOverlay_v1_1', 'true');
-                } catch (e) {
-                  console.warn(e);
-                }
+              onPress={() => {
                 setShowUpdateOverlay(false);
+                AsyncStorage.setItem('hasShownNewUpdateOverlay_v1_1', 'true').catch(console.warn);
               }}
               activeOpacity={0.9}
             >
@@ -1320,6 +1401,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Manrope-Medium',
     fontSize: 13,
     textAlign: 'center',
+  },
+  notificationPrompt: {
+    padding: 16,
+    borderRadius: 20,
+    marginBottom: 20,
+    borderWidth: 1,
   },
 });
 

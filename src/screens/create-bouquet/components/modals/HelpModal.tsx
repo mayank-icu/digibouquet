@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Modal, ScrollView, Animated, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, Animated, StyleSheet, BackHandler } from 'react-native';
 
 export const HelpModal = ({
   visible,
@@ -14,8 +14,20 @@ export const HelpModal = ({
   onHelpScroll,
   onClose,
 }: any) => {
+  useEffect(() => {
+    if (!visible) return;
+    const backAction = () => {
+      onClose();
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  }, [visible, onClose]);
+
+  if (!visible && helpSlideAnim._value === SCREEN_H) return null;
+
   return (
-    <Modal visible={visible} transparent animationType="none" onRequestClose={onClose}>
+    <View style={[StyleSheet.absoluteFill, { zIndex: 9999, elevation: 999 }]} pointerEvents="box-none">
       <View style={StyleSheet.absoluteFill}>
         <Animated.View
           pointerEvents={visible ? 'auto' : 'none'}
@@ -72,6 +84,6 @@ export const HelpModal = ({
           </ScrollView>
         </Animated.View>
       </View>
-    </Modal>
+    </View>
   );
 };

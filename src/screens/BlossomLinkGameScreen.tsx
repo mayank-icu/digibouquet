@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Image } from 'expo-image';
 import {
   View,
   Text,
@@ -9,7 +10,7 @@ import {
   StatusBar,
   ScrollView,
   PanResponder,
- Image } from 'react-native';
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeft, RotateCcw, Award, Play, ChevronRight, Pointer, Hand } from 'lucide-react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';

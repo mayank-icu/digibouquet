@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import { View, TouchableOpacity, Image, Animated, PanResponder } from 'react-native';
+import { View, TouchableOpacity, Animated, PanResponder } from 'react-native';
+import { Image } from 'expo-image';
 import { X } from 'lucide-react-native';
 import { getFlowerImage } from '../../../utils/bouquetData';
 import * as Haptics from '../../../utils/haptics';

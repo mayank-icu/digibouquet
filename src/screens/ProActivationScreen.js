@@ -52,11 +52,13 @@ export default function ProActivationScreen({ navigation, route }) {
   };
 
   const handleContinue = () => {
-    if (route.params?.fromScreen === 'CreateBouquet') {
-      navigation.navigate('CreateBouquet');
-    } else {
-      navigation.replace('MainTabs');
-    }
+    setTimeout(() => {
+      if (route.params?.fromScreen === 'CreateBouquet') {
+        navigation.navigate('CreateBouquet');
+      } else {
+        navigation.replace('MainTabs');
+      }
+    }, 0);
   };
 
   return (
@@ -129,7 +131,7 @@ export default function ProActivationScreen({ navigation, route }) {
         <View style={[StyleSheet.absoluteFill, styles.animationOverlay]} pointerEvents="none">
           <LottieView
             ref={lottieRef}
-            source={{ uri: 'https://raw.githubusercontent.com/mayank-icu/digibouquet-assets/main/animations/pro-activate.json' }}
+            source={require('../../assets/animations/pro-activate.json')}
             autoPlay={true}
             loop={false}
             style={styles.overlayAnimation}

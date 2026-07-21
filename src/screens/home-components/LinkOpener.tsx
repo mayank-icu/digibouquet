@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { HapticButton } from '../../components/HapticButton';
 
-export const LinkOpener = memo(({ themeColors, translate, navigation }) => {
+export const LinkOpener = React.memo(({ themeColors, translate, navigation }) => {
   const [openLink, setOpenLink] = useState('');
 
   const handleOpenLink = () => {

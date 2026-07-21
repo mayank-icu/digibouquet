@@ -41,16 +41,6 @@ import Svg, {
   Stop, Rect, Circle, Ellipse, Path, G,
 } from 'react-native-svg';
 
-const { width: W, height: H } = Dimensions.get('window');
-
-// ─── Preview frame ────────────────────────────────────────────────────────────
-const PREV_W  = W * 0.54;
-const PREV_H  = PREV_W * 2.08;
-const SCALE   = PREV_W / W;
-
-// Sticky bar height so ScrollView can pad correctly
-const STICKY_H = 80;
-
 import {
   SharedWallpaperCanvas,
   THEMES,
@@ -60,6 +50,16 @@ import {
   FlowerV2,
   BouquetData,
 } from '../components/SharedWallpaperCanvas';
+
+const { width: W, height: H } = Dimensions.get('window');
+
+// ─── Preview frame ────────────────────────────────────────────────────────────
+const PREV_W  = W * 0.54;
+const PREV_H  = PREV_W * 2.08;
+const SCALE   = PREV_W / W;
+
+// Sticky bar height so ScrollView can pad correctly
+const STICKY_H = 80;
 
 // ─── Main screen ──────────────────────────────────────────────────────────────
 export default function WallpaperSetupScreen() {
@@ -471,7 +471,7 @@ export default function WallpaperSetupScreen() {
       </View>
 
       {/* ── Custom wallpaper placement modal ─────────────────────────────── */}
-      <Modal visible={showPlaceModal} transparent animationType="none" onRequestClose={closePlaceModal}>
+      <Modal hardwareAccelerated={true} visible={showPlaceModal} transparent animationType="none" onRequestClose={closePlaceModal}>
         <View style={StyleSheet.absoluteFill}>
           <Animated.View
             pointerEvents="auto"

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, Image, StyleSheet, LayoutAnimation, UIManager, Platform, Modal } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, StyleSheet, LayoutAnimation, UIManager, Platform, Modal } from 'react-native';
+import { Image } from 'expo-image';
+import { Calendar, Clock, Music, X , Sparkles } from 'lucide-react-native';
+import Toast from 'react-native-toast-message';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import MessageMediaUploader from '../../../components/MessageMediaUploader';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
-import { Calendar, Clock, Music, X } from 'lucide-react-native';
-import Toast from 'react-native-toast-message';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { Sparkles } from 'lucide-react-native';
-import MessageMediaUploader from '../../../components/MessageMediaUploader';
 
 export const Stage3Message = ({
   insets,
@@ -74,6 +74,7 @@ export const Stage3Message = ({
 }: any) => {
   const [isDeliverySettingsExpanded, setIsDeliverySettingsExpanded] = useState(false);
   const [tempDate, setTempDate] = React.useState<Date | null>(null);
+  const minDate = React.useMemo(() => new Date(new Date().setHours(0,0,0,0)), []);
 
 
   return (
@@ -536,7 +537,7 @@ export const Stage3Message = ({
 
       {/* Modals placed inside card at end */}
       {/* iOS Date Picker Modal */}
-      <Modal visible={showUnlockDatePicker && Platform.OS === 'ios'} transparent animationType="slide">
+      <Modal hardwareAccelerated={true} visible={showUnlockDatePicker && Platform.OS === 'ios'} transparent animationType="slide">
          <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.4)' }}>
             <View style={{ backgroundColor: themeColors.cardBg, paddingBottom: 30, borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 16, borderBottomWidth: 1, borderColor: themeColors.border }}>
@@ -549,7 +550,7 @@ export const Stage3Message = ({
                  value={additionalSettings.unlockDate || new Date()}
                  mode="date"
                  display="inline"
-                 minimumDate={new Date(new Date().setHours(0,0,0,0))}
+                 minimumDate={minDate}
                  onChange={(event, date) => {
                    if (date) {
                      // Keep the existing time if it was set, otherwise start with a clean date
@@ -573,7 +574,7 @@ export const Stage3Message = ({
         <DateTimePicker
           value={additionalSettings.unlockDate || new Date()}
           mode="date"
-          minimumDate={new Date(new Date().setHours(0,0,0,0))}
+          minimumDate={minDate}
           onChange={(event, date) => {
             setShowUnlockDatePicker(false);
             if (event.type === 'set' && date) {
@@ -590,7 +591,7 @@ export const Stage3Message = ({
       )}
 
       {/* iOS Time Picker Modal */}
-      <Modal visible={showUnlockTimePicker && Platform.OS === 'ios'} transparent animationType="slide">
+      <Modal hardwareAccelerated={true} visible={showUnlockTimePicker && Platform.OS === 'ios'} transparent animationType="slide">
          <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.4)' }}>
             <View style={{ backgroundColor: themeColors.cardBg, paddingBottom: 30, borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 16, borderBottomWidth: 1, borderColor: themeColors.border }}>

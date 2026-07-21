@@ -1,7 +1,8 @@
 import { PremiumImage } from '../components/PremiumImage';
 import { HapticButton } from '../components/HapticButton';
 import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ImageBackground, Platform, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, ActivityIndicator } from 'react-native';
+import { ExpoImageBackground as ImageBackground } from '../components/ExpoImageBackground';
 import Svg, { Path } from 'react-native-svg';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -134,7 +135,7 @@ export default function WelcomeScreen({ navigation }) {
 
           <HapticButton
             style={styles.guestBtn}
-            onPress={() => navigation.replace('MainTabs')}
+            onPress={() => setTimeout(() => navigation.replace('MainTabs'), 0)}
             activeOpacity={0.8}
             disabled={googleLoading}
           >

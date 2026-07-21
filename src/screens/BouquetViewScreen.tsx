@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
-  Image,
   ScrollView,
   TouchableOpacity,
   TextInput,
@@ -24,6 +23,7 @@ import {
   KeyboardAvoidingView } from 'react-native';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Music, Play, ExternalLink } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 import { doc, getDoc, setDoc, deleteDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
@@ -37,7 +37,7 @@ import LottieView from 'lottie-react-native';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system/legacy';
-import { BlurView } from 'expo-blur';
+
 import { Accelerometer } from 'expo-sensors';
 import Svg, { Defs, Mask, Rect, Path, G, Text as SvgText, Polygon } from 'react-native-svg';
 import { useAuth } from '../contexts/AuthContext';
@@ -63,6 +63,7 @@ import { getFlowerTranslation } from '../flower-translations';
 
 import { getFlowerImage } from '../utils/bouquetData';
 import { CachedImage } from '../components/CachedImage';
+import { Image } from 'expo-image';
 import { useSwipeToClose } from '../hooks/useSwipeToClose';
 // react-native-manage-wallpaper is a native module that can throw on import
 // on some Android versions (notably SDK 36). Lazy-require it with a guard.
@@ -472,8 +473,64 @@ function ScratchOffOverlay({ onRevealed, onScratchingChange, initiallyRevealed }
 // ─────────────────────────────────────────────────────────────────────────────
 // Main Component
 // ─────────────────────────────────────────────────────────────────────────────
-export default function BouquetView() {
-  const navigation = useNavigation();
+const ParticlesOverlay = React.memo(({ type, SCREEN_WIDTH, SCREEN_HEIGHT }: { type: string, SCREEN_WIDTH: number, SCREEN_HEIGHT: number }) => {
+  const [particles, setParticles] = useState<any[]>([]);
+  const particleTimerRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (!type || type === 'none') {
+      setParticles([]);
+      return;
+    }
+    
+    if (particleTimerRef.current) clearInterval(particleTimerRef.current);
+
+    const configs = PARTICLE_CONFIGS[type];
+    if (!configs) return;
+
+    const makeParticle = () => {
+      const config = configs[Math.floor(Math.random() * configs.length)];
+      return {
+        id: Math.random().toString(36).slice(2),
+        config,
+        left: Math.random() * (SCREEN_WIDTH - 20),
+        duration: 2500 + Math.random() * 2500,
+        rotationEnd: (Math.random() - 0.5) * 720,
+      };
+    };
+
+    const isSnow = type === 'snow';
+    const initialCount = isSnow ? 8 : 5;
+    setParticles(Array.from({ length: initialCount }, makeParticle));
+
+    particleTimerRef.current = setInterval(() => {
+      setParticles(prev => {
+        const newParticles = isSnow 
+          ? [makeParticle(), makeParticle()]
+          : [makeParticle()];
+        return [...prev.slice(isSnow ? -20 : -12), ...newParticles];
+      });
+    }, 800);
+
+    return () => {
+      if (particleTimerRef.current) clearInterval(particleTimerRef.current);
+    };
+  }, [type, SCREEN_WIDTH]);
+
+  if (particles.length === 0) return null;
+
+  return (
+    <View style={styles.particleOverlay} pointerEvents="none">
+      {particles.map((p) => (
+        <ParticleDrop key={p.id} particle={p} screenHeight={SCREEN_HEIGHT} />
+      ))}
+    </View>
+  );
+});
+
+ParticlesOverlay.displayName = 'ParticlesOverlay';
+
+export default function BouquetViewScreen({ navigation }: any) {
   const route = useRoute();
   const { id, openWallpaperModal, shouldGoToHomeOnClose, inlineData } = (route.params || {}) as { id?: string; openWallpaperModal?: boolean; shouldGoToHomeOnClose?: boolean; inlineData?: any };
   const { currentUser } = useAuth();
@@ -491,6 +548,7 @@ export default function BouquetView() {
   const [isScratching, setIsScratching] = useState(false);
   const [isScratchRevealed, setIsScratchRevealed] = useState(false);
   const [showScratchAnimation, setShowScratchAnimation] = useState(false);
+  const parallaxCleanupRef = useRef<(() => void) | null>(null);
 
   const handleScratchRevealed = useCallback(async () => {
     setIsScratchRevealed(true);
@@ -529,8 +587,7 @@ export default function BouquetView() {
   const [resolvedBouquetId, setResolvedBouquetId] = useState<string | null>(null);
 
   // ── Particle effects ────────────────────────────────────────────────────────
-  const [particles, setParticles] = useState<any[]>([]);
-  const particleTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [activeAnimType, setActiveAnimType] = useState<string | null>(null);
 
   const [touchEffects, setTouchEffects] = useState<any[]>([]);
   const tiltX = useRef(new Animated.Value(0)).current;
@@ -576,6 +633,7 @@ export default function BouquetView() {
   const bouquetCanvasRef = useRef<View>(null);
   const [isCapturing, setIsCapturing] = useState(false);
   const [saveOptionsModalVisible, setSaveOptionsModalVisible] = useState(false);
+  const [reportModalVisible, setReportModalVisible] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -602,7 +660,8 @@ export default function BouquetView() {
   );
 
   const handleSaveCard = () => {
-    setSaveOptionsModalVisible(true);
+    setShareInitialTab('image');
+    setShareModalVisible(true);
   };
 
   const handleDownloadCard = async () => {
@@ -718,6 +777,7 @@ export default function BouquetView() {
 
   // ── Share modal ─────────────────────────────────────────────────────────────
   const [shareModalVisible, setShareModalVisible] = useState(false);
+  const [shareInitialTab, setShareInitialTab] = useState('link');
   const [shareUrl, setShareUrl] = useState('');
   const [shareRecipientName, setShareRecipientName] = useState('');
 
@@ -1046,7 +1106,6 @@ export default function BouquetView() {
         voiceNoteSoundRef.current = null;
       }
       Speech.stop();
-      if (particleTimerRef.current) clearInterval(particleTimerRef.current);
     };
   }, [navigation]);
 
@@ -1088,10 +1147,11 @@ export default function BouquetView() {
     if (!bouquetData) return;
     setShowFullScreenFlowers(false);
 
-    // Start particle effects if configured
+    // Start parallax and particle effects if configured
     const animType = (bouquetData as any)?.isGoldenEdition ? 'golden-sparkles' : bouquetData.additionalSettings?.animation;
     if (animType && animType !== 'none') {
-      startParticles(animType);
+      parallaxCleanupRef.current = startParallax();
+      setActiveAnimType(animType);
     }
 
     // Save to received history (only if not the creator)
@@ -1145,38 +1205,7 @@ export default function BouquetView() {
   }, [bouquetData, isCreator, id]);
 
   // ─── Particle system ──────────────────────────────────────────────────────────
-  const startParticles = useCallback((type: string) => {
-    if (particleTimerRef.current) clearInterval(particleTimerRef.current);
-
-    const configs = PARTICLE_CONFIGS[type];
-    if (!configs) return;
-
-    const makeParticle = () => {
-      const config = configs[Math.floor(Math.random() * configs.length)];
-      return {
-        id: Math.random().toString(36).slice(2),
-        config,
-        left: Math.random() * (SCREEN_WIDTH - 20),
-        duration: 2500 + Math.random() * 2500,
-        rotationEnd: (Math.random() - 0.5) * 720,
-      };
-    };
-
-    const isSnow = type === 'snow';
-    const initialCount = isSnow ? 8 : 5;
-    setParticles(Array.from({ length: initialCount }, makeParticle));
-
-    particleTimerRef.current = setInterval(() => {
-      setParticles(prev => {
-        const newParticles = isSnow 
-          ? [makeParticle(), makeParticle()]
-          : [makeParticle()];
-        return [...prev.slice(isSnow ? -20 : -12), ...newParticles];
-      });
-    }, 800);
-
-    // Removed setTimeout to let particles loop continuously like the website
-
+  const startParallax = useCallback(() => {
     // ── Accelerometer for Parallax ──
     let accelerometerSub: any = null;
     Accelerometer.setUpdateInterval(200);
@@ -1196,7 +1225,6 @@ export default function BouquetView() {
     });
 
     return () => {
-      if (particleTimerRef.current) clearInterval(particleTimerRef.current);
       if (accelerometerSub) accelerometerSub.remove();
     };
   }, []);
@@ -1513,7 +1541,7 @@ export default function BouquetView() {
     const url = `https://egreet.in/bouquet/${id}`;
     const recipientName = bouquetData?.recipientName || bouquetData?.messageCard?.recipientName || 'Friend';
     setShareUrl(url);
-    setShareRecipientName(recipientName);
+    setShareInitialTab('link');
     setShareModalVisible(true);
   }, [id, bouquetData]);
 
@@ -1521,6 +1549,7 @@ export default function BouquetView() {
   const handleWhatsAppShare = useCallback(async () => {
     const url = `https://egreet.in/bouquet/${id}`;
     setShareUrl(url);
+    setShareInitialTab('whatsapp');
     setShareModalVisible(true);
   }, [id]);
 
@@ -1734,12 +1763,12 @@ export default function BouquetView() {
         <View style={{ flex: 1 }}>
 
           {/* ── Particle effects overlay ──────────────────────────────────── */}
-          {particles.length > 0 && (
-            <View style={styles.particleOverlay} pointerEvents="none">
-              {particles.map((p) => (
-                <ParticleDrop key={p.id} particle={p} screenHeight={SCREEN_HEIGHT} />
-              ))}
-            </View>
+          {activeAnimType && (
+            <ParticlesOverlay 
+              type={activeAnimType} 
+              SCREEN_WIDTH={SCREEN_WIDTH} 
+              SCREEN_HEIGHT={SCREEN_HEIGHT} 
+            />
           )}
 
           <ScrollView
@@ -2436,11 +2465,32 @@ export default function BouquetView() {
           {/* ── Bottom actions ─────────────────────────────────────────────── */}
           <View style={styles.bottomActions}>
             <TouchableOpacity
-              style={[styles.createOwnBtn, { flex: 1, width: '100%' }]}
+              style={{ flex: 1, width: '100%' }}
               onPress={handleSaveCard}
+              activeOpacity={0.8}
             >
-              <Feather name="download" size={16} color="#fff" style={{ marginRight: 8 }} />
-              <Text style={styles.createOwnBtnText}>{t('bouquetView.saveCard') || 'Save Card'}</Text>
+              <LinearGradient
+                colors={['#8E6E69', '#7A5C58']}
+                start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                style={{
+                  paddingVertical: 16,
+                  paddingHorizontal: 24,
+                  borderRadius: 16,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  shadowColor: '#7A5C58',
+                  shadowOffset: { width: 0, height: 6 },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 12,
+                  elevation: 6,
+                }}
+              >
+                <Feather name="image" size={18} color="#fff" style={{ marginRight: 10 }} />
+                <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16, letterSpacing: 0.5 }}>
+                  {t('bouquetView.saveCard') || 'Save as Image'}
+                </Text>
+              </LinearGradient>
             </TouchableOpacity>
           </View>
 
@@ -2508,7 +2558,7 @@ export default function BouquetView() {
         </View>
       </Modal>
       {/* Image Gallery Full-Screen Modal */}
-      <Modal visible={showImageFullScreen} transparent={true} animationType="fade" onRequestClose={() => setShowImageFullScreen(false)}>
+      <Modal hardwareAccelerated={true} visible={showImageFullScreen} transparent={true} animationType="fade" onRequestClose={() => setShowImageFullScreen(false)}>
         <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.97)', justifyContent: 'center', alignItems: 'center' }}>
           {/* Close */}
           <TouchableOpacity
@@ -2558,6 +2608,7 @@ export default function BouquetView() {
               <View style={{ width: SCREEN_WIDTH, alignItems: 'center' }}>
                 {activeUrl && (
                   <CachedImage
+                    key={activeUrl}
                     source={{ uri: activeUrl }}
                     style={{ width: SCREEN_WIDTH, height: SCREEN_HEIGHT * 0.75 }}
                     resizeMode="contain"
@@ -2619,6 +2670,7 @@ export default function BouquetView() {
         shareText={t('share.defaultText') || 'I made a digital bouquet for you! 🌸'}
         onShareImage={handleShareImage}
         bouquetData={bouquetData}
+        initialTab={shareInitialTab}
       />
 
 
@@ -2658,6 +2710,7 @@ export default function BouquetView() {
             <FlatList
               data={sortedLanguages}
               keyExtractor={(item) => item.value}
+              getItemLayout={(data, index) => ({ length: 51, offset: 51 * index, index })}
               renderItem={({ item }) => {
                 const isDetected = detectedLanguage && item.value === detectedLanguage;
                 return (
@@ -2703,9 +2756,7 @@ export default function BouquetView() {
       {/* ── Time Capsule Lock Overlay ────────────────────────────────────────────── */}
       {isLocked && unlockTargetDate && (
         <View style={[StyleSheet.absoluteFill, { zIndex: 9999, justifyContent: 'center', alignItems: 'center', backgroundColor: Platform.OS === 'web' ? 'rgba(250, 248, 245, 0.98)' : 'rgba(250, 248, 245, 0.85)' }]}>
-          {Platform.OS !== 'web' && (
-            <BlurView intensity={100} tint="light" style={StyleSheet.absoluteFill} />
-          )}
+
           <TouchableOpacity 
             style={styles.overlayCloseBtn} 
             onPress={() => {
@@ -2739,7 +2790,7 @@ export default function BouquetView() {
       {showScratchAnimation && (
         <View style={[StyleSheet.absoluteFillObject, { zIndex: 9999, elevation: 9999 }]} pointerEvents="none">
           <LottieView
-            source={{ uri: 'https://raw.githubusercontent.com/mayank-icu/digibouquet-assets/main/animations/scratch.json' }}
+            source={require('../../assets/animations/scratch.json')}
             autoPlay
             loop={false}
             onAnimationFinish={() => setShowScratchAnimation(false)}
