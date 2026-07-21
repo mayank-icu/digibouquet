@@ -2,7 +2,7 @@
   "expo": {
     "name": "Digi Bouquet",
     "slug": "digibouquet",
-    "version": "1.0.9",
+    "version": "1.0.13",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -26,7 +26,7 @@
         "backgroundColor": "#FAF7F2"
       },
       "package": "com.digibouquet.app",
-      "versionCode": 18,
+      "versionCode": 22,
       "blockedPermissions": [
         "android.permission.ACTIVITY_RECOGNITION",
         "android.permission.READ_MEDIA_IMAGES",
@@ -80,11 +80,11 @@
               "name": "BouquetWidget",
               "label": "Digi Bouquet",
               "description": "Quickly create and send bouquets.",
-              "previewImage": "./assets/icon.png",
-              "minWidth": "180dp",
-              "minHeight": "220dp",
-              "targetCellWidth": 3,
-              "targetCellHeight": 4,
+              "previewImage": "./assets/widget.jpeg",
+              "minWidth": "220dp",
+              "minHeight": "110dp",
+              "targetCellWidth": 4,
+              "targetCellHeight": 2,
               "resizeMode": "vertical"
             }
           ]

@@ -95,10 +95,12 @@ module.exports = function withWidgetPin(config) {
     let mainApplication = config.modResults.contents;
     
     // Add WidgetPinPackage to getPackages() in MainApplication.kt
+    // Matches both the commented and non-commented variants of the apply block
     if (!mainApplication.includes('WidgetPinPackage()')) {
+      // Try to match the apply block and inject add(WidgetPinPackage()) inside it
       mainApplication = mainApplication.replace(
-        /val packages = PackageList\(this\)\.packages\.apply\s*\{/,
-        `val packages = PackageList(this).packages.apply {\n              add(WidgetPinPackage())`
+        /(PackageList\(this\)\.packages\.apply\s*\{)/,
+        `$1\n              add(WidgetPinPackage())`
       );
     }
     config.modResults.contents = mainApplication;
